@@ -1,0 +1,56 @@
+<% var data = {
+title: "Полезное",
+author: "Danil X"
+}; %>
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <%= _.template(require('html-loader!./../includes/head.html'))(data) %>
+</head>
+<body>
+
+
+<%= _.template(require('html-loader!./../includes/header.html'))(data) %>
+
+<section >
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> <%= data.title %> </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="mainBlock">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <hr class="mainBlockHR">
+            </div>
+
+            <div class="col-12">
+                <p>Список полезных ссылок (будут обовляться и дополняться)</p>
+                <ul>
+
+                    <li>https://medium.com/@stasonmars/%D0%BE%D0%B1%D1%8A%D1%8F%D1%81%D0%BD%D1%8F%D0%B5%D0%BC-%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B-%D0%B2-%D0%BC%D0%B0%D1%81%D1%81%D0%B8%D0%B2%D0%B0%D1%85-js-filter-vs-map-vs-reduce-vs-foreach-995ef7468c4a</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<%= _.template(require('html-loader!./../includes/footer.html'))(data) %>
+
+</body>
+</html>

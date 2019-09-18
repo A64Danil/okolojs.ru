@@ -13,13 +13,13 @@ $font-stack: -apple-system, BlinkMacSystemFont,Roboto,'Open Sans','Helvetica Neu
 //@import "~bootstrap/scss/tables";
 //@import "~bootstrap/scss/forms";
 //@import "~bootstrap/scss/buttons";
-//@import "~bootstrap/scss/transitions";
-//@import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/transitions";
+@import "~bootstrap/scss/dropdown";
 //@import "~bootstrap/scss/button-group";
 //@import "~bootstrap/scss/input-group";
 //@import "~bootstrap/scss/custom-forms";
-//@import "~bootstrap/scss/nav";
-//@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
 //@import "~bootstrap/scss/card";
 //@import "~bootstrap/scss/breadcrumb";
 //@import "~bootstrap/scss/pagination";
@@ -53,12 +53,97 @@ html {
 body {
   font-family: $font-stack;
   color: #000;
-  #logo {
-    width: 10rem;
-  }
-  .container {
-    img {
-      width: 20rem;
-    }
-  }
+  //#logo {
+  //  width: 10rem;
+  //}
+  //.container {
+  //  img {
+  //    width: 20rem;
+  //  }
+  //}
 }
+
+header {
+  padding-bottom: 1rem;
+}
+
+.navbar {
+  padding: 0;
+}
+
+.navbar-collapse {
+  justify-content: flex-end;
+}
+
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+logo--title {
+  padding-bottom: 2rem;
+}
+
+.logo--subtitle {
+  padding-bottom: 1rem;
+}
+
+.logo__img {
+  height: 80px;
+  //padding: 0 2px;
+}
+.logo__img--subtitle {
+  height: 50px;
+}
+.logo__desc {
+  line-height: 2.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.logo__desc--small {
+  font-size: 1.5rem;
+}
+
+.logo__desc--subtitle {
+  padding-left: 0.5rem;
+  //text-transform: capitalize;
+}
+
+
+
+.mainBlockHR {
+  border-top: 3px solid #000;
+}
+
+
+
+//ТРЭНДЫ
+
+.trends {
+}
+
+.trend {
+  margin-bottom: 1rem;
+}
+
+.trend__difficult {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.trend__title {
+  font-size: 1.2rem;
+}
+
+.trend__desc {
+  padding-bottom: 0.5rem;
+}
+.trend__auth {
+  font-weight: 500;
+}
+
+.trend__status {
+  font-style: italic;
+}
+
