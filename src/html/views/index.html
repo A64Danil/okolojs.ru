@@ -1,10 +1,16 @@
 <% var data = {
 title: "OkoloJS",
-author: "Harrix"
+author: "Danil X"
 }; %>
 
 
-<%= _.template(require('html-loader!./../includes/head.html'))(data) %>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <%= _.template(require('html-loader!./../includes/head.html'))(data) %>
+</head>
+<body>
+
 
 <%= _.template(require('html-loader!./../includes/header.html'))(data) %>
 
@@ -14,8 +20,6 @@ author: "Harrix"
             <div class="col">
                 <h2>Тесты OkoloJS</h2>
                 <p>Тестируем</p>
-                <p>разные</p>
-                <p>шрифты</p>
             </div>
 
             <div class="col col-md-12">111
@@ -27,9 +31,8 @@ author: "Harrix"
     </div>
 </section>
 
-<div class="container">
-    <p>Первая страница.</p>
-    <p>Автор - <%=data.author%></p>
-</div>
 
 <%= _.template(require('html-loader!./../includes/footer.html'))(data) %>
+
+</body>
+</html>
