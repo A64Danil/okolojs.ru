@@ -1,0 +1,32 @@
+<% var data = {
+title: "Заголовок | Проект",
+author: "Harrix"
+}; %>
+
+
+<%= _.template(require('html-loader!./../includes/header.html'))(data) %>
+
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col">111
+
+                    <button class="btn">test</button>
+
+            </div>
+
+            <div class="col col-md-12">111
+
+                    <button class="btn">test</button>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <p>Первая страница.</p>
+    <p>Автор - <%=data.author%></p>
+</div>
+
+<%= _.template(require('html-loader!./../includes/footer.html'))(data) %>

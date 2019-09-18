@@ -8,8 +8,6 @@ package-lock.json
 out/
 node_modules/
 coverage/
-
+dist/
 
 upload/
-
-TekBooks/.build/
