@@ -46,6 +46,10 @@ $font-stack: -apple-system, BlinkMacSystemFont,Roboto,'Open Sans','Helvetica Neu
   src: url(../fonts/Roboto-Regular.ttf);
 }
 
+html {
+  font-size: 20px;
+}
+
 body {
   font-family: $font-stack;
   color: #000;

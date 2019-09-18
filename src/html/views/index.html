@@ -1,18 +1,21 @@
 <% var data = {
-title: "Заголовок | Проект",
+title: "OkoloJS",
 author: "Harrix"
 }; %>
 
+
+<%= _.template(require('html-loader!./../includes/head.html'))(data) %>
 
 <%= _.template(require('html-loader!./../includes/header.html'))(data) %>
 
 <section>
     <div class="container">
         <div class="row">
-            <div class="col">111
-
-                    <button class="btn">test</button>
-
+            <div class="col">
+                <h2>Тесты OkoloJS</h2>
+                <p>Тестируем</p>
+                <p>разные</p>
+                <p>шрифты</p>
             </div>
 
             <div class="col col-md-12">111

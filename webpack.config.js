@@ -33,6 +33,14 @@ module.exports = {
     devtool: "source-map",
     module: {
         rules: [
+            { test: /\.(png|svg)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {name: 'img/[name].[ext]'}
+                    }
+                ]
+            },
             {
                 test: /\.js$/,
                 include: path.resolve(__dirname, 'src/js'),

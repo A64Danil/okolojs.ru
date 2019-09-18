@@ -36,6 +36,7 @@
     "css-loader": "^3.2.0",
     "del-cli": "^2.0.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "*",
     "fibers": "*",
     "html-cli": "^1.0.0",
     "html-loader": "^0.5.5",
