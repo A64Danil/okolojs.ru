@@ -1,21 +1,42 @@
-<div class="trends">
-    <div class="trend">
-        <div class="trend__difficult">Лёгкий</div>
-        <div class="trend__title">Базовый курс по JS 2018</div>
-        <div class="trend__desc">Основы по JS</div>
-        <div class="trend__auth">Авторы курса: LoftSCHOOL</div>
-        <div class="trend__link"><a href="https://coursehunter.net/course/kompleksnoe-obuchenie-javascript">Ссылка на курс</a></div>
-        <div class="trend__data">1.01.2018</div>
-        <div class="trend__status">Завершен 1.07.2018</div>
-    </div>
+<div class="trends" id="trends">
+    Загружаем...
+<!--    <div class="trend">-->
+<!--        <div class="trend__difficult">Лёгкий</div>-->
+<!--        <div class="trend__title">Базовый курс по JS 2018</div>-->
+<!--        <div class="trend__desc">Основы по JS</div>-->
+<!--        <div class="trend__auth">Авторы курса: LoftSCHOOL</div>-->
+<!--        <div class="trend__link"><a href="https://coursehunter.net/course/kompleksnoe-obuchenie-javascript">Ссылка на курс</a></div>-->
+<!--        <div class="trend__data">1.01.2018</div>-->
+<!--        <div class="trend__status">Завершен 1.07.2018</div>-->
+<!--    </div>-->
 
-    <div class="trend">
-        <div class="trend__difficult">Продвинутый</div>
-        <div class="trend__title">NodeJS</div>
-        <div class="trend__desc">Курс по ноде</div>
-        <div class="trend__auth">Авторы курса: Udemy (Brad Tavares)</div>
-        <div class="trend__link"><a href="https://coursehunter.net/course/izuchite-nodejs-sozdav-12-proektov">Ссылка на курс</a></div>
-        <div class="trend__data">1.04.2019</div>
-        <div class="trend__status">Будет завершен 1.11.2018</div>
-    </div>
+<!--    <div class="trend">-->
+<!--        <div class="trend__difficult">Продвинутый</div>-->
+<!--        <div class="trend__title">NodeJS</div>-->
+<!--        <div class="trend__desc">Курс по ноде</div>-->
+<!--        <div class="trend__auth">Авторы курса: Udemy (Brad Tavares)</div>-->
+<!--        <div class="trend__link"><a href="https://coursehunter.net/course/izuchite-nodejs-sozdav-12-proektov">Ссылка на курс</a></div>-->
+<!--        <div class="trend__data">1.04.2019</div>-->
+<!--        <div class="trend__status">Будет завершен 1.11.2018</div>-->
+<!--    </div>-->
 </div>
+
+
+<script id="trend-template" type="text/x-handlebars-template">
+    {{#each trends}}
+    <div class="trend">
+        <div class="trend__difficulty">{{difficulty}}</div>
+        <div class="trend__title">{{title}}</div>
+        {{#if titleOriginal}}
+        <div class="trend__titleOriginal">{{titleOriginal}}</div>
+        {{/if}}
+        <div class="trend__desc">{{description}}</div>
+        <div class="trend__language">Язык: {{language}}</div>
+        <div class="trend__auth">Автор: {{author}}</div>
+        <div class="trend__link"><a href="{{url}}">Ссылка на курс</a></div>
+        <div class="trend__published">Появился в сети: {{published}}</div>
+        <div class="trend__started">Старт курса у нас: {{started}}</div>
+        <div class="trend__status">{{status}}</div>
+    </div>
+    {{/each}}
+</script>
