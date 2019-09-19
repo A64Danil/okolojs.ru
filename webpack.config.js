@@ -132,6 +132,10 @@ module.exports = {
             {
                 from: './src/uploads',
                 to: './uploads'
+            },
+            {
+                from: './src/model',
+                to: './model'
             }
         ]),
     ].concat(htmlPlugins)
