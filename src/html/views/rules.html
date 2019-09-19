@@ -1,0 +1,58 @@
+<% var data = {
+title: "Правила",
+author: "Danil X"
+}; %>
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <%= _.template(require('html-loader!./../includes/head.html'))(data) %>
+</head>
+<body>
+
+
+<%= _.template(require('html-loader!./../includes/header.html'))(data) %>
+
+<section >
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> <%= data.title %> </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="mainBlock">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <hr class="mainBlockHR">
+            </div>
+
+            <div class="col-12">
+                <p>Простые правила для поддержания комфортной обстановки (будут обовляться и дополняться)</p>
+                <ul>
+                    <li>Не флудить - стандартное правило всех чатов. Старайтесь группировать свои сообщения в одно больше. Для ответа на вопрос используйте указание на чужой ник, чтобы можно было понять, кто кому отвечает</li>
+                    <li>Быть вежливым - в интернете хватает грубости и хамства. За любые оскарбления и разжигания бессмысленных споров не по теме будет бан</li>
+                    <li>Ограничить мат - много мата у нас не любят. Старайтесь минимизировать его использование и применять только при необходимости</li>
+                    <li>Быть активным! Чем больше активности вы проявляете в чате, тем больше знаний получите в процессе обсуждения!</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<%= _.template(require('html-loader!./../includes/footer.html'))(data) %>
+
+</body>
+</html>
