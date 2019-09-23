@@ -73,3 +73,10 @@ var result = template(data);
 TRENDS.innerHTML = result;
 
 console.log(result);
+
+
+data.forEach(){
+    title == .... {
+        return id
+    }
+}
