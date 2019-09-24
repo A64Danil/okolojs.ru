@@ -137,6 +137,11 @@ module.exports = {
                 from: './src/model',
                 to: './model'
             }
+            ,
+            {
+                from: './src/core',
+                to: './core'
+            }
         ]),
     ].concat(htmlPlugins)
 };
