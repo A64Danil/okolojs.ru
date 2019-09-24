@@ -9,39 +9,47 @@ import Handlebars from 'handlebars';
 jQuery(function() {
     // jQuery('body').css('color', 'blue');
     console.log("Пасхалка для самых любопытных =) 19-12")
+    init();
 });
 
 
-const TRENDS = document.getElementById("trends");
+;
 
-function getTest() {
-    // 1. Создаём новый объект XMLHttpRequest
-    var xhr = new XMLHttpRequest();
-
-    // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
-    xhr.open('GET', 'model/trends.json', false);
-
-    // 3. Отсылаем запрос
-    xhr.send();
-
-    // 4. Если код ответа сервера не 200, то это ошибка
-    if (xhr.status != 200) {
-        // обработать ошибку
-        console.log( xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
-    } else {
-        // вывести результат
-        console.log( xhr.responseText ); // responseText -- текст ответа.
-        return xhr.responseText;
-    }
+function init() {
+    loadModelAndShowBlock('trends', "trend-template", 'trends');
 }
 
+function loadModelAndShowBlock(blockid, tpl, filename) {
+    const block = document.getElementById(blockid);
+    if (blockid === null) {
+        console.log("Нет места для вывода " + filename);
+    } else {
+
+        console.log("Start render ", blockid, tpl, filename)
+        const source = document.getElementById(tpl).innerHTML;
+        const template = Handlebars.compile(source);
 
 
-var source = document.getElementById("trend-template").innerHTML;;
-var template = Handlebars.compile(source);
+        // 1. Создаём новый объект XMLHttpRequest
+        var xhr = new XMLHttpRequest();
 
-var result = template(getTest());
+        // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
+        xhr.open('GET', 'model/'+filename+'.json', true);
 
-TRENDS.innerHTML = result;
+        // 3. Отсылаем запрос
+        xhr.send();
 
-console.log(result);
+        // 4. Если код ответа сервера не 200, то это ошибка
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                // вывести результат
+
+                const result = template(JSON.parse(xhr.responseText));
+                block.innerHTML = result;
+            }
+        }
+    }
+
+
+
+}

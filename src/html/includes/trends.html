@@ -6,18 +6,16 @@
 <script id="trend-template" type="text/x-handlebars-template">
     {{#each trends}}
     <div class="trend">
-        <div class="trend__difficulty">{{difficulty}}</div>
+        {{#if difficulty}} <div class="trend__difficulty" title="Требуемый уровень подготовки">{{difficulty}}</div>{{/if}}
         <div class="trend__title">{{title}}</div>
-        {{#if titleOriginal}}
-        <div class="trend__titleOriginal">{{titleOriginal}}</div>
-        {{/if}}
-        <div class="trend__desc">{{description}}</div>
+        {{#if titleOriginal}} <div class="trend__titleOriginal">{{titleOriginal}}</div> {{/if}}
+        {{#if description}}<div class="trend__description">{{description}}</div>{{/if}}
         <div class="trend__language">Язык: {{language}}</div>
-        <div class="trend__auth">Автор: {{author}}</div>
+        {{#if author}}<div class="trend__author">Автор: {{author}}</div>{{/if}}
         <div class="trend__link"><a href="{{url}}">Ссылка на курс</a></div>
-        <div class="trend__published">Появился в сети: {{published}}</div>
-        <div class="trend__started">Старт курса у нас: {{started}}</div>
-        <div class="trend__status">{{status}}</div>
+        {{#if published}}<div class="trend__published">Появился в сети: {{published}}</div>{{/if}}
+        {{#if started}}<div class="trend__started">Старт тренда у нас: {{started}}</div>{{/if}}
+        {{#if status}}<div class="trend__status">{{status}}</div>{{/if}}
     </div>
     {{/each}}
 </script>
