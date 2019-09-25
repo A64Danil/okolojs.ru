@@ -7,17 +7,17 @@
 <?php
 require_once 'connection.php'; // подключаем скрипт
 
-if (isset($_POST['title']) && isset($_POST['info'])) {
+if (isset($_POST['name']) && isset($_POST['company'])) {
 // подключаемся к серверу
     $link = mysqli_connect($host, $user, $password, $database)
     or die("Ошибка " . mysqli_error($link));
 
 // экранирования символов для mysql
-    $title = htmlentities(mysqli_real_escape_string($link, $_POST['title']));
-    $info = htmlentities(mysqli_real_escape_string($link, $_POST['info']));
+    $name = htmlentities(mysqli_real_escape_string($link, $_POST['name']));
+    $company = htmlentities(mysqli_real_escape_string($link, $_POST['company']));
 
 // создание строки запроса
-    $query = "INSERT INTO testtrends VALUES(NULL, '$title','$info')";
+    $query = "INSERT INTO tovars VALUES(NULL, '$name','$company')";
 
 // выполняем запрос
     $result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
@@ -29,19 +29,18 @@ if (isset($_POST['title']) && isset($_POST['info'])) {
 }
 
 
-
 $link = mysqli_connect($host, $user, $password, $database)
 or die("Ошибка " . mysqli_error($link));
 
 
-$query ="SELECT * FROM testtrends";
+$query ="SELECT * FROM tovars";
 
 $result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
 if($result)
 {
     $rows = mysqli_num_rows($result); // количество полученных строк
 
-    echo "<table><tr><th>Id</th><th>Title</th><th>Info</th></tr>";
+    echo "<table><tr><th>Id</th><th>Модель</th><th>Производитель</th></tr>";
     for ($i = 0 ; $i < $rows ; ++$i)
     {
         $row = mysqli_fetch_row($result);
@@ -56,12 +55,12 @@ if($result)
 }
 
 ?>
-<h2>Добавить новый тренд</h2>
+<h2>Добавить новую модель</h2>
 <form method="POST">
-    <p>Введите название:<br>
-        <input type="text" name="title"/></p>
-    <p>JSON: <br>
-        <textarea name="info"></textarea></p>
+    <p>Введите модель:<br>
+        <input type="text" name="name"/></p>
+    <p>Производитель: <br>
+        <input type="text" name="company"/></p>
     <input type="submit" value="Добавить">
 </form>
 </body>
