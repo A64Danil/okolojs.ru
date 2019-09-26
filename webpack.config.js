@@ -117,10 +117,15 @@ module.exports = {
         //     filename: 'test_new.html',
         //     template: 'src/html/views/test.html'
         // }),
-        new CopyWebpackPlugin([{
-            from: './src/fonts',
-            to: './fonts'
-        },
+        new CopyWebpackPlugin([
+            {
+                from: './src/rootfolder',
+                to: './'
+            },
+            {
+                from: './src/fonts',
+                to: './fonts'
+            },
             {
                 from: './src/favicon',
                 to: './favicon'

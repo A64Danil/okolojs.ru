@@ -1,0 +1,13 @@
+User-Agent: *
+Disallow: *
+Allow: *.css
+Allow: *.js
+Allow: *.jpg
+Allow: *.jpeg
+Allow: *.png
+Allow: *.svg
+
+Allow: /index.html
+Allow: /faq.html
+Allow: /rules.html
+Allow: /usefull.html
