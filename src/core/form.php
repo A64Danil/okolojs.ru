@@ -19,7 +19,7 @@
 
             <p>Успех. Скоро тут будет более интересно.</p>
 
-            <form method="POST" action="https://okolojs.ru/core/trends.php" class="sendtrend">
+            <form method="POST" action="https://okolojs.ru/core/trends.php" class="sendTrend">
                 <p>Введите название:<br>
                     <input type="text" name="title"/></p>
                 <p>JSON: <br>
@@ -27,29 +27,29 @@
                 <input type="submit" value="Добавить">
             </form>
 
-        <div class="infoFromDB2"></div>
+            <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateTrend">
+                <p>ID:<br>
+                    <input type="text" name="id" value="" disabled /></p>
+                <p>Введите название:<br>
+                    <input type="text" name="title" value="" disabled /></p>
+                <p>JSON: <br>
+                    <textarea name="info"></textarea></p>
+                <input type="submit" value="Сохранить">
+            </form>
 
-        <table class="infoFromDB">
-            <thead>
-                <th>ID</th>
-                <th>TITLE</th>
-                <th>EDIT</th>
-            </thead>
-            <tbody>
-                <td>1</td>
-                <td>test</td>
-                <td>
-                    <form action="">
-                        <input type="submit" value="EDIT">
-                    </form>
-                </td>
-            </tbody>
-        </table>
+            <table class="editTrendsTable">
+                <thead>
+                    <th>ID</th>
+                    <th>TITLE</th>
+                    <th>EDIT</th>
+                </thead>
+                <tbody>
 
-        <?php
+                </tbody>
+            </table>
 
 
-        // Вывести таблицу
+    <?php
 
     } else {
         echo "Не верный логин или пароль. Вы вводите: \r\n";
@@ -62,8 +62,6 @@
 
 
 <?php } else {?>
-
-
     <h2>Авторизация</h2>
     <form method="POST" action="form.php">
         <p>Login:<br>

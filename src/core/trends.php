@@ -96,101 +96,115 @@ if (isset($_GET['get'])) {
 
 // Get record by ID
 if (isset($_GET['id'])) {
-//    echo "18-55"."\r\n";
-    $reqID = preg_replace('/\s/', '', $_GET['id']);
 
-    if (strlen($reqID) > 0) {
-        $reqID = explode(",", $reqID);
-
-        $goodReqIDArr = array(); // Сюда запишем результат;
-
-        // Проверки на валидность каждого отдельного ID в запросе
-        foreach ( $reqID as $checkedID) {
-            if (strpos($checkedID, '.') !== false) {
-                echo 'Не правильный ID в строке запроса: "'.$checkedID.'". Найден лишний символ в строке';
-                return false;
-            }
-
-            if (!is_numeric($checkedID)) {
-                echo 'Не правильный ID в строке запроса: "'.$checkedID.'". Это точно не numeric. Проверьте запрос и попробуйте снова';
-                return false;
-            } else {
-                $checkedID = (integer) $checkedID;
-                !in_array($checkedID, $goodReqIDArr) ? array_push($goodReqIDArr, $checkedID) : null; // Если такого ID еще нет, то добавить
-            }
+    if ($_GET['id'] == 'all')
+    {
+        if (isset($_GET['limit']) == false) {
+            $reqLimit = 10;
+        } else {
+            $reqLimit = (int)$_GET['limit'];
         }
-
-        // Коннектимся к БД
-        $mysqli = new mysqli($host, $user, $password, $database);
-        /* проверяем соединение */
-        if (mysqli_connect_errno()) {
-            printf("Не удалось подключиться: %s\n", mysqli_connect_error());
-            exit();
-        }
-
-        if(count($goodReqIDArr) == 1)
+        // Проверкаа на валидность
+        if ($reqLimit > 0)
         {
-            $stmt = $mysqli->prepare("SELECT * FROM `testtrends` WHERE id=?");
-            // info заменить на *
-            $stmt->bind_param("i", $goodReqIDArr[0]);
+        //  echo "1-22 Вы запросили ".$reqLimit." записей, начиная с конца";
+            $mysqli = new mysqli($host, $user, $password, $database);
+            if (mysqli_connect_errno()) {
+                printf("Не удалось подключиться: %s\n", mysqli_connect_error());
+                exit();
+            }
+            $stmt = $mysqli->prepare("SELECT * FROM `testtrends` ORDER BY `id` DESC LIMIT 0,?");
+            $stmt->bind_param("i",$reqLimit);
             if (!$stmt->execute()) {
                 echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
             }
             $result = $stmt->get_result();
             showTrendsJson($result);
-        }
-        elseif (count($goodReqIDArr) > 1)
-        {
 
-            $clause = implode(',', array_fill(0, count($goodReqIDArr), '?'));
-            $stmt = $mysqli->prepare("SELECT * FROM `testtrends` WHERE id IN (" . $clause . ") GROUP BY `id`,`info`");
-            $stmt->bind_param(str_repeat('i', count($goodReqIDArr)), ...$goodReqIDArr);
-            if (!$stmt->execute()) {
-                echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
-            }
-            $result = $stmt->get_result();
-            showTrendsJson($result);
+            /* закрываем запрос */
+            $stmt->close();
+            /* закрываем соединение */
+            $mysqli->close();
+        }
+        else {
+            echo "Ошибка. Вы запросили неверное (".$reqLimit.") количество записей.";
+
         }
 
-        /* закрываем запрос */
-        $stmt->close();
-        /* закрываем соединение */
-        $mysqli->close();
 
     }
     else
     {
-        echo "Запрошено неправильное количество записей \r\n";
-        echo "Ваш запрос: $reqID"."\r\n";
-        return false;
+        //    echo "18-55"."\r\n";
+        $reqID = preg_replace('/\s/', '', $_GET['id']);
+
+        if (strlen($reqID) > 0) {
+            $reqID = explode(",", $reqID);
+
+            $goodReqIDArr = array(); // Сюда запишем результат;
+
+            // Проверки на валидность каждого отдельного ID в запросе
+            foreach ( $reqID as $checkedID) {
+                if (strpos($checkedID, '.') !== false) {
+                    echo 'Не правильный ID в строке запроса: "'.$checkedID.'". Найден лишний символ в строке';
+                    return false;
+                }
+
+                if (!is_numeric($checkedID)) {
+                    echo 'Не правильный ID в строке запроса: "'.$checkedID.'". Это точно не numeric. Проверьте запрос и попробуйте снова';
+                    return false;
+                } else {
+                    $checkedID = (integer) $checkedID;
+                    !in_array($checkedID, $goodReqIDArr) ? array_push($goodReqIDArr, $checkedID) : null; // Если такого ID еще нет, то добавить
+                }
+            }
+
+            // Коннектимся к БД
+            $mysqli = new mysqli($host, $user, $password, $database);
+            /* проверяем соединение */
+            if (mysqli_connect_errno()) {
+                printf("Не удалось подключиться: %s\n", mysqli_connect_error());
+                exit();
+            }
+
+            if(count($goodReqIDArr) == 1)
+            {
+                $stmt = $mysqli->prepare("SELECT * FROM `testtrends` WHERE id=?");
+                // info заменить на *
+                $stmt->bind_param("i", $goodReqIDArr[0]);
+                if (!$stmt->execute()) {
+                    echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
+                }
+                $result = $stmt->get_result();
+                showTrendsJson($result);
+            }
+            elseif (count($goodReqIDArr) > 1)
+            {
+
+                $clause = implode(',', array_fill(0, count($goodReqIDArr), '?'));
+                $stmt = $mysqli->prepare("SELECT * FROM `testtrends` WHERE id IN (" . $clause . ") GROUP BY `id`,`info`");
+                $stmt->bind_param(str_repeat('i', count($goodReqIDArr)), ...$goodReqIDArr);
+                if (!$stmt->execute()) {
+                    echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
+                }
+                $result = $stmt->get_result();
+                showTrendsJson($result);
+            }
+
+            /* закрываем запрос */
+            $stmt->close();
+            /* закрываем соединение */
+            $mysqli->close();
+
+        }
+        else
+        {
+            echo "Запрошено неправильное количество записей \r\n";
+            echo "Ваш запрос: $reqID"."\r\n";
+            return false;
+        }
+
     }
-
-
-
-//
-//    if (is_array($reqID)) {
-//        echo 'is_array. Запрошенный ID '."\r\n";
-//        print_r($reqID);
-//    } else {
-//        echo 'Это точно не array'."\r\n";
-//    }
-//
-//    if (is_numeric($reqID)) {
-//        echo 'is_numeric. Запрошенный ID '.$reqID."\r\n";
-//    } else {
-//        echo 'Это точно не numeric'."\r\n";
-//    }
-//    if (is_int($reqID)) {
-//        echo 'is_int. Запрошенный ID '.$reqID."\r\n";
-//    } else {
-//        echo 'Это точно не int'."\r\n";
-//    }
-//    if (is_string($reqID)) {
-//        echo 'is_string. Запрошенный ID '.$reqID."\r\n";
-//    } else {
-//        echo 'Это точно не string'."\r\n";
-//    }
-
 
 }
 
