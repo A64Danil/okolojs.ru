@@ -3,72 +3,57 @@ require_once 'connection.php'; // подключаем скрипт
 
 
 // Print JSON from STR
-function showJson($reqArr)
+function showTrendsJson($result)
 {
-    $arrLikeJson = [];
 
+    print '{ "trends": ['."\r\n";
+    $teller = 0;
+    while ($row = $result->fetch_array(MYSQLI_NUM))
+    {
+        $teller++;
+        $trendId = '"id": '.$row[0].",\r\n";
+        $trendTitle = '"title": "'.iconv("windows-1251","utf-8", $row[1]).'"'.",\r\n";
+        $trendInfo = '"info": '.iconv("windows-1251","utf-8", $row[2])."\r\n";
 
-    array_push($arrLikeJson, array(
-        "user_link" => $link,
-        "name"      => $name,
-        "height"    => $height,
-        "weight"    => $weight,
-        "date"      => $date,
-        "info"      => $info,
-        "country"   => $country
-    ));
+        print "{"."\r\n";
+        print "$trendId";
+        print "$trendTitle";
+        print "$trendInfo";
+        if($result->num_rows !== $teller) {
+            print "},"."\r\n";
+        } else {
+            print "}"."\r\n";
+        }
 
-    echo "Пример функции.\n";
-//    return $retval;
+    }
+    print ']'."\r\n";
+    print '}'."\r\n";
 }
 
 // Get all records
 if (isset($_GET['get'])) {
     if ($_GET['get'] == 'all' && isset($_GET['limit']) == false)
     {
-        $link = mysqli_connect($host, $user, $password, $database)
-        or die("Ошибка " . mysqli_error($link));
-
-
-        $query = "SELECT * FROM testtrends";
-
-        $result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
-        if ($result) {
-            $rows = mysqli_num_rows($result); // количество полученных строк
-
-            echo '{ "trends":'." \r\n";
-            echo "[ \r\n";
-//            echo "<table><tr><th>Id</th><th>Title</th><th>Info</th></tr>";
-            for ($i = 0; $i < $rows; ++$i) {
-                $row = mysqli_fetch_row($result);
-
-                $row1 = iconv("windows-1251","utf-8",$row[1]);
-                $row2 = iconv("windows-1251","utf-8",$row[2]);
-//                echo "<tr>";
-//                for ($j = 0; $j < 3; ++$j) {
-//                    $encode = mb_detect_encoding($row[j], array("UTF-8", "Windows-1251", "CP866", "KOI8-R"));
-//                    echo "<td style='padding-bottom: 20px;'>$row[$j] $encode</td>";
-//                }
-//                echo "</tr>";
-                echo "{\r\n";
-                echo '"id": '.$row[0].",\r\n";
-                //echo '"title": '."\"$row[1]\"".",\r\n";
-                //echo '"info": '.$row[2]."\r\n";
-                echo '"title": '."\"$row1\"".",\r\n";
-                echo '"info": '.$row2."\r\n";
-                if (($i + 1) < $rows) {
-                    echo "}, \r\n";
-                } else {
-                    echo "} \r\n";
-                }
-            }
-//            echo "</table>";
-            echo "] \r\n";
-            echo "}";
-
-            // очищаем результат
-            mysqli_free_result($result);
+        // Коннектимся к БД
+        $mysqli = new mysqli($host, $user, $password, $database);
+        /* проверяем соединение */
+        if (mysqli_connect_errno()) {
+            printf("Не удалось подключиться: %s\n", mysqli_connect_error());
+            exit();
         }
+        $stmt = $mysqli->prepare("SELECT * FROM `testtrends` ORDER BY `id` DESC");
+//        $stmt->bind_param("i",$reqLimit);
+        if (!$stmt->execute()) {
+            echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
+        }
+        $result = $stmt->get_result();
+        showTrendsJson($result);
+
+
+        /* закрываем запрос */
+        $stmt->close();
+        /* закрываем соединение */
+        $mysqli->close();
     }
     elseif ($_GET['get'] == 'all' && isset($_GET['limit']))
     {
@@ -90,29 +75,7 @@ if (isset($_GET['get'])) {
                 echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
             }
             $result = $stmt->get_result();
-            // Далее - вынести в функцию
-            print '{ "trends": ['."\r\n";
-            $teller = 0;
-            while ($row = $result->fetch_array(MYSQLI_NUM))
-            {
-                $teller++;
-                $trendId = '"id": '.$row[0].",\r\n";
-                $trendTitle = '"title": "'.iconv("windows-1251","utf-8", $row[1]).'"'.",\r\n";
-                $trendInfo = '"info": '.iconv("windows-1251","utf-8", $row[2])."\r\n";
-
-                print "{"."\r\n";
-                print "$trendId";
-                print "$trendTitle";
-                print "$trendInfo";
-                if($result->num_rows !== $teller) {
-                    print "},"."\r\n";
-                } else {
-                    print "}"."\r\n";
-                }
-
-            }
-            print ']'."\r\n";
-            print '}'."\r\n";
+            showTrendsJson($result);
 
             /* закрываем запрос */
             $stmt->close();
@@ -133,7 +96,7 @@ if (isset($_GET['get'])) {
 
 // Get record by ID
 if (isset($_GET['id'])) {
-//    echo "19-07"."\r\n";
+//    echo "18-55"."\r\n";
     $reqID = preg_replace('/\s/', '', $_GET['id']);
 
     if (strlen($reqID) > 0) {
@@ -165,32 +128,16 @@ if (isset($_GET['id'])) {
             exit();
         }
 
-        //$stmt = mysqli_prepare($link, "INSERT INTO testtrends(title, info) VALUES (?, ?)"); // создание строки запроса
-        //mysqli_stmt_bind_param($stmt, 'ss', $codedTitle, $codedInfo); // экранирования символов для mysql
-
-
         if(count($goodReqIDArr) == 1)
         {
-            $stmt = $mysqli->prepare("SELECT `info` FROM `testtrends` WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT * FROM `testtrends` WHERE id=?");
             // info заменить на *
             $stmt->bind_param("i", $goodReqIDArr[0]);
             if (!$stmt->execute()) {
                 echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
             }
             $result = $stmt->get_result();
-
-            print '{ "trends": ['."\r\n";
-            while ($row = $result->fetch_array(MYSQLI_NUM))
-            {
-                foreach ($row as $r)
-                {
-                    $r = iconv("windows-1251","utf-8",$r);
-                    print "$r";
-                }
-                print "\n";
-            }
-            print ']'."\r\n";
-            print '}'."\r\n";
+            showTrendsJson($result);
         }
         elseif (count($goodReqIDArr) > 1)
         {
@@ -202,28 +149,7 @@ if (isset($_GET['id'])) {
                 echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
             }
             $result = $stmt->get_result();
-            print '{ "trends": ['."\r\n";
-            $teller = 0;
-            while ($row = $result->fetch_array(MYSQLI_NUM))
-            {
-                $teller++;
-                $trendId = '"id": '.$row[0].",\r\n";
-                $trendTitle = '"title": "'.iconv("windows-1251","utf-8", $row[1]).'"'.",\r\n";
-                $trendInfo = '"info": '.iconv("windows-1251","utf-8", $row[2])."\r\n";
-
-                print "{"."\r\n";
-                print "$trendId";
-                print "$trendTitle";
-                print "$trendInfo";
-                if($result->num_rows !== $teller) {
-                    print "},"."\r\n";
-                } else {
-                    print "}"."\r\n";
-                }
-
-            }
-            print ']'."\r\n";
-            print '}'."\r\n";
+            showTrendsJson($result);
         }
 
         /* закрываем запрос */
