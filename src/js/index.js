@@ -4,20 +4,17 @@ import bootstrap from 'bootstrap';
 import Handlebars from 'handlebars';
 
 
-jQuery(function() {
-    // jQuery('body').css('color', 'blue');
-    console.log("Пасхалка для самых любопытных =) 12-49");
-    init();
-});
+document.addEventListener("DOMContentLoaded", init);
 
-
-;
 
 function init() {
+
+    console.log("Пасхалка для самых любопытных =) 18-54");
     // loadModelAndShowBlock('trends', "trend-template", 'trends');
     loadModelAndShowBlock('trends11', "trend-template", 'trends');
 
     initManagerForm();
+    loadAndShowData();
 }
 
 function loadModelAndShowBlock(blockid, tpl, filename) {
@@ -82,9 +79,11 @@ function initManagerForm() {
 
             // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
             // xhr.open('GET', 'core/trends.php?get=all', true);
-            xhr.open('POST', 'core/trends.php', true);
+            console.log("Готовим запрос");
+            xhr.open('POST', '/core/trends.php', true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); //Передает правильный заголовок в запросе
             // 3. Отсылаем запрос
+            console.log(FORM_DATA);
             xhr.send(FORM_DATA);
 
             // 4. Если код ответа сервера не 200, то это ошибка
@@ -113,28 +112,40 @@ function initManagerForm() {
 }
 
 
-//
-//
-// jQuery(document).ready(function(){
-//     console.log("fetchingjs");
-//     console.log(jQuery(".sendtrend"));
-//     jQuery(".sendtrend").submit(function(e) { //устанавливаем событие отправки для формы с id=form
-//         e.preventDefault();
-//         var form_data = jQuery(this).serialize(); //собераем все данные из формы
-//         console.log(form_data);
-//         var newData = encodeURIComponent(form_data);
-//         console.log(newData);
-//         jQuery.ajax({
-//             type: "POST", //Метод отправки
-//             dataType: 'text', // тип ожидаемых данных в ответе
-//             url: "core/trends.php", //путь до php фаила отправителя
-//             data: form_data,
-//             success: function(otvet) {
-//                 //alert(otvet);
-//                 console.log("Ответ");
-//                 console.log(otvet);
-//
-//             }
-//         });
-//     });
-// });
+function loadAndShowData() {
+    const infoTable = document.querySelector('.infoFromDB');
+
+    if (infoTable !== null) {
+        // 1. Создаём новый объект XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+
+        // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
+        xhr.open('GET', '/core/trends.php?get=all', true);
+        // 3. Отсылаем запрос
+        xhr.send();
+
+        // 4. Если код ответа сервера не 200, то это ошибка
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                // вывести результат
+                // infoTable.innerHTML = xhr.responseText;
+
+                const result = JSON.parse(xhr.responseText);
+                result["trends"].forEach(function (item, i) {
+                    let newItemROW = `
+                        <tr>
+                            <td>${item["id"]}</td>
+                            <td>${item["title"]}</td>
+                            <td>
+                                <form action="">
+                                    <input type="submit" value="EDIT">
+                                </form>
+                            </td>
+                        </tr>`;
+                    infoTable.querySelector("tbody").innerHTML += newItemROW;
+                })
+
+            }
+        }
+    }
+}

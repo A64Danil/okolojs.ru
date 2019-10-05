@@ -27,6 +27,40 @@
         "url": "https://www.exlab.net/files/tools/sheets/regexp/regexp.png"
       }
     ],
+    "PHP": [
+      {
+        "title": "Как вывести HTML внутри PHP",
+        "description": "Простые примеры на все ситуации",
+        "url": "https://ploshadka.net/output-html-inside-php/"
+      }
+    ],
+    "MySQL": [
+      {
+        "title": "MySQL WHERE Clause with Examples - AND, OR, IN, NOT IN",
+        "description": "",
+        "url": "https://www.guru99.com/where-clause.html"
+      },
+      {
+        "title": "Организация хранения тегов",
+        "description": "",
+        "url": "https://sqlinfo.ru/forum/viewtopic.php?id=3393"
+      }
+    ],
+    "GIT": [
+      {
+        "title": "Как генерировать осмысленные коммиты. Применяем стандарт Conventional Commits",
+        "description": "",
+        "url": "https://habr.com/ru/company/yandex/blog/431432/"
+      }
+    ],
+    "RESTful API": [
+      {
+        "title": "REST Resource Naming Guide",
+        "description": "Система нейминга ресурсов в REST, нагляднно и с примерами",
+        "url": "https://restfulapi.net/resource-naming/"
+      }
+    ],
+
     "ООП": [
       {
         "title": "Принципы ООП",
