@@ -36,6 +36,7 @@
                 <th>ID</th>
                 <th>TITLE</th>
                 <th>EDIT</th>
+                <th>DELETE</th>
             </thead>
             <tbody>
 

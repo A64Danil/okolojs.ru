@@ -17,31 +17,34 @@
 
         ?>
 
-            <p>Успех. Скоро тут будет более интересно.</p>
+            <div class="addData">
+                <p class="addData__title">Добавить тренд</p>
+                <form method="POST" action="https://okolojs.ru/core/trends.php" class="sendTrend">
+    <!--                <p>Введите название:<br>-->
+    <!--                    <input type="text" name="title"/></p>-->
+                    <p>Введите Info в формате JSON: </p>
+                    <textarea cols=60 rows=12 name="info"></textarea>
+                    <input type="submit" value="Добавить">
+                </form>
+            </div>
 
-            <form method="POST" action="https://okolojs.ru/core/trends.php" class="sendTrend">
-                <p>Введите название:<br>
-                    <input type="text" name="title"/></p>
-                <p>JSON: <br>
-                    <textarea name="info"></textarea></p>
-                <input type="submit" value="Добавить">
-            </form>
-
-            <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateTrend">
-                <p>ID:<br>
-                    <input type="text" name="id" value="" disabled /></p>
-                <p>Введите название:<br>
-                    <input type="text" name="title" value="" disabled /></p>
-                <p>JSON: <br>
-                    <textarea name="info"></textarea></p>
-                <input type="submit" value="Сохранить">
-            </form>
-
-            <table class="editTrendsTable">
+            <div class="addData">
+                <p class="addData__title">Редактировать тренд</p>
+                <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateTrend">
+                    <input type="hidden" name="method" value="UPDATE">
+                    <p>ID: <input type="text" name="id" value="" readonly /></p>
+                    <p>Название: <input type="text" name="title" value="" disabled /></p>
+                    <p>Info (JSON): <br>
+                        <textarea cols=60 rows=12 name="info"></textarea></p>
+                    <input type="submit" value="Сохранить">
+                </form>
+            </div>
+            <table class="manageTrendsTable">
                 <thead>
                     <th>ID</th>
                     <th>TITLE</th>
                     <th>EDIT</th>
+                    <th>DELETE</th>
                 </thead>
                 <tbody>
 

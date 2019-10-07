@@ -1,6 +1,8 @@
 <?php
 require_once 'connection.php'; // подключаем скрипт
 
+//$trendsTable = 'testtrends';
+$trendsTable = 'myguests';
 
 // Print JSON from STR
 function showTrendsJson($result)
@@ -30,70 +32,8 @@ function showTrendsJson($result)
     print '}'."\r\n";
 }
 
-// Get all records
-if (isset($_GET['get'])) {
-    if ($_GET['get'] == 'all' && isset($_GET['limit']) == false)
-    {
-        // Коннектимся к БД
-        $mysqli = new mysqli($host, $user, $password, $database);
-        /* проверяем соединение */
-        if (mysqli_connect_errno()) {
-            printf("Не удалось подключиться: %s\n", mysqli_connect_error());
-            exit();
-        }
-        $stmt = $mysqli->prepare("SELECT * FROM `testtrends` ORDER BY `id` DESC");
-//        $stmt->bind_param("i",$reqLimit);
-        if (!$stmt->execute()) {
-            echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
-        }
-        $result = $stmt->get_result();
-        showTrendsJson($result);
 
-
-        /* закрываем запрос */
-        $stmt->close();
-        /* закрываем соединение */
-        $mysqli->close();
-    }
-    elseif ($_GET['get'] == 'all' && isset($_GET['limit']))
-    {
-        $reqLimit = (int)$_GET['limit'];
-        // Проверкаа на валидность
-        if ($reqLimit > 0){
-//            echo "1-22 Вы запросили ".$reqLimit." записей, начиная с конца";
-
-            // Коннектимся к БД
-            $mysqli = new mysqli($host, $user, $password, $database);
-            /* проверяем соединение */
-            if (mysqli_connect_errno()) {
-                printf("Не удалось подключиться: %s\n", mysqli_connect_error());
-                exit();
-            }
-            $stmt = $mysqli->prepare("SELECT * FROM `testtrends` ORDER BY `id` DESC LIMIT 0,?");
-            $stmt->bind_param("i",$reqLimit);
-            if (!$stmt->execute()) {
-                echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
-            }
-            $result = $stmt->get_result();
-            showTrendsJson($result);
-
-            /* закрываем запрос */
-            $stmt->close();
-            /* закрываем соединение */
-            $mysqli->close();
-
-        } else {
-            echo "Ошибка. Вы запросили неверное (".$reqLimit.") количество записей, начиная с $reqID";
-
-        }
-    }
-    else
-        {
-        echo 'Не правильный гет-запрос';
-    }
-}
-
-
+// Handle GET-request
 // Get record by ID
 if (isset($_GET['id'])) {
 
@@ -113,7 +53,7 @@ if (isset($_GET['id'])) {
                 printf("Не удалось подключиться: %s\n", mysqli_connect_error());
                 exit();
             }
-            $stmt = $mysqli->prepare("SELECT * FROM `testtrends` ORDER BY `id` DESC LIMIT 0,?");
+            $stmt = $mysqli->prepare("SELECT * FROM $trendsTable ORDER BY `id` DESC LIMIT 0,?");
             $stmt->bind_param("i",$reqLimit);
             if (!$stmt->execute()) {
                 echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
@@ -169,7 +109,7 @@ if (isset($_GET['id'])) {
 
             if(count($goodReqIDArr) == 1)
             {
-                $stmt = $mysqli->prepare("SELECT * FROM `testtrends` WHERE id=?");
+                $stmt = $mysqli->prepare("SELECT * FROM $trendsTable WHERE id=?");
                 // info заменить на *
                 $stmt->bind_param("i", $goodReqIDArr[0]);
                 if (!$stmt->execute()) {
@@ -182,7 +122,7 @@ if (isset($_GET['id'])) {
             {
 
                 $clause = implode(',', array_fill(0, count($goodReqIDArr), '?'));
-                $stmt = $mysqli->prepare("SELECT * FROM `testtrends` WHERE id IN (" . $clause . ") GROUP BY `id`,`info`");
+                $stmt = $mysqli->prepare("SELECT * FROM $trendsTable WHERE id IN (" . $clause . ") GROUP BY `id`,`info`");
                 $stmt->bind_param(str_repeat('i', count($goodReqIDArr)), ...$goodReqIDArr);
                 if (!$stmt->execute()) {
                     echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
@@ -208,34 +148,90 @@ if (isset($_GET['id'])) {
 
 }
 
-
-// Add new record form POST
+// Handle POST-request
 if (count($_POST) != 0) {
+    if(isset($_POST['method'])) {
+        // UPDATE record
+        if($_POST['method'] == "UPDATE") {
+            //echo "Вы пытаетесь сделать ".$_POST['method']."\r\n";
+            if (isset($_POST['info']) && isset($_POST['id']) && $_POST['id'] !== "")
+            {
+                $tendINFO = json_decode($_POST['info']);
+                $newTrendTitle = trim($tendINFO->title);
+                if (empty($newTrendTitle)) {
+                    echo "Ошибка! Вы не указали title.";
+                } else {
+                    $link = mysqli_connect($host, $user, $password, $database);
+                    /* проверка подключения */
+                    if (!$link) {
+                        printf("Не удалось подключиться: %s\n", mysqli_connect_error());
+                        exit();
+                    };
 
-    if (isset($_POST['title']) && isset($_POST['info'])) {
-        $link = mysqli_connect($host, $user, $password, $database);
-        /* проверка подключения */
-        if (!$link) {
-            printf("Не удалось подключиться: %s\n", mysqli_connect_error());
-            exit();
-        };
+                    $codedTitle = iconv("utf-8", "windows-1251", $newTrendTitle); // смена кодировки
+                    $codedInfo = iconv("utf-8", "windows-1251", $_POST['info']);
 
-        $codedTitle = iconv("utf-8", "windows-1251", $_POST['title']); // смена кодировки
-        $codedInfo = iconv("utf-8", "windows-1251", $_POST['info']);
+                    $stmt = mysqli_prepare($link, "UPDATE $trendsTable SET title=?, info=? WHERE id=?"); // создание строки запроса
+                    mysqli_stmt_bind_param($stmt, 'ssi', $codedTitle, $codedInfo, $_POST['id']); // экранирования символов для mysql
 
-        $stmt = mysqli_prepare($link, "INSERT INTO testtrends(title, info) VALUES (?, ?)"); // создание строки запроса
-        mysqli_stmt_bind_param($stmt, 'ss', $codedTitle, $codedInfo); // экранирования символов для mysql
+                    if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
+                        echo "Данные обновлены";
+                    } else {
+                        print_r($stmt->errorInfo());
+                    }
 
-        if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
-            echo "Данные добавлены";
-        } else {
-            print_r($stmt->errorInfo());
+                    mysqli_stmt_close($stmt); // закрываем запрос
+                    mysqli_close($link); // закрываем подключение
+                }
+            }
+            else
+            {
+                echo "Вы не прислали INFO или ID";
+            }
         }
 
-        mysqli_stmt_close($stmt); // закрываем запрос
-        mysqli_close($link); // закрываем подключение
-    } else {
-        echo 'Не правильный post-запрос';
+        // DELETE
+        if($_POST['method'] == "DELETE") {
+            // остановились тут
+            echo "Вы пытаетесь сделать ".$_POST['method']."\r\n";
+        }
+
+    }
+    // Add new record form POST
+    elseif (isset($_POST['info']))
+    {
+        $tendINFO = json_decode($_POST['info']);
+        $newTrendTitle = trim($tendINFO->title);
+        if (empty($newTrendTitle)) {
+            echo "Ошибка! Вы не указали title.";
+        }
+        else
+        {
+            $link = mysqli_connect($host, $user, $password, $database);
+            /* проверка подключения */
+            if (!$link) {
+                printf("Не удалось подключиться: %s\n", mysqli_connect_error());
+                exit();
+            };
+
+            $codedTitle = iconv("utf-8", "windows-1251", $newTrendTitle); // смена кодировки
+            $codedInfo = iconv("utf-8", "windows-1251", $_POST['info']);
+
+            $stmt = mysqli_prepare($link, "INSERT INTO $trendsTable(title, info) VALUES (?, ?)"); // создание строки запроса
+            mysqli_stmt_bind_param($stmt, 'ss', $codedTitle, $codedInfo); // экранирования символов для mysql
+
+            if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
+                echo "Данные добавлены";
+            } else {
+                print_r($stmt->errorInfo());
+            }
+
+            mysqli_stmt_close($stmt); // закрываем запрос
+            mysqli_close($link); // закрываем подключение
+        }
+    }
+    else {
+        echo "Ошибка! Не правильный post-запрос";
     }
 }
 
