@@ -30,18 +30,19 @@
                 <input type="submit" value="Добавить">
             </form>
 
+        <div class="table-responsive">
+            <table class="editTrends table table-striped  table-hover">
+                <thead>
+                    <th>ID</th>
+                    <th>TITLE</th>
+                    <th>EDIT</th>
+                    <th>DELETE</th>
+                </thead>
+                <tbody>
 
-        <table class="editTrends">
-            <thead>
-                <th>ID</th>
-                <th>TITLE</th>
-                <th>EDIT</th>
-                <th>DELETE</th>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
 
         <?php
 

@@ -194,8 +194,24 @@ if (count($_POST) != 0) {
         if($_POST['method'] == "DELETE") {
             // остановились тут
             if(isset($_POST['id']) && $_POST['id'] !== "") {
+                $link = mysqli_connect($host, $user, $password, $database);
+                /* проверка подключения */
+                if (!$link) {
+                    printf("Не удалось подключиться: %s\n", mysqli_connect_error());
+                    exit();
+                };
 
-                echo "Вы пытаетесь сделать ".$_POST['method']."\r\n";
+                $stmt = mysqli_prepare($link, "DELETE FROM $trendsTable WHERE id=?");
+                mysqli_stmt_bind_param($stmt, 'i', $_POST['id']);
+
+                if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
+                    echo "Запись удалена";
+                } else {
+                    print_r($stmt->errorInfo());
+                }
+
+                mysqli_stmt_close($stmt);
+                mysqli_close($link);
             }
             else
             {

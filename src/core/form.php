@@ -17,39 +17,60 @@
 
         ?>
 
-            <div class="addData">
-                <p class="addData__title">Добавить тренд</p>
-                <form method="POST" action="https://okolojs.ru/core/trends.php" class="sendTrend">
+            <div class="manageForm addData active">
+                <p class="manageForm__title">Добавить тренд</p>
+                <form method="POST" action="https://okolojs.ru/core/trends.php" class="addTrend">
     <!--                <p>Введите название:<br>-->
     <!--                    <input type="text" name="title"/></p>-->
-                    <p>Введите Info в формате JSON: </p>
-                    <textarea cols=60 rows=12 name="info"></textarea>
-                    <input type="submit" value="Добавить">
+                    <div class="form-group">
+                        <label for="">Введите Info в формате JSON: </label>
+                        <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
+                    </div>
+                    <input type="submit" value="Добавить" class="btn btn-success">
                 </form>
             </div>
 
-            <div class="addData">
-                <p class="addData__title">Редактировать тренд</p>
+            <div class="manageForm updateData">
+                <p class="manageForm__title">Редактировать тренд</p>
                 <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateTrend">
                     <input type="hidden" name="method" value="UPDATE">
-                    <p>ID: <input type="text" name="id" value="" readonly /></p>
-                    <p>Название: <input type="text" name="title" value="" disabled /></p>
-                    <p>Info (JSON): <br>
-                        <textarea cols=60 rows=12 name="info"></textarea></p>
-                    <input type="submit" value="Сохранить">
+
+                    <div class="form-group row">
+                        <label for="" class="col-sm-2 col-form-label col-form-label-lg">ID </label>
+                        <div class="col-sm-10">
+                            <input class="form-control form-control-lg" type="text" name="id" value="" readonly />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="" class="col-sm-2 col-form-label col-form-label-lg">Title </label>
+                        <div class="col-sm-10">
+                            <input class="form-control form-control-lg" type="text" name="title" value="" disabled readonly />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Введите Info в формате JSON: </label>
+                        <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
+                    </div>
+
+                    <input type="submit" value="Сохранить" class="btn btn-success">
+                    <input type="reset" value="Отменить" class="btn btn-secondary js_AbortTrendUpdating">
                 </form>
             </div>
-            <table class="manageTrendsTable">
-                <thead>
-                    <th>ID</th>
-                    <th>TITLE</th>
-                    <th>EDIT</th>
-                    <th>DELETE</th>
-                </thead>
-                <tbody>
+            <div class="table-responsive">
+                <table class="manageTrendsTable table table-striped table-hover">
+                    <thead>
+                        <th>ID</th>
+                        <th>TITLE</th>
+                        <th>EDIT</th>
+                        <th>DELETE</th>
+                    </thead>
+                    <tbody>
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
 
 
     <?php
