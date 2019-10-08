@@ -99,8 +99,8 @@ function addTrendForm() {
 
 function addTrendRequest(response, form) {
     form.reset();
-    if (response === "Данные добавлены") {
-        alert("Данные добавлены");
+    if (response === "Запись добавлена") {
+        alert("Запись добавлена");
     } else {
         alert("Что-то пошло не так: \r\n" + response);
     }
@@ -125,8 +125,8 @@ function updateTrendForm() {
 function updateTrendRequest(response, form) {
     form.reset();
     form.querySelector('textarea').innerHTML = "";
-    if (response === "Данные обновлены") {
-        alert("Данные обновлены");
+    if (response === "Запись обновлена") {
+        alert("Запись обновлена");
     } else {
         alert("Не удалось обновить. Что-то пошло не так: \r\n" + response);
     }
@@ -224,8 +224,8 @@ function showTrends(response) {
 
 // остановились тут
 function deleteTrendRequest() {
-    if (response === "Данные обновлены") {
-        alert("Данные обновлены");
+    if (response === "Запись удалена") {
+        alert("Запись удалена");
     } else {
         alert("Не удалось обновить. Что-то пошло не так: \r\n" + response);
     }

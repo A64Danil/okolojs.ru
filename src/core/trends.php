@@ -175,7 +175,7 @@ if (count($_POST) != 0) {
                     mysqli_stmt_bind_param($stmt, 'ssi', $codedTitle, $codedInfo, $_POST['id']); // экранирования символов для mysql
 
                     if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
-                        echo "Данные обновлены";
+                        echo "Запись обновлена";
                     } else {
                         print_r($stmt->errorInfo());
                     }
@@ -186,14 +186,21 @@ if (count($_POST) != 0) {
             }
             else
             {
-                echo "Вы не прислали INFO или ID";
+                echo "Ошибка. Вы не прислали INFO или ID";
             }
         }
 
         // DELETE
         if($_POST['method'] == "DELETE") {
             // остановились тут
-            echo "Вы пытаетесь сделать ".$_POST['method']."\r\n";
+            if(isset($_POST['id']) && $_POST['id'] !== "") {
+
+                echo "Вы пытаетесь сделать ".$_POST['method']."\r\n";
+            }
+            else
+            {
+                echo "Ошибка. Вы не прислали ID";
+            }
         }
 
     }
@@ -221,7 +228,7 @@ if (count($_POST) != 0) {
             mysqli_stmt_bind_param($stmt, 'ss', $codedTitle, $codedInfo); // экранирования символов для mysql
 
             if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
-                echo "Данные добавлены";
+                echo "Запись добавлена";
             } else {
                 print_r($stmt->errorInfo());
             }
