@@ -62,7 +62,7 @@ if (isset($_GET['id'])) {
         // Проверкаа на валидность
         if ($reqLimit > 0 && $reqOffset >= 0 && $lastId > 0)
         {
-        //  echo "1-22 Вы запросили ".$reqLimit." записей, начиная с конца";
+            //  echo "1-22 Вы запросили ".$reqLimit." записей, начиная с конца";
             $mysqli = new mysqli($host, $user, $password, $database);
             if (mysqli_connect_errno()) {
                 printf("Не удалось подключиться: %s\n", mysqli_connect_error());

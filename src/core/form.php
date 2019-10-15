@@ -17,60 +17,135 @@
 
         ?>
 
-            <div class="manageForm addData active">
-                <p class="manageForm__title">Добавить тренд</p>
-                <form method="POST" action="https://okolojs.ru/core/trends.php" class="addTrend">
-    <!--                <p>Введите название:<br>-->
-    <!--                    <input type="text" name="title"/></p>-->
-                    <div class="form-group">
-                        <label for="">Введите Info в формате JSON: </label>
-                        <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
-                    </div>
-                    <input type="submit" value="Добавить" class="btn btn-success">
-                </form>
+            <div class="mainManagerMenu">
+                <a class="btn btn-primary" data-toggle="collapse" href="#trendsManager" role="button" aria-expanded="false" aria-controls="trendsManager">
+                    trends
+                </a>
+
+                <a class="btn btn-primary" data-toggle="collapse" href="#rulesManager" role="button" aria-expanded="false" aria-controls="rulesManager">
+                    rules
+                </a>
+
+                <a class="btn btn-primary" data-toggle="collapse" href="#faqManager" role="button" aria-expanded="false" aria-controls="faqManager">
+                    faq
+                </a>
             </div>
 
-            <div class="manageForm updateData">
-                <p class="manageForm__title">Редактировать тренд</p>
-                <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateTrend">
-                    <input type="hidden" name="method" value="UPDATE">
+            <div class="mainManager">
 
-                    <div class="form-group row">
-                        <label for="" class="col-sm-2 col-form-label col-form-label-lg">ID </label>
-                        <div class="col-sm-10">
-                            <input class="form-control form-control-lg" type="text" name="id" value="" readonly />
-                        </div>
+
+                <div class="trendsManager dataManager collapse" id="trendsManager" data-parent=".mainManager">
+                    <div class="trendsManager__menu innerMenu">
+                        <a class="btn btn-primary" data-toggle="collapse" href="#addTrend" role="button" aria-expanded="true" aria-controls="addTrend">
+                            Add trend
+                        </a>
+
+                        <a class="btn btn-primary" data-toggle="collapse" href="#updateTrend" role="button" aria-expanded="false" aria-controls="updateTrend">
+                            Update Trend
+                        </a>
                     </div>
 
-                    <div class="form-group row">
-                        <label for="" class="col-sm-2 col-form-label col-form-label-lg">Title </label>
-                        <div class="col-sm-10">
-                            <input class="form-control form-control-lg" type="text" name="title" value="" disabled readonly />
-                        </div>
+                    <div class="manageForm addData collapse show" id="addTrend" data-parent=".trendsManager">
+                        <p class="manageForm__title">Добавить тренд</p>
+                        <ul class="schema">
+                            <p>Доступные поля:</p>
+                            <li><b>Title*</b> - название тренда (обяз. поле)</li>
+                            <li><b>titleOriginal</b> - название без перевода</li>
+                            <li><b>description</b> - краткое описание</li>
+                            <li><b>language</b> - язык тренда</li>
+                            <li><b>difficulty</b> - сложость </li>
+                            <li><b>author</b> - автор тренда</li>
+                            <li><b>url</b> - ссылка на тренд</li>
+                            <li><b>published</b> - дата появления в сети</li>
+                            <li><b>started</b> - дата, когда тренд стал актуален у нас</li>
+                            <li><b>status</b> - статус тренда на текущий момент</li>
+                        </ul>
+                        <form method="POST" action="https://okolojs.ru/core/trends.php" class="addTrend">
+                            <!--                <p>Введите название:<br>-->
+                            <!--                    <input type="text" name="title"/></p>-->
+                            <div class="form-group">
+                                <label for="">Введите Info в формате JSON: </label>
+                                <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
+                            </div>
+                            <input type="submit" value="Добавить" class="btn btn-success">
+                        </form>
                     </div>
 
-                    <div class="form-group">
-                        <label for="">Введите Info в формате JSON: </label>
-                        <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
+                    <div class="manageForm updateData collapse" id="updateTrend"  data-parent=".trendsManager">
+                        <p class="manageForm__title">Редактировать тренд</p>
+                        <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateTrend">
+                            <input type="hidden" name="method" value="UPDATE">
+
+                            <div class="form-group row">
+                                <label for="" class="col-sm-2 col-form-label col-form-label-lg">ID </label>
+                                <div class="col-sm-10">
+                                    <input class="form-control form-control-lg" type="text" name="id" value="" readonly />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="col-sm-2 col-form-label col-form-label-lg">Title </label>
+                                <div class="col-sm-10">
+                                    <input class="form-control form-control-lg" type="text" name="title" value="" disabled readonly />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">Введите Info в формате JSON: </label>
+                                <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
+                            </div>
+
+                            <input type="submit" value="Сохранить" class="btn btn-success">
+                            <input type="reset" value="Отменить" class="btn btn-secondary js_AbortTrendUpdating">
+                        </form>
                     </div>
 
-                    <input type="submit" value="Сохранить" class="btn btn-success">
-                    <input type="reset" value="Отменить" class="btn btn-secondary js_AbortTrendUpdating">
-                </form>
+                    <div class="table-responsive" >
+                        <table id="trendsTableManage" class="manageTrendsTable table table-striped table-hover" data-lastid="">
+                            <thead>
+                            <th>ID</th>
+                            <th>TITLE</th>
+                            <th>EDIT</th>
+                            <th>DELETE</th>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                        <button type="button"
+                                class="btn btn-primary showMore"
+                                data-action="loadMore"
+                                data-loadtype="trends"
+                                data-place="#trendsTableManage">
+                            Показать еще
+                        </button>
+                        <button type="button"
+                                class="btn btn-primary showMore"
+                                data-action="loadMore"
+                                data-loadtype="trends"
+                                data-limit="30"
+                                data-place="#trendsTableManage">
+                            Показать еще 30
+                        </button>
+                    </div>
+                </div>
+
+                <div class="rulesManager dataManager collapse" id="rulesManager" data-parent=".mainManager">
+                    rules manager
+                </div>
+
+                <div class="rulesManager dataManager collapse" id="faqManager" data-parent=".mainManager">
+                    rules manager
+                </div>
+
+                <div class="usefullManager dataManager collapse">
+                    other manager
+                </div>
+
             </div>
-            <div class="table-responsive">
-                <table class="manageTrendsTable table table-striped table-hover">
-                    <thead>
-                        <th>ID</th>
-                        <th>TITLE</th>
-                        <th>EDIT</th>
-                        <th>DELETE</th>
-                    </thead>
-                    <tbody>
 
-                    </tbody>
-                </table>
-            </div>
+            <div>Блок для опытов</div>
+
 
 
     <?php

@@ -9,13 +9,13 @@ document.addEventListener("DOMContentLoaded", coreFunction);
 
 function coreFunction() {
 
-
+    const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 22-31");
+        console.log("Пасхалка для самых любопытных =) 23-02");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
         // loadModelAndShowBlock('trends11', "trend-template", 'trends');
-
+        mainEvents();
 
         trendsMainManager();
     }
@@ -25,14 +25,8 @@ function coreFunction() {
 
     function trendsMainManager() {
 
-        const addTrendFormWrapper = document.querySelector('.manageForm.addData');
         const addTrendForm = document.querySelector('.addTrend');
-        const addTrendFormWrapperHeight = addTrendFormWrapper.offsetHeight;
-
-        const updateTrendFormWrapper = document.querySelector('.manageForm.updateData');
         const updateTrendForm = document.querySelector('.updateTrend');
-        const updateTrendFormWrapperHeight = updateTrendFormWrapper.offsetHeight;
-
         const manageTrendsTable = document.querySelector('.manageTrendsTable');
 
 
@@ -49,11 +43,15 @@ function coreFunction() {
                 addTrendForm.addEventListener("submit", function (e) {
                     e.preventDefault();
 
-                    if(textAreaJsonValidation(updateTrendForm)) {
+                    if(textAreaJsonValidation(addTrendForm)) {
                         sendRequest('/core/trends.php', addTrendRequest, this, "POST");
                     }
 
                 });
+
+                addTrendForm.addEventListener("reset", function (e) {
+                    jQuery('#addTrend').collapse('hide');
+                })
             } else {
                 console.log('Формы sendTrend не существует');
             }
@@ -63,9 +61,9 @@ function coreFunction() {
         }
 
         function addTrendRequest(response, form) {
-            form.reset();
             if (response === "Запись добавлена") {
                 alert("Запись добавлена");
+                form.reset();
             } else {
                 alert("Что-то пошло не так: \r\n" + response);
             }
@@ -75,36 +73,26 @@ function coreFunction() {
 
         // Edit trend
         function updateTrendFormControl() {
+            console.log("Вызываем updateTrendFormControl");
             if (updateTrendForm) {
-                updateTrendFormWrapper.style.height = "0";
-                updateTrendFormWrapper.classList.toggle("active", false);
                 updateTrendForm.addEventListener("submit", function (e) {
                     e.preventDefault();
-
                     if(textAreaJsonValidation(updateTrendForm)) {
                         sendRequest('/core/trends.php', updateTrendRequest, this, "POST");
                     }
                 });
 
                 updateTrendForm.addEventListener("reset", function (e) {
-                    e.preventDefault();
-                    updateTrendFormWrapper.style.height = "0";
-                    updateTrendFormWrapper.classList.toggle("active", false);
-                    addTrendFormWrapper.style.height = addTrendFormWrapperHeight + 10 + "px";
-                    addTrendFormWrapper.classList.toggle("active", true);
+                    jQuery('#updateTrend').collapse('hide');
                 })
             }
         }
 
         function updateTrendRequest(response, form) {
-            form.reset();
-            form.querySelector('textarea').innerHTML = "";
             if (response === "Запись обновлена") {
-                updateTrendFormWrapper.style.height = "0";
-                updateTrendFormWrapper.classList.toggle("active", false);
-                addTrendFormWrapper.style.height = addTrendFormWrapperHeight + 10 + "px";
-                addTrendFormWrapper.classList.toggle("active", true);
                 alert("Запись обновлена");
+                form.querySelector('textarea').value = "";
+                form.reset();
             } else {
                 alert("Не удалось обновить. Что-то пошло не так: \r\n" + response);
             }
@@ -113,18 +101,20 @@ function coreFunction() {
 
         function addInfoToUpdateTrendForm(info) {
             if (updateTrendForm) {
-                addTrendFormWrapper.style.height = "0";
-                addTrendFormWrapper.classList.toggle("active", false);
-                updateTrendFormWrapper.style.height = updateTrendFormWrapperHeight + 10 + "px";
-                updateTrendFormWrapper.classList.toggle("active", true);
+                mainManager.scrollIntoView();
+                jQuery('#updateTrend').collapse('show');
+
                 const formInputID = updateTrendForm.querySelector('[name=id]');
                 const formInputTitle = updateTrendForm.querySelector('[name=title]');
                 const formInputInfo = updateTrendForm.querySelector('[name=info]');
                 const formInfo = JSON.parse(info).trends[0];
 
+                console.log(formInputInfo);
+
                 formInputID.value = formInfo.id;
                 formInputTitle.value = formInfo.title;
-                formInputInfo.innerHTML = JSON.stringify(formInfo.info, undefined, 4);
+                // formInputInfo.innerHTML = JSON.stringify(formInfo.info, undefined, 4);
+                formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
 
             } else {
                 console.log("Формы updateTrendForm нет")
@@ -183,39 +173,21 @@ function coreFunction() {
         // LOAD and SHOW Trends helpers
         function loadTrends() {
             if (manageTrendsTable!== null) {
-                sendRequest('/core/trends.php?id=all', showTrends);
+                manageTrendsTable.querySelector("tbody").innerHTML = "";
+                sendRequest('/core/trends.php?id=all', showTrendsInManager, manageTrendsTable);
             }
         }
 
 
-        function showTrends(response) {
-            const result = JSON.parse(response);
-            manageTrendsTable.querySelector("tbody").innerHTML = "";
-            result["trends"].forEach(function (item) {
-                let newItemROW = `
-                        <tr>
-                            <td>${item["id"]}</td>
-                            <td>${item["title"]}</td>
-                            <td>
-                                <form class="editTrendForm" method="GET" action="https://okolojs.ru/core/trends.php">
-                                    <input type="hidden" name="id" value="${item["id"]}">
-                                    <input class="btn btn-info js_EditTrendButton" type="submit" value="EDIT" >
-                                </form>
-                            </td>
-                            <td>
-                                <form class="deleteTrendForm" method="POST" action="https://okolojs.ru/core/trends.php">
-                                    <input type="hidden" name="method" value="DELETE">
-                                    <input type="hidden" name="id" value="${item["id"]}">
-                                    <input class="btn btn-danger js_EditTrendButton" type="submit" value="DELETE">
-                                </form>
-                            </td>
-                        </tr>`;
-                manageTrendsTable.querySelector("tbody").innerHTML += newItemROW;
-            })
-        }
+
 
     }
-    
+
+
+    function mainEvents() {
+        console.log("Вешает все обработяики")
+        document.body.addEventListener('click', showMoreData)
+    }
 
 }
 
@@ -243,7 +215,7 @@ function loadModelAndShowBlock(blockid, tpl, filename) {
 
 
         // 1. Создаём новый объект XMLHttpRequest
-        var xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
 
         // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
         xhr.open('GET', 'model/'+filename+'.json', true);
@@ -266,12 +238,13 @@ function loadModelAndShowBlock(blockid, tpl, filename) {
 
 }
 
-// HELPERS
+
+//  --==:: HELPERS ::==-
 function sendRequest(url, callback, form, method = "GET") {
     console.log("Отправляем запрос...");
     let FORM_DATA;
     // 1. Создаём новый объект XMLHttpRequest
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
 
     // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
     if (method == "GET") {
@@ -301,7 +274,6 @@ function textAreaJsonValidation(form) {
     if (IsJsonString(textAreaVal)) {
         const newTrend = JSON.parse(textAreaVal);
         // Проверить на наличие поля title
-        console.log(newTrend);
         if("title" in newTrend) {
             if (newTrend.title !== "") {
                 return true;
@@ -339,3 +311,79 @@ function paramsToJson(string) {
 }
 
 
+// Show More Buttons Services
+function showTrendsInManager(response, table) {
+    const result = JSON.parse(response);
+    // Удалить кнопки, если response пустой
+    if(result["trends"].length === 0) {
+        alert("Все записи уже загружены!");
+        const buttons = document.querySelectorAll("[data-place='#trendsTableManage']");
+        buttons.forEach(el => el.remove());
+    }
+
+    const arrLength = result["trends"].length;
+    table.dataset.lastid = result["trends"][arrLength - 1].id;
+    result["trends"].forEach(function (item) {
+        let newItemROW = manageTrendsTPL(item);
+        document.querySelector('.manageTrendsTable tbody').innerHTML += newItemROW;
+        // manageTrendsTable.querySelector("tbody").innerHTML += newItemROW;
+    })
+}
+
+function showMoreData(e) {
+    const target = e.target;
+
+    if(target.classList.contains("showMore") && target.dataset.action == "loadMore") {
+        console.log("showMoreData");
+        const types = ["trends", "faq", "rules"]
+        if (types.indexOf(target.dataset.loadtype) === -1) {
+            console.log("неизвестный тип " + target.dataset.loadtype);
+            return false;
+        }
+
+        let loadtype = target.dataset.loadtype;
+        let place = target.dataset.place;
+        let placeToInput = document.querySelector(place);
+        let lastID = placeToInput.dataset.lastid;
+        let limit = target.dataset.limit ? parseInt(target.dataset.limit) : 10 ;
+        let url ="/core/"+ loadtype +".php?id=all&lastid=" + lastID + "&limit=" + limit;
+
+        switch (place) {
+            case "#trendsTableManage":
+                console.log("Будут загружены Тренды в менеджере");
+                sendRequest(url, showTrendsInManager, placeToInput);
+                break;
+            default:
+                console.log("неизвестное место");
+                break;
+        }
+
+
+    }
+
+
+}
+
+
+//  --==:: TPL ::==-
+function manageTrendsTPL(item) {
+    const newTrend = `
+                        <tr>
+                            <td>${item["id"]}</td>
+                            <td>${item["title"]}</td>
+                            <td>
+                                <form class="editTrendForm" method="GET" action="https://okolojs.ru/core/trends.php">
+                                    <input type="hidden" name="id" value="${item["id"]}">
+                                    <input class="btn btn-info js_EditTrendButton" type="submit" value="EDIT" >
+                                </form>
+                            </td>
+                            <td>
+                                <form class="deleteTrendForm" method="POST" action="https://okolojs.ru/core/trends.php">
+                                    <input type="hidden" name="method" value="DELETE">
+                                    <input type="hidden" name="id" value="${item["id"]}">
+                                    <input class="btn btn-danger js_EditTrendButton" type="submit" value="DELETE">
+                                </form>
+                            </td>
+                        </tr>`
+    return newTrend;
+}

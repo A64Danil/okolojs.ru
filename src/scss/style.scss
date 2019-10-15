@@ -155,8 +155,24 @@ header {
 }
 
 // Manag
+.mainManagerMenu {
+  margin-bottom: 20px;
+}
+
+.mainManagerMenu > a {
+  text-transform: uppercase;
+}
+
+.innerMenu {
+  margin-bottom: 20px;
+}
+
 .manageForm {
   margin-bottom: 20px;
+}
+
+.manageForm form .form-group.row {
+  margin-right: 0;
 }
 
 
@@ -174,19 +190,27 @@ header {
 
 .addData, .updateData {
   transition: 0.3s;
-  overflow: hidden;
+  //overflow: hidden;
 }
 
 .addData {
-  visibility: hidden;
+  //visibility: hidden;
 }
 
 .updateData {
-  visibility: hidden;
+  //visibility: hidden;
 }
 .updateData.active, .addData.active {
   visibility: visible;
 
+}
+
+.table-responsive {
+
+}
+
+.table-responsive button{
+  text-align: center;
 }
 
 //.manageTrendsTable {
