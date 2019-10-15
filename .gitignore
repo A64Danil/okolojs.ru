@@ -3,6 +3,7 @@
 .DS_Store
 package-lock.json
 connection.php
+guard.php
 *.lock
 !yarn.lock
 *.log

@@ -12,11 +12,14 @@ function coreFunction() {
     const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 23-02");
+        console.log("Пасхалка для самых любопытных =) 2020");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
         // loadModelAndShowBlock('trends11', "trend-template", 'trends');
         mainEvents();
 
+        if (mainManager) {
+            console.log("Вы в админке");
+        }
         trendsMainManager();
     }
 
@@ -25,8 +28,8 @@ function coreFunction() {
 
     function trendsMainManager() {
 
-        const addTrendForm = document.querySelector('.addTrend');
-        const updateTrendForm = document.querySelector('.updateTrend');
+        const addTrendForm = document.querySelector('.addTrendForm');
+        const updateTrendForm = document.querySelector('.updateTrendForm');
         const manageTrendsTable = document.querySelector('.manageTrendsTable');
 
 
@@ -123,10 +126,11 @@ function coreFunction() {
 
 
         // Delete trend
-        function deleteTrendRequest(response) {
-            console.log(response);
+        function deleteTrendRequest(response, form) {
+            console.log(form);
             if (response === "Запись удалена") {
                 alert("Запись удалена");
+                updateTrendForm.reset();
             } else {
                 alert("Не удалось удалить запись. Что-то пошло не так: \r\n" + response);
             }
@@ -154,6 +158,7 @@ function coreFunction() {
                                     sendRequest('/core/trends.php?id=' + formDataObj.id, addInfoToUpdateTrendForm);
                                     break;
                                 case 'DELETE':
+                                    debugger
                                     sendRequest('/core/trends.php?', deleteTrendRequest, form, "POST");
                                     break;
                             }

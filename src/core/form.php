@@ -11,8 +11,9 @@
 
 
 <?php if (count($_POST) != 0) {
+    require_once 'guard.php';
 
-    if ($_POST['login'] == "dark" && $_POST['password'] == "lord2019") {
+    if ($_POST['login'] == $mngr_login && $_POST['password'] == $mngr_password) {
         require_once 'connection.php'; // подключаем скрипт
 
         ?>
@@ -60,7 +61,7 @@
                             <li><b>started</b> - дата, когда тренд стал актуален у нас</li>
                             <li><b>status</b> - статус тренда на текущий момент</li>
                         </ul>
-                        <form method="POST" action="https://okolojs.ru/core/trends.php" class="addTrend">
+                        <form method="POST" action="https://okolojs.ru/core/trends.php" class="addTrendForm">
                             <!--                <p>Введите название:<br>-->
                             <!--                    <input type="text" name="title"/></p>-->
                             <div class="form-group">
@@ -73,7 +74,7 @@
 
                     <div class="manageForm updateData collapse" id="updateTrend"  data-parent=".trendsManager">
                         <p class="manageForm__title">Редактировать тренд</p>
-                        <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateTrend">
+                        <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateTrendForm">
                             <input type="hidden" name="method" value="UPDATE">
 
                             <div class="form-group row">
