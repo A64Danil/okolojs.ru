@@ -30,170 +30,185 @@ function coreFunction() {
     init();
 
     function initManager() {
+
+
+
+        //TODO: блокировать формы отправки/редактирования, пока не пришел ответ
+        let isSending = false;
+
+
         trendsMainManager();
-    }
 
 
-    function trendsMainManager() {
+        function trendsMainManager() {
 
-        const addTrendForm = document.querySelector('.addTrendForm');
-        const updateTrendForm = document.querySelector('.updateTrendForm');
-        const manageTrendsTable = document.querySelector('.manageTrendsTable');
-
-
-        loadTrends();
-        addTrendFormControl();
-        updateTrendFormControl();
-        manageTrendsTableControl();
+            const addTrendForm = document.querySelector('.addTrendForm');
+            const updateTrendForm = document.querySelector('.updateTrendForm');
+            const manageTrendsTable = document.querySelector('.manageTrendsTable');
 
 
-        // Add trend
-        function addTrendFormControl() {
-
-            if (addTrendForm !== null) {
-                addTrendForm.addEventListener("submit", function (e) {
-                    e.preventDefault();
-
-                    if(textAreaJsonValidation(addTrendForm)) {
-                        sendRequest('/core/trends.php', addTrendRequest, this, "POST");
-                    }
-
-                });
-
-                addTrendForm.addEventListener("reset", function (e) {
-                    jQuery('#addTrend').collapse('hide');
-                })
-            } else {
-                console.log('Формы sendTrend не существует');
-            }
-
-
-
-        }
-
-        function addTrendRequest(response, form) {
-            if (response === "Запись добавлена") {
-                alert("Запись добавлена");
-                form.reset();
-            } else {
-                alert("Что-то пошло не так: \r\n" + response);
-            }
             loadTrends();
-        }
+            addTrendFormControl();
+            updateTrendFormControl();
+            manageTrendsTableControl();
 
 
-        // Edit trend
-        function updateTrendFormControl() {
-            console.log("Вызываем updateTrendFormControl");
-            if (updateTrendForm) {
-                updateTrendForm.addEventListener("submit", function (e) {
-                    e.preventDefault();
-                    if(textAreaJsonValidation(updateTrendForm)) {
-                        sendRequest('/core/trends.php', updateTrendRequest, this, "POST");
-                    }
-                });
-
-                updateTrendForm.addEventListener("reset", function (e) {
-                    jQuery('#updateTrendModal').modal('hide');
-                })
-            }
-        }
-
-        function updateTrendRequest(response, form) {
-            if (response === "Запись обновлена") {
-                alert("Запись обновлена");
-                form.querySelector('textarea').value = "";
-                form.reset();
-            } else {
-                alert("Не удалось обновить. Что-то пошло не так: \r\n" + response);
-            }
-            loadTrends();
-        }
-
-        function addInfoToUpdateTrendForm(info) {
-            if (updateTrendForm) {
-                jQuery('#updateTrendModal').modal('show');
-                const formInputID = updateTrendForm.querySelector('[name=id]');
-                const formInputTitle = updateTrendForm.querySelector('[name=title]');
-                const formInputInfo = updateTrendForm.querySelector('[name=info]');
-                const formInfo = JSON.parse(info).trends[0];
-
-                console.log(formInputInfo);
-
-                formInputID.value = formInfo.id;
-                formInputTitle.value = formInfo.title;
-                // formInputInfo.innerHTML = JSON.stringify(formInfo.info, undefined, 4);
-                formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
-
-            } else {
-                console.log("Формы updateTrendForm нет")
-            }
-        }
-
-
-        // Delete trend
-        function deleteTrendRequest(response, form) {
-            console.log(form);
-            if (response === "Запись удалена") {
-                alert("Запись удалена");
-                updateTrendForm.reset();
-            } else {
-                alert("Не удалось удалить запись. Что-то пошло не так: \r\n" + response);
-            }
-            loadTrends();
-        }
-
-
-        // Кнопки EDIT and DELETE
-        function manageTrendsTableControl() {
-            if (manageTrendsTable !== null) {
-                manageTrendsTable.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    const target = e.target;
-
-                    if (target.classList.contains("js_EditTrendButton")) {
+            // Add trend
+            function addTrendFormControl() {
+                if (addTrendForm !== null) {
+                    addTrendForm.addEventListener("submit", function (e) {
                         e.preventDefault();
-                        const button = target;
-                        const form = button.parentNode;
-                        const FORM_DATA = jQuery(form).serialize();
-                        // console.log(FORM_DATA);
-                        const formDataObj = paramsToJson(FORM_DATA);
-                        if (parseInt(formDataObj.id) > 0) {
-                            switch(button.value) {
-                                case 'EDIT':
-                                    sendRequest('/core/trends.php?id=' + formDataObj.id, addInfoToUpdateTrendForm);
-                                    break;
-                                case 'DELETE':
-                                    sendRequest('/core/trends.php?', deleteTrendRequest, form, "POST");
-                                    break;
+
+
+                        if (isSending) {
+                            alert("Вы уже отправили запрос. Сначала дождитесь ответ.");
+                            return false
+                        }
+                        if(textAreaJsonValidation(addTrendForm)) {
+                            isSending = true;
+                            sendRequest('/core/trends.php', addTrendRequest, this, "POST");
+                        }
+
+                    });
+
+                    addTrendForm.addEventListener("reset", function (e) {
+                        jQuery('#addTrendModal').modal('hide');
+                    })
+                } else {
+                    console.log('Формы sendTrend не существует');
+                }
+
+
+
+            }
+
+            function addTrendRequest(response, form) {
+                if (response === "Запись добавлена") {
+                    alert("Запись добавлена");
+                    form.reset();
+                } else {
+                    alert("Что-то пошло не так: \r\n" + response);
+                }
+                isSending = false;
+                loadTrends();
+            }
+
+
+            // Edit trend
+            function updateTrendFormControl() {
+                if (updateTrendForm) {
+                    updateTrendForm.addEventListener("submit", function (e) {
+                        e.preventDefault();
+
+                        if (isSending) {
+                            alert("Вы уже отправили запрос. Сначала дождитесь ответ.");
+                            return false
+                        }
+                        if(textAreaJsonValidation(updateTrendForm)) {
+                            isSending = true;
+                            sendRequest('/core/trends.php', updateTrendRequest, this, "POST");
+                        }
+                    });
+
+                    updateTrendForm.addEventListener("reset", function (e) {
+                        jQuery('#updateTrendModal').modal('hide');
+                    })
+                }
+            }
+
+            function updateTrendRequest(response, form) {
+                if (response === "Запись обновлена") {
+                    alert("Запись обновлена");
+                    form.querySelector('textarea').value = "";
+                    form.reset();
+                } else {
+                    alert("Не удалось обновить. Что-то пошло не так: \r\n" + response);
+                }
+                isSending = false;
+                loadTrends();
+            }
+
+            function addInfoToUpdateTrendForm(info) {
+                if (updateTrendForm) {
+                    jQuery('#updateTrendModal').modal('show');
+                    const formInputID = updateTrendForm.querySelector('[name=id]');
+                    const formInputTitle = updateTrendForm.querySelector('[name=title]');
+                    const formInputInfo = updateTrendForm.querySelector('[name=info]');
+                    const formInfo = JSON.parse(info).trends[0];
+
+                    formInputID.value = formInfo.id;
+                    formInputTitle.value = formInfo.title;
+                    formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
+
+                } else {
+                    console.log("Формы updateTrendForm нет")
+                }
+            }
+
+
+            // Delete trend
+            function deleteTrendRequest(response, form) {
+                if (response === "Запись удалена") {
+                    alert("Запись удалена");
+                    updateTrendForm.reset();
+                } else {
+                    alert("Не удалось удалить запись. Что-то пошло не так: \r\n" + response);
+                }
+                loadTrends();
+            }
+
+
+            // Кнопки EDIT and DELETE
+            function manageTrendsTableControl() {
+                if (manageTrendsTable !== null) {
+                    manageTrendsTable.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        const target = e.target;
+
+                        if (target.classList.contains("js_EditTrendButton")) {
+                            e.preventDefault();
+                            const button = target;
+                            const form = button.parentNode;
+                            const FORM_DATA = jQuery(form).serialize();
+                            // console.log(FORM_DATA);
+                            const formDataObj = paramsToJson(FORM_DATA);
+                            if (parseInt(formDataObj.id) > 0) {
+                                switch(button.value) {
+                                    case 'EDIT':
+                                        sendRequest('/core/trends.php?id=' + formDataObj.id, addInfoToUpdateTrendForm);
+                                        break;
+                                    case 'DELETE':
+                                        sendRequest('/core/trends.php?', deleteTrendRequest, form, "POST");
+                                        break;
+                                }
+                            } else {
+                                alert("Что-то пошло не так, передан не верный id: " + formDataObj.id);
                             }
-                        } else {
-                            alert("Что-то пошло не так, передан не верный id: " + formDataObj.id);
+
+
                         }
 
 
-                    }
-
-
-                });
+                    });
+                }
             }
-        }
 
 
-        // LOAD and SHOW Trends helpers
-        function loadTrends() {
-            if (manageTrendsTable!== null) {
-                manageTrendsTable.querySelector("tbody").innerHTML = "";
-                sendRequest('/core/trends.php?id=all', showTrendsInManager, manageTrendsTable);
+            // LOAD and SHOW Trends helpers
+            function loadTrends() {
+                if (manageTrendsTable!== null) {
+                    manageTrendsTable.querySelector("tbody").innerHTML = "";
+                    sendRequest('/core/trends.php?id=all', showTrendsInManager, manageTrendsTable);
+                }
             }
+
+
+
+
         }
-
-
 
 
     }
-
-
     function mainEvents() {
         console.log("Вешает все обработяики")
         document.body.addEventListener('click', showMoreData)

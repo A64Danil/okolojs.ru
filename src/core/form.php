@@ -18,65 +18,104 @@
 
         ?>
 
-            <div class="mainManagerMenu">
-                <a class="btn btn-primary" data-toggle="collapse" href="#trendsManager" role="button" aria-expanded="false" aria-controls="trendsManager">
-                    trends
-                </a>
+            <nav class="mainManagerMenu">
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-trends-tab" data-toggle="tab" href="#trendsManager" role="tab" aria-controls="trendsManager" aria-selected="true">Trends</a>
+                    <a class="nav-item nav-link" id="nav-rules-tab" data-toggle="tab" href="#rulesManager" role="tab" aria-controls="rulesManager" aria-selected="false">Rules</a>
+                    <a class="nav-item nav-link" id="nav-faq-tab" data-toggle="tab" href="#faqManager" role="tab" aria-controls="faqManager" aria-selected="false">FAQ</a>
+                    <a class="nav-item nav-link" id="nav-usfl-tab" data-toggle="tab" href="#usflManager" role="tab" aria-controls="usflManager" aria-selected="false">
+                        Usefull Links
+                    </a>
+                </div>
+            </nav>
 
-                <a class="btn btn-primary" data-toggle="collapse" href="#rulesManager" role="button" aria-expanded="false" aria-controls="rulesManager">
-                    rules
-                </a>
+            <div class="mainManager tab-content" >
 
-                <a class="btn btn-primary" data-toggle="collapse" href="#faqManager" role="button" aria-expanded="false" aria-controls="faqManager">
-                    faq
-                </a>
-            </div>
-
-            <div class="mainManager">
-
-
-                <div class="trendsManager dataManager collapse" id="trendsManager" data-parent=".mainManager">
+                <div class="trendsManager dataManager tab-pane fade show active" id="trendsManager" role="tabpanel" aria-labelledby="nav-trends-tab">
                     <div class="trendsManager__menu innerMenu">
-                        <a class="btn btn-primary" data-toggle="collapse" href="#addTrend" role="button" aria-expanded="true" aria-controls="addTrend">
-                            Add trend
-                        </a>
-
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateTrendModal">
-                            Launch demo modal
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addTrendModal">
+                            Add trend
+                        </button>
+                        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addTrendModal">
+                            Add trend
                         </button>
                     </div>
 
-                    <div class="manageForm addData collapse show" id="addTrend" data-parent=".trendsManager">
-                        <p class="manageForm__title">Добавить тренд</p>
-                        <ul class="schema">
-                            <p>Доступные поля:</p>
-                            <li><b>Title*</b> - название тренда (обяз. поле)</li>
-                            <li><b>titleOriginal</b> - название без перевода</li>
-                            <li><b>description</b> - краткое описание</li>
-                            <li><b>language</b> - язык тренда</li>
-                            <li><b>difficulty</b> - сложость </li>
-                            <li><b>author</b> - автор тренда</li>
-                            <li><b>url</b> - ссылка на тренд</li>
-                            <li><b>published</b> - дата появления в сети</li>
-                            <li><b>started</b> - дата, когда тренд стал актуален у нас</li>
-                            <li><b>status</b> - статус тренда на текущий момент</li>
-                        </ul>
-                        <form method="POST" action="https://okolojs.ru/core/trends.php" class="addTrendForm">
-                            <!--                <p>Введите название:<br>-->
-                            <!--                    <input type="text" name="title"/></p>-->
-                            <div class="form-group">
-                                <label for="">Введите Info в формате JSON: </label>
-                                <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
-                            </div>
-                            <input type="submit" value="Добавить" class="btn btn-success">
-                        </form>
-                    </div>
-
-
 
                     <!-- Modal -->
-                    <div class="manageForm updateData modal fade" id="updateTrendModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="manageForm modal fade" id="addTrendModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Добавить тренд</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#trendsSchema" aria-expanded="false" aria-controls="trendsSchema">
+                                                Описание доступных полей
+                                            </button>
+                                        </div>
+
+                                        <div id="trendsSchema" class="collapse">
+                                            <div class="card-body">
+                                                <ul class="schema">
+                                                    <li><b>Title*</b> - название тренда (обяз. поле)</li>
+                                                    <li><b>titleOriginal</b> - название без перевода</li>
+                                                    <li><b>description</b> - краткое описание</li>
+                                                    <li><b>language</b> - язык тренда</li>
+                                                    <li><b>difficulty</b> - сложость </li>
+                                                    <li><b>author</b> - автор тренда</li>
+                                                    <li><b>url</b> - ссылка на тренд</li>
+                                                    <li><b>published</b> - дата появления в сети</li>
+                                                    <li><b>started</b> - дата, когда тренд стал актуален у нас</li>
+                                                    <li><b>status</b> - статус тренда на текущий момент</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--
+                                    <a class="btn btn-outline-dark schemaBtn" data-toggle="collapse" href="#trendsSchema" role="button" aria-expanded="false" aria-controls="trendsManager">
+                                        Описание доступных полей
+                                    </a>
+                                    -->
+                                    <form method="POST" action="https://okolojs.ru/core/trends.php" class="addTrendForm">
+                                        <div class="form-group">
+                                            <label for="">Введите Info в формате JSON: </label>
+                                            <textarea class="form-control" id="" cols=60 rows=12 name="info">
+{
+    "title": "Новый Тренд",
+    "titleOriginal": "New Trend",
+    "description": "",
+    "difficulty": "",
+    "author": "",
+    "url": "",
+    "started": "",
+    "published": "",
+    "started": "",
+    "status": ""
+}
+                                            </textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Добавить" class="btn btn-success">
+                                            <input type="reset" value="Отменить" class="btn btn-secondary js_CancelEdit">
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="manageForm modal fade" id="updateTrendModal" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
 
@@ -116,22 +155,6 @@
                                     </form>
 
                                 </div>
-
-                                <!--
-                                <div class="modal-header">
-                                    <p class="manageForm__title">Редактировать тренд</p>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    ...
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                </div> -->
-
                             </div>
                         </div>
                     </div>
@@ -167,19 +190,20 @@
                     </div>
                 </div>
 
-                <div class="rulesManager dataManager collapse" id="rulesManager" data-parent=".mainManager">
+                <div class="rulesManager dataManager tab-pane fade" id="rulesManager" role="tabpanel" aria-labelledby="nav-rules-tab">
                     rules manager
                 </div>
 
-                <div class="rulesManager dataManager collapse" id="faqManager" data-parent=".mainManager">
-                    rules manager
+                <div class="faqManager dataManager tab-pane fade" id="faqManager" role="tabpanel" aria-labelledby="nav-faq-tab">
+                    faq manager
                 </div>
 
-                <div class="usefullManager dataManager collapse">
-                    other manager
+                <div class="usefullManager dataManager tab-pane fade" id="usflManager" role="tabpanel" aria-labelledby="nav-usfl-tab">
+                    usfl manager
                 </div>
 
             </div>
+
 
             <div>Блок для опытов</div>
 
