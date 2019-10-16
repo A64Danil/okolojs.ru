@@ -41,9 +41,10 @@
                             Add trend
                         </a>
 
-                        <a class="btn btn-primary" data-toggle="collapse" href="#updateTrend" role="button" aria-expanded="false" aria-controls="updateTrend">
-                            Update Trend
-                        </a>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateTrendModal">
+                            Launch demo modal
+                        </button>
                     </div>
 
                     <div class="manageForm addData collapse show" id="addTrend" data-parent=".trendsManager">
@@ -72,34 +73,69 @@
                         </form>
                     </div>
 
-                    <div class="manageForm updateData collapse" id="updateTrend"  data-parent=".trendsManager">
-                        <p class="manageForm__title">Редактировать тренд</p>
-                        <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateTrendForm">
-                            <input type="hidden" name="method" value="UPDATE">
 
-                            <div class="form-group row">
-                                <label for="" class="col-sm-2 col-form-label col-form-label-lg">ID </label>
-                                <div class="col-sm-10">
-                                    <input class="form-control form-control-lg" type="text" name="id" value="" readonly />
+
+                    <!-- Modal -->
+                    <div class="manageForm updateData modal fade" id="updateTrendModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Редактировать тренд</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
-                            </div>
+                                <div class="modal-body">
+                                    <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateTrendForm">
+                                        <input type="hidden" name="method" value="UPDATE">
 
-                            <div class="form-group row">
-                                <label for="" class="col-sm-2 col-form-label col-form-label-lg">Title </label>
-                                <div class="col-sm-10">
-                                    <input class="form-control form-control-lg" type="text" name="title" value="" disabled readonly />
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2 col-form-label col-form-label-lg">ID </label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" name="id" value="" readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2 col-form-label col-form-label-lg">Title </label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" name="title" value="" disabled readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="">Введите Info в формате JSON: </label>
+                                            <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Сохранить" class="btn btn-success" >
+                                            <input type="reset" value="Отменить" class="btn btn-secondary js_CancelEdit">
+                                        </div>
+                                    </form>
+
                                 </div>
-                            </div>
 
-                            <div class="form-group">
-                                <label for="">Введите Info в формате JSON: </label>
-                                <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
-                            </div>
+                                <!--
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Редактировать тренд</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div> -->
 
-                            <input type="submit" value="Сохранить" class="btn btn-success">
-                            <input type="reset" value="Отменить" class="btn btn-secondary js_AbortTrendUpdating">
-                        </form>
+                            </div>
+                        </div>
                     </div>
+
 
                     <div class="table-responsive" >
                         <table id="trendsTableManage" class="manageTrendsTable table table-striped table-hover" data-lastid="">

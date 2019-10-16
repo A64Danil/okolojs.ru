@@ -19,11 +19,19 @@ function coreFunction() {
 
         if (mainManager) {
             console.log("Вы в админке");
+            initManager();
+        } else {
+            console.log("Вы не в админке, доп. скрипты грузить не надо");
+
         }
-        trendsMainManager();
+
     }
 
     init();
+
+    function initManager() {
+        trendsMainManager();
+    }
 
 
     function trendsMainManager() {
@@ -86,7 +94,7 @@ function coreFunction() {
                 });
 
                 updateTrendForm.addEventListener("reset", function (e) {
-                    jQuery('#updateTrend').collapse('hide');
+                    jQuery('#updateTrendModal').modal('hide');
                 })
             }
         }
@@ -104,9 +112,7 @@ function coreFunction() {
 
         function addInfoToUpdateTrendForm(info) {
             if (updateTrendForm) {
-                mainManager.scrollIntoView();
-                jQuery('#updateTrend').collapse('show');
-
+                jQuery('#updateTrendModal').modal('show');
                 const formInputID = updateTrendForm.querySelector('[name=id]');
                 const formInputTitle = updateTrendForm.querySelector('[name=title]');
                 const formInputInfo = updateTrendForm.querySelector('[name=info]');
@@ -158,7 +164,6 @@ function coreFunction() {
                                     sendRequest('/core/trends.php?id=' + formDataObj.id, addInfoToUpdateTrendForm);
                                     break;
                                 case 'DELETE':
-                                    debugger
                                     sendRequest('/core/trends.php?', deleteTrendRequest, form, "POST");
                                     break;
                             }

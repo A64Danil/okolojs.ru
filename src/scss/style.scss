@@ -29,9 +29,9 @@ $font-stack: -apple-system, BlinkMacSystemFont,Roboto,'Open Sans','Helvetica Neu
 //@import "~bootstrap/scss/progress";
 //@import "~bootstrap/scss/media";
 //@import "~bootstrap/scss/list-group";
-//@import "~bootstrap/scss/close";
+@import "~bootstrap/scss/close";
 //@import "~bootstrap/scss/toasts";
-//@import "~bootstrap/scss/modal";
+@import "~bootstrap/scss/modal";
 //@import "~bootstrap/scss/tooltip";
 //@import "~bootstrap/scss/popover";
 //@import "~bootstrap/scss/carousel";
@@ -183,27 +183,15 @@ header {
 }
 
 .manageForm textarea {
-  //width: 95%;
-  min-width: 300px;
+  min-width: 260px;
   padding: 0 10px 0 4px;
 }
 
-.addData, .updateData {
-  transition: 0.3s;
-  //overflow: hidden;
+.manageForm .modal-footer {
+  padding: 0;
+  border: 0;
 }
 
-.addData {
-  //visibility: hidden;
-}
-
-.updateData {
-  //visibility: hidden;
-}
-.updateData.active, .addData.active {
-  visibility: visible;
-
-}
 
 .table-responsive {
 
@@ -213,18 +201,6 @@ header {
   text-align: center;
 }
 
-//.manageTrendsTable {
-//  width: 100%;
-//}
-//
-//
-//.manageTrendsTable tr:nth-child(even){
-//  background-color: #f5f5f5;
-//}
-//
-//.manageTrendsTable tr:hover {
-//  background-color: #f1f1f1;
-//}
 
 footer {
   padding-top: 50px;
