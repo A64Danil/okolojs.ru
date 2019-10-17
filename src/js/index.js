@@ -117,6 +117,7 @@ function coreFunction() {
             }
 
             function updateTrendRequest(response, form) {
+                loadTrends();
                 if (response === "Запись обновлена") {
                     alert("Запись обновлена");
                     form.querySelector('textarea').value = "";
@@ -125,7 +126,6 @@ function coreFunction() {
                     alert("Не удалось обновить. Что-то пошло не так: \r\n" + response);
                 }
                 isSending = false;
-                loadTrends();
             }
 
             function addInfoToUpdateTrendForm(info) {
@@ -148,13 +148,13 @@ function coreFunction() {
 
             // Delete trend
             function deleteTrendRequest(response, form) {
+                loadTrends();
                 if (response === "Запись удалена") {
                     alert("Запись удалена");
                     updateTrendForm.reset();
                 } else {
                     alert("Не удалось удалить запись. Что-то пошло не так: \r\n" + response);
                 }
-                loadTrends();
             }
 
 
@@ -178,7 +178,10 @@ function coreFunction() {
                                         sendRequest('/core/trends.php?id=' + formDataObj.id, addInfoToUpdateTrendForm);
                                         break;
                                     case 'DELETE':
-                                        sendRequest('/core/trends.php?', deleteTrendRequest, form, "POST");
+                                        if (confirm("Точно удалить?")) {
+                                            sendRequest('/core/trends.php?', deleteTrendRequest, form, "POST");
+                                        }
+
                                         break;
                                 }
                             } else {
