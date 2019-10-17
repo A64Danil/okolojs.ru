@@ -30,14 +30,11 @@ function coreFunction() {
     init();
 
     function initManager() {
-
-
-
-        //TODO: блокировать формы отправки/редактирования, пока не пришел ответ
         let isSending = false;
 
 
         trendsMainManager();
+        usflMainManager();
 
 
         function trendsMainManager() {
@@ -66,7 +63,7 @@ function coreFunction() {
                         }
                         if(textAreaJsonValidation(addTrendForm)) {
                             isSending = true;
-                            sendRequest('/core/trends.php', addTrendRequest, this, "POST");
+                            sendRequest('/core/db/trends.php', addTrendRequest, this, "POST");
                         }
 
                     });
@@ -106,7 +103,7 @@ function coreFunction() {
                         }
                         if(textAreaJsonValidation(updateTrendForm)) {
                             isSending = true;
-                            sendRequest('/core/trends.php', updateTrendRequest, this, "POST");
+                            sendRequest('/core/db/trends.php', updateTrendRequest, this, "POST");
                         }
                     });
 
@@ -175,11 +172,11 @@ function coreFunction() {
                             if (parseInt(formDataObj.id) > 0) {
                                 switch(button.value) {
                                     case 'EDIT':
-                                        sendRequest('/core/trends.php?id=' + formDataObj.id, addInfoToUpdateTrendForm);
+                                        sendRequest('/core/db/trends.php?id=' + formDataObj.id, addInfoToUpdateTrendForm);
                                         break;
                                     case 'DELETE':
                                         if (confirm("Точно удалить?")) {
-                                            sendRequest('/core/trends.php?', deleteTrendRequest, form, "POST");
+                                            sendRequest('/core/db/trends.php?', deleteTrendRequest, form, "POST");
                                         }
 
                                         break;
@@ -201,7 +198,177 @@ function coreFunction() {
             function loadTrends() {
                 if (manageTrendsTable!== null) {
                     manageTrendsTable.querySelector("tbody").innerHTML = "";
-                    sendRequest('/core/trends.php?id=all', showTrendsInManager, manageTrendsTable);
+                    sendRequest('/core/db/trends.php?id=all', showTrendsInManager, manageTrendsTable);
+                }
+            }
+
+
+
+
+        }
+
+        function usflMainManager() {
+
+            const addUsflLinkForm = document.querySelector('.addUsflLinkForm');
+            const updateUsflLinkForm = document.querySelector('.updateUsflLinkForm');
+            const manageUsflLinksTable = document.querySelector('.manageUsflLinksTable');
+
+
+            loadUsflLinks();
+            addUsflLinkFormControl();
+            updateUsflLinkFormControl();
+            manageUsflLinksTableControl();
+
+
+            // Add usflLink
+            function addUsflLinkFormControl() {
+                if (addUsflLinkForm !== null) {
+                    addUsflLinkForm.addEventListener("submit", function (e) {
+                        e.preventDefault();
+
+
+                        if (isSending) {
+                            alert("Вы уже отправили запрос. Сначала дождитесь ответ.");
+                            return false
+                        }
+                        if(textAreaJsonValidation(addUsflLinkForm)) {
+                            isSending = true;
+                            sendRequest('/core/db/usfl.php', addUsflLinkRequest, this, "POST");
+                        }
+
+                    });
+
+                    addUsflLinkForm.addEventListener("reset", function (e) {
+                        jQuery('#addUsflLinkModal').modal('hide');
+                    })
+                } else {
+                    console.log('Формы sendUsflLink не существует');
+                }
+
+
+
+            }
+
+            function addUsflLinkRequest(response, form) {
+                if (response === "Запись добавлена") {
+                    alert("Запись добавлена");
+                    form.reset();
+                } else {
+                    alert("Что-то пошло не так: \r\n" + response);
+                }
+                isSending = false;
+                loadUsflLinks();
+            }
+
+
+            // Edit usflLink
+            function updateUsflLinkFormControl() {
+                if (updateUsflLinkForm) {
+                    updateUsflLinkForm.addEventListener("submit", function (e) {
+                        e.preventDefault();
+
+                        if (isSending) {
+                            alert("Вы уже отправили запрос. Сначала дождитесь ответ.");
+                            return false
+                        }
+                        if(textAreaJsonValidation(updateUsflLinkForm)) {
+                            isSending = true;
+                            sendRequest('/core/db/usfl.php', updateUsflLinkRequest, this, "POST");
+                        }
+                    });
+
+                    updateUsflLinkForm.addEventListener("reset", function (e) {
+                        jQuery('#updateUsflLinkModal').modal('hide');
+                    })
+                }
+            }
+
+            function updateUsflLinkRequest(response, form) {
+                loadUsflLinks();
+                if (response === "Запись обновлена") {
+                    alert("Запись обновлена");
+                    form.querySelector('textarea').value = "";
+                    form.reset();
+                } else {
+                    alert("Не удалось обновить. Что-то пошло не так: \r\n" + response);
+                }
+                isSending = false;
+            }
+
+            function addInfoToUpdateUsflLinkForm(info) {
+                if (updateUsflLinkForm) {
+                    jQuery('#updateUsflLinkModal').modal('show');
+                    const formInputID = updateUsflLinkForm.querySelector('[name=id]');
+                    const formInputTitle = updateUsflLinkForm.querySelector('[name=title]');
+                    const formInputInfo = updateUsflLinkForm.querySelector('[name=info]');
+                    const formInfo = JSON.parse(info).usflLinks[0];
+
+                    formInputID.value = formInfo.id;
+                    formInputTitle.value = formInfo.title;
+                    formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
+
+                } else {
+                    console.log("Формы updateUsflLinkForm нет")
+                }
+            }
+
+
+            // Delete usflLink
+            function deleteUsflLinkRequest(response, form) {
+                loadUsflLinks();
+                if (response === "Запись удалена") {
+                    alert("Запись удалена");
+                    updateUsflLinkForm.reset();
+                } else {
+                    alert("Не удалось удалить запись. Что-то пошло не так: \r\n" + response);
+                }
+            }
+
+
+            // Кнопки EDIT and DELETE
+            function manageUsflLinksTableControl() {
+                if (manageUsflLinksTable !== null) {
+                    manageUsflLinksTable.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        const target = e.target;
+
+                        if (target.classList.contains("js_EditUsflLinkButton")) {
+                            e.preventDefault();
+                            const button = target;
+                            const form = button.parentNode;
+                            const FORM_DATA = jQuery(form).serialize();
+                            // console.log(FORM_DATA);
+                            const formDataObj = paramsToJson(FORM_DATA);
+                            if (parseInt(formDataObj.id) > 0) {
+                                switch(button.value) {
+                                    case 'EDIT':
+                                        sendRequest('/core/db/usfl.php?id=' + formDataObj.id, addInfoToUpdateUsflLinkForm);
+                                        break;
+                                    case 'DELETE':
+                                        if (confirm("Точно удалить?")) {
+                                            sendRequest('/core/db/usfl.php?', deleteUsflLinkRequest, form, "POST");
+                                        }
+
+                                        break;
+                                }
+                            } else {
+                                alert("Что-то пошло не так, передан не верный id: " + formDataObj.id);
+                            }
+
+
+                        }
+
+
+                    });
+                }
+            }
+
+
+            // LOAD and SHOW UsflLinks helpers
+            function loadUsflLinks() {
+                if (manageUsflLinksTable!== null) {
+                    manageUsflLinksTable.querySelector("tbody").innerHTML = "";
+                    sendRequest('/core/db/usfl.php?id=all', showUsflLinksInManager, manageUsflLinksTable);
                 }
             }
 
@@ -400,13 +567,13 @@ function manageTrendsTPL(item) {
                             <td>${item["id"]}</td>
                             <td>${item["title"]}</td>
                             <td>
-                                <form class="editTrendForm" method="GET" action="https://okolojs.ru/core/trends.php">
+                                <form class="editTrendForm" method="GET" action="https://okolojs.ru/core/db/trends.php">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-info js_EditTrendButton" type="submit" value="EDIT" >
                                 </form>
                             </td>
                             <td>
-                                <form class="deleteTrendForm" method="POST" action="https://okolojs.ru/core/trends.php">
+                                <form class="deleteTrendForm" method="POST" action="https://okolojs.ru/core/db/trends.php">
                                     <input type="hidden" name="method" value="DELETE">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-danger js_EditTrendButton" type="submit" value="DELETE">

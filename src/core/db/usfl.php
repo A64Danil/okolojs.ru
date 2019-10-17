@@ -1,9 +1,7 @@
 <?php
 require_once 'connection.php'; // подключаем скрипт
 
-//$trendsTable = 'testtrends';
-$trendsTable = 'myguests';
-
+$trendsTable = 'testtrends';
 // Print JSON from STR
 function showTrendsJson($result)
 {

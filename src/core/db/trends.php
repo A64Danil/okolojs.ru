@@ -1,5 +1,5 @@
 <?php
-require_once 'connection.php'; // подключаем скрипт
+require_once '../connection.php'; // подключаем скрипт
 
 //$trendsTable = 'testtrends';
 $trendsTable = 'myguests';
