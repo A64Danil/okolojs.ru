@@ -1,40 +1,13 @@
 <?php
+require_once '../core.php'; // ядро
 require_once '../connection.php'; // подключаем скрипт
 
+
+show("haha");
 
 $linksDBTable = 'usfl_links';
 $tagsDBTable = 'usfl_tags';
 $tagLinksDBTable = 'usfl_tagLinks';
-
-
-
-// Print JSON from STR
-function showLinksJson($result)
-{
-
-    print '{ "links": ['."\r\n";
-    $teller = 0;
-    while ($row = $result->fetch_array(MYSQLI_NUM))
-    {
-        $teller++;
-        $linkId = '"id": '.$row[0].",\r\n";
-        $linkTitle = '"title": "'.iconv("windows-1251","utf-8", $row[1]).'"'.",\r\n";
-        $linkInfo = '"info": '.iconv("windows-1251","utf-8", $row[2])."\r\n";
-
-        print "{"."\r\n";
-        print "$linkId";
-        print "$linkTitle";
-        print "$linkInfo";
-        if($result->num_rows !== $teller) {
-            print "},"."\r\n";
-        } else {
-            print "}"."\r\n";
-        }
-
-    }
-    print ']'."\r\n";
-    print '}'."\r\n";
-}
 
 
 // Handle GET-request
@@ -82,7 +55,7 @@ if (isset($_GET['id'])) {
                 echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
             }
             $result = $stmt->get_result();
-            showLinksJson($result);
+            showAsJson($result);
 
             /* закрываем запрос */
             $stmt->close();

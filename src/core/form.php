@@ -198,14 +198,14 @@
                     faq manager
                 </div>
 
-                <div class="usflManager dataManager tab-pane fade show active" id="usflManager" role="tabpanel" aria-labelledby="nav-usfl-tab">
+                <div class="usflManager dataManager tab-pane fade" id="usflManager" role="tabpanel" aria-labelledby="nav-usfl-tab">
                     <div class="usflManager__menu innerMenu">
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUsflLinkModal">
                             Add usflLink
                         </button>
-                        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addUsflLinkModal">
-                            Add usflLink
+                        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addUsflTagModal">
+                            Add usflTag
                         </button>
                     </div>
 
@@ -232,43 +232,68 @@
                                         <div id="usflLinkSchema" class="collapse">
                                             <div class="card-body">
                                                 <ul class="schema">
-                                                    <li><b>Title*</b> - название тренда (обяз. поле)</li>
-                                                    <li><b>titleOriginal</b> - название без перевода</li>
+                                                    <li><b>Title*</b> - заголовок ссылки(обяз. поле)</li>
                                                     <li><b>description</b> - краткое описание</li>
-                                                    <li><b>language</b> - язык тренда</li>
-                                                    <li><b>difficulty</b> - сложость </li>
-                                                    <li><b>author</b> - автор тренда</li>
-                                                    <li><b>url</b> - ссылка на тренд</li>
-                                                    <li><b>published</b> - дата появления в сети</li>
-                                                    <li><b>started</b> - дата, когда тренд стал актуален у нас</li>
-                                                    <li><b>status</b> - статус тренда на текущий момент</li>
+                                                    <li><b>url</b> - ссылка на страницу</li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!--
-                                    <a class="btn btn-outline-dark schemaBtn" data-toggle="collapse" href="#usflSchema" role="button" aria-expanded="false" aria-controls="usflManager">
-                                        Описание доступных полей
-                                    </a>
-                                    -->
-                                    <form method="POST" action="https://okolojs.ru/core/usfl.php" class="addUsflLinkForm">
+                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" class="addUsflLinkForm">
                                         <div class="form-group">
                                             <label for="">Введите Info в формате JSON: </label>
                                             <textarea class="form-control" id="" cols=60 rows=12 name="info">
 {
-    "title": "Новый Тренд",
-    "titleOriginal": "New UsflLink",
+    "title": "Новая Ссылка",
     "description": "",
-    "difficulty": "",
-    "author": "",
-    "url": "",
-    "started": "",
-    "published": "",
-    "started": "",
-    "status": ""
+    "url": "https://"
 }
                                             </textarea>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="" class="col-form-label col-form-label-lg">Тэги </label>
+                                            <div class="selectedTags form-control ">
+                                                <input type="text" class="search searchTags" >
+                                            </div>
+                                            <div class="jsSearchTags_result search_result">
+                                                <div class="resultItem tag">GIT</div>
+                                                <div class="resultItem tag">HTML</div>
+                                                <div class="resultItem tag">PHP</div>
+                                                <div class="resultItem tag">JS</div>
+                                                <div class="resultItem tag">PHP 2.1</div>
+                                                <div class="resultItem tag">P+++</div>
+                                                <div class="resultItem tag">Antol AMN</div>
+                                                <div class="resultItem tag">CRM cern xTWO</div>
+                                                <div class="resultItem tag">GIT</div>
+                                                <div class="resultItem tag">HTML</div>
+                                                <div class="resultItem tag">PHP</div>
+                                                <div class="resultItem tag">JS</div>
+                                                <div class="resultItem tag">PHP 2.1</div>
+                                                <div class="resultItem tag">P+++</div>
+                                                <div class="resultItem tag">Antol AMN</div>
+                                                <div class="resultItem tag">CRM cern xTWO</div>
+                                                <div class="resultItem tag">GIT</div>
+                                                <div class="resultItem tag">HTML</div>
+                                                <div class="resultItem tag">PHP</div>
+                                                <div class="resultItem tag">JS</div>
+                                                <div class="resultItem tag">PHP 2.1</div>
+                                                <div class="resultItem tag">P+++</div>
+                                                <div class="resultItem tag">Antol AMN</div>
+                                                <div class="resultItem tag">CRM cern xTWO</div>
+                                                <div class="resultItem tag">GIT</div>
+                                                <div class="resultItem tag">HTML</div>
+                                                <div class="resultItem tag">PHP</div>
+                                                <div class="resultItem tag">JS</div>
+                                                <div class="resultItem tag">PHP 2.1</div>
+                                                <div class="resultItem tag">P+++</div>
+                                                <div class="resultItem tag">Antol AMN</div>
+                                                <div class="resultItem tag">CRM cern xTWO</div>
+                                            </div>
+                                            <select  class="form-control tags"></select>
+                                            <select  class="form-control tags"></select>
+
                                         </div>
                                         <div class="modal-footer">
                                             <input type="submit" value="Добавить" class="btn btn-success">
@@ -293,7 +318,100 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="https://okolojs.ru/core/usfl.php" class="updateUsflLinkForm">
+                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" class="updateUsflLinkForm">
+                                        <input type="hidden" name="method" value="UPDATE">
+
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2 col-form-label col-form-label-lg">ID </label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" name="id" value="" readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2 col-form-label col-form-label-lg">Title </label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" name="title" value="" disabled readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="">Введите Info в формате JSON: </label>
+                                            <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Сохранить" class="btn btn-success" >
+                                            <input type="reset" value="Отменить" class="btn btn-secondary js_CancelEdit">
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="manageForm modal fade" id="addUsflTagModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Добавить Тэг для полезных ссылок</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <button class="btn btn-tag" type="button" data-toggle="collapse" data-target="#usflTagschema" aria-expanded="false" aria-controls="usflTagschema">
+                                                Описание доступных полей
+                                            </button>
+                                        </div>
+
+                                        <div id="usflTagschema" class="collapse">
+                                            <div class="card-body">
+                                                <ul class="schema">
+                                                    <li><b>Title*</b> - имя тэга (обяз. поле)</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" class="addUsflTagForm">
+                                        <div class="form-group">
+                                            <label for="">Введите Info в формате JSON: </label>
+                                            <textarea class="form-control" id="" cols=60 rows=12 name="info">
+{
+    "title": "Новый Тэг"
+}
+                                            </textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Добавить" class="btn btn-success">
+                                            <input type="reset" value="Отменить" class="btn btn-secondary js_CancelEdit">
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="manageForm modal fade" id="updateUsflTagModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Редактировать Тэг для полезных ссылок</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" class="updateUsflTagForm">
                                         <input type="hidden" name="method" value="UPDATE">
 
                                         <div class="form-group row">
@@ -328,7 +446,7 @@
 
 
                     <div class="table-responsive" >
-                        <table id="usflTableManage" class="manageUsflTable table table-striped table-hover" data-lastid="">
+                        <table id="usflTagsTableManage" class="manageUsflTagsTable table table-striped table-hover" data-lastid="">
                             <thead>
                             <th>ID</th>
                             <th>TITLE</th>
@@ -342,16 +460,43 @@
                         <button type="button"
                                 class="btn btn-primary showMore"
                                 data-action="loadMore"
-                                data-loadtype="usfl"
-                                data-place="#usflTableManage">
+                                data-loadtype="usflTag"
+                                data-place="#usflTagsTableManage">
                             Показать еще
                         </button>
                         <button type="button"
                                 class="btn btn-primary showMore"
                                 data-action="loadMore"
-                                data-loadtype="usfl"
+                                data-loadtype="usflTag"
                                 data-limit="30"
-                                data-place="#usflTableManage">
+                                data-place="#usflTagsTableManage">
+                            Показать еще 30
+                        </button>
+                        
+                        <table id="usflLinksTableManage" class="manageUsflLinksTable table table-striped table-hover" data-lastid="">
+                            <thead>
+                            <th>ID</th>
+                            <th>TITLE</th>
+                            <th>EDIT</th>
+                            <th>DELETE</th>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                        <button type="button"
+                                class="btn btn-primary showMore"
+                                data-action="loadMore"
+                                data-loadtype="usflLink"
+                                data-place="#usflLinksTableManage">
+                            Показать еще
+                        </button>
+                        <button type="button"
+                                class="btn btn-primary showMore"
+                                data-action="loadMore"
+                                data-loadtype="usflLink"
+                                data-limit="30"
+                                data-place="#usflLinksTableManage">
                             Показать еще 30
                         </button>
                     </div>
