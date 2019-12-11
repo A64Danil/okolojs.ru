@@ -11,24 +11,20 @@ function show($str)
 
 
 // Handle GET-request
-// Get record by ID
 if (isset($_GET['id'])) {
 
+    // Орпеделяем запрошенную базу и устанавливаем настройки
     if (!isset($_GET['db'])) {
         exit("Вы не указали имя db в параметрах GET-запроса");
     }
     else
     {
-        // Узнать сколько баз запросили
-
-
-
         switch ($_GET['db']) {
             case 'usfl_links':
-                $selectorSQL = 'usfl_links';
                 $mainDBTable = 'usfl_links';
+                $boundDBTable = 'usfl_taglinks'; // кажется не нужно
+                $selectorSQL = 'usfl_links'; // кажется не нужно
                 $categoryDBTable = 'usfl_tags'; // кажется не нужно
-                $boundDBTable = 'usfl_taglinks';
                 break;
             case 'somenew':
                 echo "i равно 1";
@@ -37,10 +33,11 @@ if (isset($_GET['id'])) {
                 $mainDBTable = $_GET['db'];
                 break;
         };
-
 //        echo "Имя таблицы ".$mainDBTable;
     }
 
+
+    // Get record by ID
     if ($_GET['id'] == 'all')
     {
         if (empty($_GET['limit'])) {
@@ -67,10 +64,11 @@ if (isset($_GET['id'])) {
             //SELECT * FROM `myguests` INNER JOIN (SELECT id FROM `myguests` ORDER BY `id` DESC LIMIT 40,10 ) AS lim USING(id)
 
             // Здесь будет свитч
-            switch ($selectorSQL) {
-                case 'usfl_links':
+            // TODO: свитч не нужен, убрать и оставить дефол
+            switch ($mainDBTable) {
+                case 'usfl_linksOFF':
                     $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` DESC LIMIT ?");
-
+// TODO: useless
 //                    $stmt2 = $mysqli->prepare("SELECT usfl_tags.id, usfl_tags.title
 //FROM (($mainDBTable
 //INNER JOIN $mainDBTable ON $mainDBTable.id = $boundDBTable.link_id)
@@ -105,14 +103,11 @@ if (isset($_GET['id'])) {
 
 
 
-
-
             $stmt->close(); /* закрываем запрос */
             $mysqli->close();  /* закрываем соединение */
         }
         else {
             echo "Ошибка. Вы запросили неверное (".$reqLimit.") количество записей. Так же lastID должен быть больше 0, а у вас (".$lastId.") ";
-
         }
 
 
@@ -144,7 +139,8 @@ if (isset($_GET['id'])) {
 
             // Коннектимся к БД
             $mysqli = new mysqli($host, $user, $password, $database);
-            if (mysqli_connect_errno()) {
+            if (mysqli_connect_errno())
+            {
                 printf("Не удалось подключиться: %s\n", mysqli_connect_error());
                 exit();
             }
@@ -182,6 +178,120 @@ if (isset($_GET['id'])) {
 
 }
 
+// Handle POST-request
+if (count($_POST) != 0) {
+
+    $mainDBTable = $_POST['db'];
+
+    if(isset($_POST['method'])) {
+        // UPDATE record
+        if($_POST['method'] == "UPDATE") {
+            //echo "Вы пытаетесь сделать ".$_POST['method']."\r\n";
+            if (isset($_POST['info']) && isset($_POST['id']) && $_POST['id'] !== "")
+            {
+                $tendINFO = json_decode($_POST['info']);
+                $newRecordTitle = trim($tendINFO->title);
+                if (empty($newRecordTitle)) {
+                    echo "Ошибка! Вы не указали title.";
+                } else {
+                    $link = mysqli_connect($host, $user, $password, $database);
+                    /* проверка подключения */
+                    if (!$link) {
+                        printf("Не удалось подключиться: %s\n", mysqli_connect_error());
+                        exit();
+                    };
+
+                    $codedTitle = iconv("utf-8", "windows-1251", $newRecordTitle); // смена кодировки
+                    $codedInfo = iconv("utf-8", "windows-1251", $_POST['info']);
+
+                    $stmt = mysqli_prepare($link, "UPDATE $mainDBTable SET title=?, info=? WHERE id=?"); // создание строки запроса
+                    mysqli_stmt_bind_param($stmt, 'ssi', $codedTitle, $codedInfo, $_POST['id']); // экранирования символов для mysql
+
+                    if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
+                        echo "Запись обновлена";
+                    } else {
+                        print_r($stmt->errorInfo());
+                    }
+
+                    mysqli_stmt_close($stmt); // закрываем запрос
+                    mysqli_close($link); // закрываем подключение
+                }
+            }
+            else
+            {
+                echo "Ошибка. Вы не прислали INFO или ID";
+            }
+        }
+
+        // DELETE
+        if($_POST['method'] == "DELETE") {
+            // остановились тут
+            if(isset($_POST['id']) && $_POST['id'] !== "") {
+                $link = mysqli_connect($host, $user, $password, $database);
+                /* проверка подключения */
+                if (!$link) {
+                    printf("Не удалось подключиться: %s\n", mysqli_connect_error());
+                    exit();
+                };
+
+                $stmt = mysqli_prepare($link, "DELETE FROM $mainDBTable WHERE id=?");
+                mysqli_stmt_bind_param($stmt, 'i', $_POST['id']);
+
+                if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
+                    echo "Запись удалена";
+                } else {
+                    print_r($stmt->errorInfo());
+                }
+
+                mysqli_stmt_close($stmt);
+                mysqli_close($link);
+            }
+            else
+            {
+                echo "Ошибка. Вы не прислали ID";
+            }
+        }
+
+    }
+    // Add new record form POST
+    elseif (isset($_POST['info']))
+    {
+        $tendINFO = json_decode($_POST['info']);
+        $newRecordTitle = trim($tendINFO->title);
+        if (empty($newRecordTitle)) {
+            echo "Ошибка! Вы не указали title.";
+        }
+        else
+        {
+            $link = mysqli_connect($host, $user, $password, $database);
+            /* проверка подключения */
+            if (!$link) {
+                printf("Не удалось подключиться: %s\n", mysqli_connect_error());
+                exit();
+            };
+
+            $codedTitle = iconv("utf-8", "windows-1251", $newRecordTitle); // смена кодировки
+            $codedInfo = iconv("utf-8", "windows-1251", $_POST['info']);
+
+            $stmt = mysqli_prepare($link, "INSERT INTO $mainDBTable(title, info) VALUES (?, ?)"); // создание строки запроса
+            // TODO: old delete
+            //mysqli_stmt_bind_param($stmt, 'ss', $codedTitle, $codedInfo); // экранирования символов для mysql
+            $stmt->bind_param('ss', $codedTitle, $codedInfo);
+
+            if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
+                echo "Запись добавлена";
+            } else {
+                print_r($stmt->errorInfo());
+            }
+
+            mysqli_stmt_close($stmt); // закрываем запрос
+            mysqli_close($link); // закрываем подключение
+        }
+    }
+    else {
+        echo "Ошибка! Не правильный post-запрос";
+    }
+}
 
 
 // Print JSON from STR

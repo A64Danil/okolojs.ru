@@ -248,7 +248,7 @@ function coreFunction() {
                             isSending = true;
                             addFieldToInfo(this, "tags");
                             addFieldToInfo(this, "selectedTag");
-                            sendRequest('/core/db/usfl.php', addUsflLinkRequest, this, "POST");
+                            sendRequest('/core/core.php', addUsflLinkRequest, this, "POST");
                         }
 
                     });
@@ -382,7 +382,7 @@ function coreFunction() {
                         }
                         if(textAreaJsonValidation(updateUsflLinkForm)) {
                             isSending = true;
-                            sendRequest('/core/db/usfl.php', updateUsflLinkRequest, this, "POST");
+                            sendRequest('/core/core.php', updateUsflLinkRequest, this, "POST");
                         }
                     });
 
@@ -410,7 +410,7 @@ function coreFunction() {
                     const formInputID = updateUsflLinkForm.querySelector('[name=id]');
                     const formInputTitle = updateUsflLinkForm.querySelector('[name=title]');
                     const formInputInfo = updateUsflLinkForm.querySelector('[name=info]');
-                    const formInfo = JSON.parse(info).links[0];
+                    const formInfo = JSON.parse(info).usfl_links[0];
 
                     formInputID.value = formInfo.id;
                     formInputTitle.value = formInfo.title;
@@ -451,11 +451,11 @@ function coreFunction() {
                             if (parseInt(formDataObj.id) > 0) {
                                 switch(button.value) {
                                     case 'EDIT':
-                                        sendRequest('/core/db/usfl.php?id=' + formDataObj.id, addInfoToUpdateUsflLinkForm);
+                                        sendRequest('/core/core.php?db=usfl_links&id=' + formDataObj.id, addInfoToUpdateUsflLinkForm);
                                         break;
                                     case 'DELETE':
                                         if (confirm("Точно удалить?")) {
-                                            sendRequest('/core/db/usfl.php?', deleteUsflLinkRequest, form, "POST");
+                                            sendRequest('/core/core.php?', deleteUsflLinkRequest, form, "POST");
                                         }
 
                                         break;
@@ -477,7 +477,7 @@ function coreFunction() {
             function loadUsflLinks() {
                 if (manageUsflLinksTable!== null) {
                     manageUsflLinksTable.querySelector("tbody").innerHTML = "";
-                    sendRequest('/core/db/usfl.php?id=all', showUsflLinksInManager, manageUsflLinksTable);
+                    sendRequest('/core/core.php?id=all&db=usfl_links', showUsflLinksInManager, manageUsflLinksTable);
                 }
             }
 
@@ -512,7 +512,7 @@ function coreFunction() {
                         }
                         if(textAreaJsonValidation(addUsflTagForm)) {
                             isSending = true;
-                            sendRequest('/core/db/usfl.php', addUsflTagRequest, this, "POST");
+                            sendRequest('/core/core.php', addUsflTagRequest, this, "POST");
                         }
 
                     });
@@ -552,7 +552,7 @@ function coreFunction() {
                         }
                         if(textAreaJsonValidation(updateUsflTagForm)) {
                             isSending = true;
-                            sendRequest('/core/db/usfl.php', updateUsflTagRequest, this, "POST");
+                            sendRequest('/core/core.php', updateUsflTagRequest, this, "POST");
                         }
                     });
 
@@ -621,11 +621,11 @@ function coreFunction() {
                             if (parseInt(formDataObj.id) > 0) {
                                 switch(button.value) {
                                     case 'EDIT':
-                                        sendRequest('/core/db/usfl.php?id=' + formDataObj.id, addInfoToUpdateUsflTagForm);
+                                        sendRequest('/core/core.php?db=usfl_links&id=' + formDataObj.id, addInfoToUpdateUsflTagForm);
                                         break;
                                     case 'DELETE':
                                         if (confirm("Точно удалить?")) {
-                                            sendRequest('/core/db/usfl.php?', deleteUsflTagRequest, form, "POST");
+                                            sendRequest('/core/core.php?db=usfl_links', deleteUsflTagRequest, form, "POST");
                                         }
 
                                         break;
@@ -848,15 +848,15 @@ function showTrendsInManager(response, table) {
 function showUsflLinksInManager(response, table) {
     const result = JSON.parse(response);
     // Удалить кнопки, если response пустой
-    if(result["links"].length === 0) {
+    if(result["usfl_links"].length === 0) {
         alert("Все записи уже загружены!");
         const buttons = document.querySelectorAll("[data-place='#usflLinksTableManage']");
         buttons.forEach(el => el.remove());
     }
 
-    const arrLength = result["links"].length;
-    table.dataset.lastid = result["links"][arrLength - 1].id;
-    result["links"].forEach(function (item) {
+    const arrLength = result["usfl_links"].length;
+    table.dataset.lastid = result["usfl_links"][arrLength - 1].id;
+    result["usfl_links"].forEach(function (item) {
         let newItemROW = manageUsflLinksTPL(item);
         document.querySelector('.manageUsflLinksTable tbody').innerHTML += newItemROW;
         // manageTrendsTable.querySelector("tbody").innerHTML += newItemROW;
@@ -961,13 +961,13 @@ function manageUsflLinksTPL(item) {
                             <td>${item["id"]}</td>
                             <td>${item["title"]} <br> Tags: ${itemCategories} </td>
                             <td>
-                                <form class="editUsflLinkForm" method="GET" action="https://okolojs.ru/core/db/usfl.php">
+                                <form class="editUsflLinkForm" method="GET" action="https://okolojs.ru/core/core.php?db=usfl_links.php">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-info js_EditUsflLinkButton" type="submit" value="EDIT" >
                                 </form>
                             </td>
                             <td>
-                                <form class="deleteUsflLinkForm" method="POST" action="https://okolojs.ru/core/db/usfl.php">
+                                <form class="deleteUsflLinkForm" method="POST" action="https://okolojs.ru/core/core.php?db=usfl_links.php">
                                     <input type="hidden" name="method" value="DELETE">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-danger js_EditUsflLinkButton" type="submit" value="DELETE">
@@ -983,13 +983,13 @@ function manageUsflTagsTPL(item) {
                             <td>${item["id"]}</td>
                             <td>${item["title"]}</td>
                             <td>
-                                <form class="editUsflTagForm" method="GET" action="https://okolojs.ru/core/db/usfl.php">
+                                <form class="editUsflTagForm" method="GET" action="https://okolojs.ru/core/core.php?db=usfl_links.php">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-info js_EditUsflTagButton" type="submit" value="EDIT" >
                                 </form>
                             </td>
                             <td>
-                                <form class="deleteUsflTagForm" method="POST" action="https://okolojs.ru/core/db/usfl.php">
+                                <form class="deleteUsflTagForm" method="POST" action="https://okolojs.ru/core/core.php?db=usfl_links.php">
                                     <input type="hidden" name="method" value="DELETE">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-danger js_EditUsflTagButton" type="submit" value="DELETE">

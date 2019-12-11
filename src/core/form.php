@@ -85,7 +85,8 @@
                                         Описание доступных полей
                                     </a>
                                     -->
-                                    <form method="POST" action="https://okolojs.ru/core/trends.php" class="addTrendForm">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addTrendForm">
+                                        <input type="hidden" value="myguests" name="db">
                                         <div class="form-group">
                                             <label for="">Введите Info в формате JSON: </label>
                                             <textarea class="form-control" id="" cols=60 rows=12 name="info">
@@ -240,7 +241,8 @@
                                         </div>
                                     </div>
 
-                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" class="addUsflLinkForm">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addUsflLinkForm">
+                                        <input type="hidden" value="usfl_links" name="db">
                                         <div class="form-group">
                                             <label for="">Введите Info в формате JSON: </label>
                                             <textarea class="form-control" id="" cols=60 rows=12 name="info">
@@ -379,7 +381,8 @@
                                         </div>
                                     </div>
 
-                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" class="addUsflTagForm">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addUsflTagForm">
+                                        <input type="hidden" value="usfl_tags" name="db">
                                         <div class="form-group">
                                             <label for="">Введите Info в формате JSON: </label>
                                             <textarea class="form-control" id="" cols=60 rows=12 name="info">
