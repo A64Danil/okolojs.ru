@@ -321,6 +321,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="https://okolojs.ru/core/db/usfl.php" class="updateUsflLinkForm">
+                                        <input type="hidden" name="db" value="usfl_links">
                                         <input type="hidden" name="method" value="UPDATE">
 
                                         <div class="form-group row">

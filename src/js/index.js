@@ -961,13 +961,14 @@ function manageUsflLinksTPL(item) {
                             <td>${item["id"]}</td>
                             <td>${item["title"]} <br> Tags: ${itemCategories} </td>
                             <td>
-                                <form class="editUsflLinkForm" method="GET" action="https://okolojs.ru/core/core.php?db=usfl_links.php">
+                                <form class="editUsflLinkForm" method="GET" action="https://okolojs.ru/core/core.php?db=usfl_links">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-info js_EditUsflLinkButton" type="submit" value="EDIT" >
                                 </form>
                             </td>
                             <td>
-                                <form class="deleteUsflLinkForm" method="POST" action="https://okolojs.ru/core/core.php?db=usfl_links.php">
+                                <form class="deleteUsflLinkForm" method="POST" action="https://okolojs.ru/core/core.php">
+                                    <input type="hidden" value="usfl_links" name="db">
                                     <input type="hidden" name="method" value="DELETE">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-danger js_EditUsflLinkButton" type="submit" value="DELETE">
