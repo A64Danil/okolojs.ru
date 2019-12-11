@@ -181,7 +181,16 @@ if (isset($_GET['id'])) {
 // Handle POST-request
 if (count($_POST) != 0) {
 
-    $mainDBTable = $_POST['db'];
+    // Орпеделяем запрошенную базу и устанавливаем настройки
+    if (!isset($_POST['db'])) {
+        exit("Вы не указали имя db в параметрах POST-запроса");
+    }
+    else
+    {
+        $mainDBTable = $_POST['db'];
+    }
+
+
 
     if(isset($_POST['method'])) {
         // UPDATE record
@@ -270,13 +279,25 @@ if (count($_POST) != 0) {
                 exit();
             };
 
-            $codedTitle = iconv("utf-8", "windows-1251", $newRecordTitle); // смена кодировки
-            $codedInfo = iconv("utf-8", "windows-1251", $_POST['info']);
 
-            $stmt = mysqli_prepare($link, "INSERT INTO $mainDBTable(title, info) VALUES (?, ?)"); // создание строки запроса
-            // TODO: old delete
-            //mysqli_stmt_bind_param($stmt, 'ss', $codedTitle, $codedInfo); // экранирования символов для mysql
-            $stmt->bind_param('ss', $codedTitle, $codedInfo);
+            switch ($_POST['db']) {
+                case 'usfl_tags':
+                    $codedTitle = iconv("utf-8", "windows-1251", $newRecordTitle); // смена кодировки
+                    $stmt = mysqli_prepare($link, "INSERT INTO $mainDBTable(title) VALUES (?)"); // создание строки запроса
+                    $stmt->bind_param('s', $codedTitle);
+                    break;
+                case 'somenew':
+                    echo "i равно 1";
+                    break;
+                default:
+                    $codedTitle = iconv("utf-8", "windows-1251", $newRecordTitle); // смена кодировки
+                    $codedInfo = iconv("utf-8", "windows-1251", $_POST['info']);
+                    $stmt = mysqli_prepare($link, "INSERT INTO $mainDBTable(title, info) VALUES (?, ?)"); // создание строки запроса
+                    $stmt->bind_param('ss', $codedTitle, $codedInfo);
+                    break;
+            };
+
+
 
             if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
                 echo "Запись добавлена";

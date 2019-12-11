@@ -258,8 +258,8 @@ function coreFunction() {
                     });
 
                     sendRequest('/core/core.php?id=all&db=usfl_tags', function (response) {
-                        // console.log()
                         allUsflTags.arr = JSON.parse(response)["usfl_tags"];
+                        console.log()
                     });
 
                     addUsflLinkForm_searchTags.addEventListener("keyup", function (e) {
@@ -968,7 +968,7 @@ function manageUsflLinksTPL(item) {
                             </td>
                             <td>
                                 <form class="deleteUsflLinkForm" method="POST" action="https://okolojs.ru/core/core.php">
-                                    <input type="hidden" value="usfl_links" name="db">
+                                    <input type="hidden" name="db" value="usfl_links">
                                     <input type="hidden" name="method" value="DELETE">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-danger js_EditUsflLinkButton" type="submit" value="DELETE">
@@ -990,7 +990,8 @@ function manageUsflTagsTPL(item) {
                                 </form>
                             </td>
                             <td>
-                                <form class="deleteUsflTagForm" method="POST" action="https://okolojs.ru/core/core.php?db=usfl_links.php">
+                                <form class="deleteUsflTagForm" method="POST" action="https://okolojs.ru/core/core.php">
+                                    <input type="hidden" name="db" value="usfl_tags">
                                     <input type="hidden" name="method" value="DELETE">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-danger js_EditUsflTagButton" type="submit" value="DELETE">
