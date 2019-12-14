@@ -245,11 +245,12 @@ header {
 
 .manageForm .selectedTags .searchTags {
   border: none;
-  //outline: none;
+  margin-bottom: 5px;
   max-width: 300px;
   min-width: 100px;
   flex-grow: 1;
   flex-basis: 100px;
+  min-height: 36px;
 }
 
 
@@ -261,7 +262,7 @@ header {
 
 .manageForm .selectedTags .selectedTag {
   font-size: 16px;
-  margin: 0 5px 0 0;
+  margin: 0 5px 5px 0;
   //padding: 0 5px;
   height: 36px;
 }

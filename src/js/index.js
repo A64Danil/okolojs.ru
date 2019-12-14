@@ -220,10 +220,13 @@ function coreFunction() {
             const addUsflLinkForm_selectedTags = document.querySelector('.selectedTags');
             const updateUsflLinkForm = document.querySelector('.updateUsflLinkForm');
             const manageUsflLinksTable = document.querySelector('.manageUsflLinksTable');
-
+            let searchResult;
+            if (addUsflLinkForm !== null) {
+                searchResult = addUsflLinkForm.querySelector(".search_result");
+            }
 
             loadUsflLinks();
-            addUsflLinkFormControl(tagsLoader);
+            addUsflLinkFormControl();
             updateUsflLinkFormControl();
             manageUsflLinksTableControl();
 
@@ -231,10 +234,6 @@ function coreFunction() {
             // Add usflLink
             function addUsflLinkFormControl(callback) {
                 if (addUsflLinkForm !== null) {
-
-                    if (callback) callback(addUsflLinkForm); // Подгрузить категории
-
-                    const searchResult = addUsflLinkForm.querySelector(".search_result");
 
                     addUsflLinkForm.addEventListener("submit", function (e) {
                         e.preventDefault();
@@ -247,19 +246,34 @@ function coreFunction() {
                         if(textAreaJsonValidation(addUsflLinkForm)) {
                             isSending = true;
                             addFieldToInfo(this, "tags");
-                            addFieldToInfo(this, "selectedTag");
                             sendRequest('/core/core.php', addUsflLinkRequest, this, "POST");
                         }
 
                     });
 
                     addUsflLinkForm.addEventListener("reset", function (e) {
+                        console.log("form reset");
+                        removeFromArr(allUsflTags.selected);
+
+                        while (addUsflLinkForm_selectedTags.children.length > 1) {
+                            addUsflLinkForm_selectedTags.removeChild(addUsflLinkForm_selectedTags.children[0])
+                        }
+
+                        nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                        searchResult.innerHTML = "";
+                        nodeCreator(allUsflTags.arr, searchResult, nodeCreator_divTPL, "resultItem tag");
                         jQuery('#addUsflLinkModal').modal('hide');
                     });
 
                     sendRequest('/core/core.php?id=all&db=usfl_tags', function (response) {
-                        allUsflTags.arr = JSON.parse(response)["usfl_tags"];
-                        console.log()
+                        if (response) {
+                            allUsflTags.arr = JSON.parse(response)["usfl_tags"];
+                            console.log("Пришли все возможные теги");
+                            nodeCreator(allUsflTags.arr, searchResult, nodeCreator_divTPL, "resultItem tag");
+                        } else {
+                            alert("Что-то пошло не так: \r\n" + response);
+                        };
+
                     });
 
                     addUsflLinkForm_searchTags.addEventListener("keyup", function (e) {
@@ -267,7 +281,6 @@ function coreFunction() {
                         const tempArr = [];
                         allUsflTags.arr.forEach((el, i, arr) => {
                             if (el["title"].match(regex) ) {
-                                // console.log("Есть совпадение " + this.value + " - " + el);
                                 tempArr.push(el);
                             }
                         });
@@ -286,43 +299,42 @@ function coreFunction() {
                         if (e.target.classList.contains("tag") && e.target.dataset.id && e.target.dataset.title) {
                             const tag = e.target;
                             const selectedTag = {};
-                            selectedTag.id = tag.dataset.id;
+                            selectedTag.id = parseInt(tag.dataset.id);
                             selectedTag.title = tag.dataset.title;
 
                             if (!checkIsSelected(allUsflTags.selected, selectedTag, "id" )) {
                                 allUsflTags.selected.push(selectedTag);
-                                // addUsflLinkForm_selectedTags.innerHTML = "";
                                 while (addUsflLinkForm_selectedTags.children.length > 1) {
-                                    console.log(addUsflLinkForm_selectedTags.children.length);
-                                    console.log(addUsflLinkForm_selectedTags.children[0]);
                                     addUsflLinkForm_selectedTags.removeChild(addUsflLinkForm_selectedTags.children[0])
                                 }
 
-                                nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
-
+                                nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                                tag.remove();
                             }
 
-                            console.log(allUsflTags.selected);
                         }
 
                         if (e.target.classList.contains("selectedTag") && e.target.dataset.id && e.target.dataset.title) {
                             const tag = e.target;
                             const selectedTag = {};
-                            selectedTag.id = tag.dataset.id;
+                            selectedTag.id = parseInt(tag.dataset.id);
                             selectedTag.title = tag.dataset.title;
-                            console.log(selectedTag);
 
+                            let tempArr;
                             removeFromArr(allUsflTags.selected, selectedTag, "id" );
 
+
+                            tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
+
+
                             while (addUsflLinkForm_selectedTags.children.length > 1) {
-                                console.log(addUsflLinkForm_selectedTags.children.length);
-                                console.log(addUsflLinkForm_selectedTags.children[0]);
                                 addUsflLinkForm_selectedTags.removeChild(addUsflLinkForm_selectedTags.children[0])
                             }
 
                             nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
+                            searchResult.innerHTML = "";
+                            nodeCreator(tempArr, searchResult, nodeCreator_divTPL, "resultItem tag");
 
-                            console.log(allUsflTags.selected);
                         }
                     })
                 } else {
@@ -345,30 +357,6 @@ function coreFunction() {
             }
 
 
-            //
-            function tagsLoader(form) {
-                sendRequest('/core/core.php?id=all&db=usfl_tags', addTagsToSelectorField, form);
-            }
-
-            // Устаревшее, добавляет тэги в выпадающий список
-            function addTagsToSelectorField(response, form) {
-                    if (response) {
-                        const result = JSON.parse(response);
-                        console.log("Пришли все возможные теги");
-                        // form.tags.innerHTML
-                        result["usfl_tags"].forEach(function (item) {
-                            let newItemROW = tagsInSelectorTPL(item);
-                            form.querySelectorAll(".tags").forEach((el) => {
-                                el.innerHTML += newItemROW;
-                            });
-
-                            // form.tags.innerHTML += newItemROW;
-                            // form["tags2"].innerHTML += newItemROW;
-                        })
-                    } else {
-                        alert("Что-то пошло не так: \r\n" + response);
-                    };
-                }
 
             // Edit usflLink
             function updateUsflLinkFormControl() {
@@ -795,13 +783,21 @@ function checkIsSelected(arr, el, key) {
     return false;
 
 }
+
 function removeFromArr(arr, el, key) {
-    for(let i = 0; i < arr.length; i++) {
-        if (arr[i][key] === el[key]) {
-            arr.splice(i, 1);
+    console.log(arr);
+
+    if(!el) {
+        arr.splice(0);
+    } else {
+        for(let i = 0; i < arr.length; i++) {
+            if (arr[i][key] === el[key]) {
+                arr.splice(i, 1);
+            }
         }
     }
 
+    console.log(arr);
 }
 
 
@@ -942,17 +938,16 @@ function manageTrendsTPL(item) {
 function manageUsflLinksTPL(item) {
     let itemCategories = "";
 
-
-    console.log(item);
+    // console.log(item);
 
     if (item["info"]["tags"] && item["info"]["tags"].length > 0) {
         item["info"]["tags"].forEach((el, i, arr) => {
-           console.log(el.id);
-           console.log(el.title);
+           // console.log(el.id);
+           // console.log(el.title);
            let newTagInRow = el.title + ` (${el.id})`;
            if (arr.length !== (i+1)) newTagInRow += ", ";
            itemCategories += newTagInRow;
-           console.log(itemCategories);
+           // console.log(itemCategories);
         });
     };
 
@@ -1002,6 +997,7 @@ function manageUsflTagsTPL(item) {
 }
 
 
+// Удалить т.к. не нужно
 function tagsInSelectorTPL(item) {
     return `<option value='${JSON.stringify(item)}'>${item["title"]}</option>`;
 }
@@ -1012,24 +1008,29 @@ function addFieldToInfo(form, field) {
     const formInfo = JSON.parse(form.info.value);
     const fieldArr = [];
 
+    console.log(form);
+    console.log(formInfo);
+
+
     form.querySelectorAll("."+field).forEach((el) => {
-        if (el.value) {
-            console.log("el.value существует - " + el.value)
-        } else {
-            // for(let key in el) {
-            //     newDiv.dataset[key] = el[key];
-            // }
-            console.log("el.value существует - " + el.value)
+        let newObj = {};
+        for(let key in el.dataset) {
+            if (key === "id") {
+                newObj[key] = parseInt(el.dataset[key]);
+            } else {
+                newObj[key] = el.dataset[key];
+            }
         }
-        let newString = JSON.parse(el.value);
+        console.log(newObj);
 
-
-        fieldArr.push(newString);
+        fieldArr.push(newObj);
     });
+
 
 
     formInfo[field]=  fieldArr;
 
+    console.log("Форм инфо");
     console.log(formInfo);
     form.info.value = JSON.stringify(formInfo, undefined, 4);
 }

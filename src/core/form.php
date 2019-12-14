@@ -260,41 +260,10 @@
                                                 <input type="text" class="search searchTags" >
                                             </div>
                                             <div class="jsSearchTags_result search_result">
-                                                <div class="resultItem tag">GIT</div>
-                                                <div class="resultItem tag">HTML</div>
-                                                <div class="resultItem tag">PHP</div>
-                                                <div class="resultItem tag">JS</div>
-                                                <div class="resultItem tag">PHP 2.1</div>
-                                                <div class="resultItem tag">P+++</div>
-                                                <div class="resultItem tag">Antol AMN</div>
-                                                <div class="resultItem tag">CRM cern xTWO</div>
-                                                <div class="resultItem tag">GIT</div>
-                                                <div class="resultItem tag">HTML</div>
-                                                <div class="resultItem tag">PHP</div>
-                                                <div class="resultItem tag">JS</div>
-                                                <div class="resultItem tag">PHP 2.1</div>
-                                                <div class="resultItem tag">P+++</div>
-                                                <div class="resultItem tag">Antol AMN</div>
-                                                <div class="resultItem tag">CRM cern xTWO</div>
-                                                <div class="resultItem tag">GIT</div>
-                                                <div class="resultItem tag">HTML</div>
-                                                <div class="resultItem tag">PHP</div>
-                                                <div class="resultItem tag">JS</div>
-                                                <div class="resultItem tag">PHP 2.1</div>
-                                                <div class="resultItem tag">P+++</div>
-                                                <div class="resultItem tag">Antol AMN</div>
-                                                <div class="resultItem tag">CRM cern xTWO</div>
-                                                <div class="resultItem tag">GIT</div>
-                                                <div class="resultItem tag">HTML</div>
-                                                <div class="resultItem tag">PHP</div>
-                                                <div class="resultItem tag">JS</div>
-                                                <div class="resultItem tag">PHP 2.1</div>
-                                                <div class="resultItem tag">P+++</div>
-                                                <div class="resultItem tag">Antol AMN</div>
-                                                <div class="resultItem tag">CRM cern xTWO</div>
+
                                             </div>
-                                            <select  class="form-control tags"></select>
-                                            <select  class="form-control tags"></select>
+<!--                                            <select  class="form-control tags"></select>-->
+<!--                                            <select  class="form-control tags"></select>-->
 
                                         </div>
                                         <div class="modal-footer">

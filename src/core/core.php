@@ -286,11 +286,6 @@ if (count($_POST) != 0) {
                     $stmt = mysqli_prepare($link, "INSERT INTO $mainDBTable(title) VALUES (?)"); // создание строки запроса
                     $stmt->bind_param('s', $codedTitle);
                     break;
-                case 'usfl_links':
-                    $codedInfo = iconv("utf-8", "windows-1251", $_POST['info']);
-                    $stmt = mysqli_prepare($link, "INSERT INTO $mainDBTable(title, info) VALUES (?, ?)");
-                    $stmt->bind_param('ss', $codedTitle, $codedInfo);
-                    break;
                 case 'somenew':
                     echo "i равно 1";
                     break;
@@ -305,39 +300,39 @@ if (count($_POST) != 0) {
 
             if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
                 echo "Запись добавлена";
+
+
+                switch ($_POST['db']) {
+                    case 'usfl_links':
+                        $boundLinkId = $link->insert_id;
+                        $boundDBTable = 'usfl_taglinks';
+
+                        $newTags = json_decode($_POST['info'])->tags;
+
+                        for ($i = 0; $i < count($newTags); $i++)
+                        {
+                            $boundTagId = $newTags[$i]->id;
+                            $stmtBound = mysqli_prepare($link, "INSERT INTO $boundDBTable(tag_id, link_id) VALUES (?,?)");
+                            $stmtBound->bind_param('ii', $boundTagId, $boundLinkId);
+
+                            if (mysqli_stmt_execute($stmtBound)) { // выполнение подготовленного запроса
+//                            echo "Связь добавлена.\n";
+                            } else {
+                                print_r($stmtBound->errorInfo());
+                            }
+                            mysqli_stmt_close($stmtBound); // закрываем запрос
+                        }
+
+                        break;
+                    default:
+                        break;
+                };
             } else {
                 print_r($stmt->errorInfo());
             }
 
 
-
             mysqli_stmt_close($stmt); // закрываем запрос
-
-            switch ($_POST['db']) {
-                case 'usfl_links':
-//                    printf ("1649-New Record has id %d.\n", $link->insert_id);
-                    $boundLinkId = $link->insert_id;
-                    $boundDBTable = 'usfl_taglinks';
-
-                    $newTags = json_decode($_POST['info'])->tags;
-
-                    for ($i = 0; $i < count($newTags); $i++) {
-                        $boundTagId = $newTags[$i]->id;
-                        $stmtBound = mysqli_prepare($link, "INSERT INTO $boundDBTable(tag_id, link_id) VALUES (?,?)");
-                        $stmtBound->bind_param('ii', $boundTagId, $boundLinkId);
-
-                        if (mysqli_stmt_execute($stmtBound)) { // выполнение подготовленного запроса
-//                            echo "Связь добавлена.\n";
-                        } else {
-                            print_r($stmtBound->errorInfo());
-                        }
-                        mysqli_stmt_close($stmtBound); // закрываем запрос
-                    }
-
-                    break;
-                default:
-                    break;
-            };
 
             mysqli_close($link); // закрываем подключение
         }
