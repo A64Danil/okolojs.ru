@@ -255,16 +255,11 @@
 
                                         </div>
                                         <div class="form-group">
-                                            <label for="" class="col-form-label col-form-label-lg">Тэги </label>
+                                            <label for="" class="col-form-label">Тэги </label>
                                             <div class="selectedTags form-control ">
                                                 <input type="text" class="search searchTags" >
                                             </div>
-                                            <div class="jsSearchTags_result search_result">
-
-                                            </div>
-<!--                                            <select  class="form-control tags"></select>-->
-<!--                                            <select  class="form-control tags"></select>-->
-
+                                            <div class="jsSearchTags_result search_result"></div>
                                         </div>
                                         <div class="modal-footer">
                                             <input type="submit" value="Добавить" class="btn btn-success">
@@ -310,6 +305,14 @@
                                         <div class="form-group">
                                             <label for="">Введите Info в формате JSON: </label>
                                             <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-form-label">Тэги </label>
+                                            <div class="selectedTags form-control ">
+                                                <input type="text" class="search searchTags" >
+                                            </div>
+                                            <div class="jsSearchTags_result search_result"></div>
                                         </div>
 
                                         <div class="modal-footer">
