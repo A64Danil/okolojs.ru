@@ -242,7 +242,7 @@
                                     </div>
 
                                     <form method="POST" action="https://okolojs.ru/core/core.php" class="addUsflLinkForm">
-                                        <input type="hidden" value="usfl_links" name="db">
+                                        <input type="hidden" name="db" value="usfl_links" >
                                         <div class="form-group">
                                             <label for="">Введите Info в формате JSON: </label>
                                             <textarea class="form-control" id="" cols=60 rows=12 name="info">
@@ -388,6 +388,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="https://okolojs.ru/core/db/usfl.php" class="updateUsflTagForm">
+                                        <input type="hidden" name="db" value="usfl_tags">
                                         <input type="hidden" name="method" value="UPDATE">
 
                                         <div class="form-group row">

@@ -540,7 +540,7 @@ function coreFunction() {
                                         break;
                                     case 'DELETE':
                                         if (confirm("Точно удалить?")) {
-                                            sendRequest('/core/core.php?', deleteUsflLinkRequest, form, "POST");
+                                            sendRequest('/core/core.php', deleteUsflLinkRequest, form, "POST");
                                         }
 
                                         break;
@@ -665,11 +665,13 @@ function coreFunction() {
                     const formInputID = updateUsflTagForm.querySelector('[name=id]');
                     const formInputTitle = updateUsflTagForm.querySelector('[name=title]');
                     const formInputInfo = updateUsflTagForm.querySelector('[name=info]');
-                    const formInfo = JSON.parse(info).tags[0];
+                    const formInfo = JSON.parse(info).usfl_tags[0];
+
+                    console.log(formInfo);
 
                     formInputID.value = formInfo.id;
                     formInputTitle.value = formInfo.title;
-                    formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
+                    formInputInfo.value = JSON.stringify(formInfo, undefined, 4);
 
                 } else {
                     console.log("Формы updateUsflTagForm нет")
@@ -701,16 +703,15 @@ function coreFunction() {
                             const button = target;
                             const form = button.parentNode;
                             const FORM_DATA = jQuery(form).serialize();
-                            // console.log(FORM_DATA);
                             const formDataObj = paramsToJson(FORM_DATA);
                             if (parseInt(formDataObj.id) > 0) {
                                 switch(button.value) {
                                     case 'EDIT':
-                                        sendRequest('/core/core.php?db=usfl_links&id=' + formDataObj.id, addInfoToUpdateUsflTagForm);
+                                        sendRequest('/core/core.php?db=usfl_tags&id=' + formDataObj.id, addInfoToUpdateUsflTagForm);
                                         break;
                                     case 'DELETE':
                                         if (confirm("Точно удалить?")) {
-                                            sendRequest('/core/core.php?db=usfl_links', deleteUsflTagRequest, form, "POST");
+                                            sendRequest('/core/core.php', deleteUsflTagRequest, form, "POST");
                                         }
 
                                         break;
