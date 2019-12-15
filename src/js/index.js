@@ -213,8 +213,6 @@ function coreFunction() {
 
         function usflLinksMainManager() {
 
-
-
             const addUsflLinkForm = document.querySelector('.addUsflLinkForm');
             const addUsflLinkForm_searchTags = document.querySelector('.addUsflLinkForm .searchTags');
             const addUsflLinkForm_selectedTags = document.querySelector('.addUsflLinkForm .selectedTags');
@@ -297,7 +295,6 @@ function coreFunction() {
                         console.log(tempArr);
                         addUsflLinkForm_searchResult.innerHTML = "";
                         nodeCreator(tempArr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
-                        // search_result
 
                     });
 
@@ -364,6 +361,9 @@ function coreFunction() {
                 loadUsflLinks();
             }
 
+            jQuery('#addUsflLinkModal').on('shown.bs.modal', function () {
+                removeFromArr(allUsflTags.selected);
+            });
 
 
             // Edit usflLink
@@ -378,6 +378,7 @@ function coreFunction() {
                         }
                         if(textAreaJsonValidation(updateUsflLinkForm)) {
                             isSending = true;
+                            addFieldToInfo(this, "tags");
                             sendRequest('/core/core.php', updateUsflLinkRequest, this, "POST");
                         }
                     });
@@ -445,13 +446,11 @@ function coreFunction() {
 
 
                             tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
-
-
                             while (updateUsflLinkForm_selectedTags.children.length > 1) {
                                 updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
                             }
 
-                            nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
+                            nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
                             updateUsflLinkForm_searchResult.innerHTML = "";
                             nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
 
@@ -474,6 +473,12 @@ function coreFunction() {
 
             function addInfoToUpdateUsflLinkForm(info) {
                 if (updateUsflLinkForm) {
+                    removeFromArr(allUsflTags.selected);
+
+                    while (updateUsflLinkForm_selectedTags.children.length > 1) {
+                        updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
+                    }
+
                     jQuery('#updateUsflLinkModal').modal('show');
                     const formInputID = updateUsflLinkForm.querySelector('[name=id]');
                     const formInputTitle = updateUsflLinkForm.querySelector('[name=title]');
@@ -482,17 +487,24 @@ function coreFunction() {
 
                     formInputID.value = formInfo.id;
                     formInputTitle.value = formInfo.title;
-                    console.log(formInfo.info.tags);
+                    allUsflTags.selected = formInfo.info.tags;
                     formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
 
-                    // добавить все теги в форму
-                    nodeCreator(allUsflTags.arr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
-                    // добавить выбранные теги в форму
+
+                    let tempArr;
+                    tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
+
+
+                    nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
+                    updateUsflLinkForm_searchResult.innerHTML = "";
+                    nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
 
                 } else {
                     console.log("Формы updateUsflLinkForm нет")
                 }
             }
+
+
 
 
             // Delete usflLink
@@ -1093,10 +1105,6 @@ function addFieldToInfo(form, field) {
     const formInfo = JSON.parse(form.info.value);
     const fieldArr = [];
 
-    console.log(form);
-    console.log(formInfo);
-
-
     form.querySelectorAll("."+field).forEach((el) => {
         let newObj = {};
         for(let key in el.dataset) {
@@ -1106,17 +1114,12 @@ function addFieldToInfo(form, field) {
                 newObj[key] = el.dataset[key];
             }
         }
-        console.log(newObj);
-
         fieldArr.push(newObj);
     });
 
 
 
     formInfo[field]=  fieldArr;
-
-    console.log("Форм инфо");
-    console.log(formInfo);
     form.info.value = JSON.stringify(formInfo, undefined, 4);
 }
 
