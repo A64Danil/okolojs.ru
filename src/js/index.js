@@ -216,13 +216,22 @@ function coreFunction() {
 
 
             const addUsflLinkForm = document.querySelector('.addUsflLinkForm');
-            const addUsflLinkForm_searchTags = document.querySelector('.searchTags');
-            const addUsflLinkForm_selectedTags = document.querySelector('.selectedTags');
+            const addUsflLinkForm_searchTags = document.querySelector('.addUsflLinkForm .searchTags');
+            const addUsflLinkForm_selectedTags = document.querySelector('.addUsflLinkForm .selectedTags');
+
             const updateUsflLinkForm = document.querySelector('.updateUsflLinkForm');
+            const updateUsflLinkForm_searchTags = document.querySelector('.updateUsflLinkForm .searchTags');
+            const updateUsflLinkForm_selectedTags = document.querySelector('.updateUsflLinkForm .selectedTags');
+
             const manageUsflLinksTable = document.querySelector('.manageUsflLinksTable');
-            let searchResult;
+
+            let addUsflLinkForm_searchResult;
+            let updateUsflLinkForm_searchResult;
             if (addUsflLinkForm !== null) {
-                searchResult = addUsflLinkForm.querySelector(".search_result");
+                addUsflLinkForm_searchResult = addUsflLinkForm.querySelector(".search_result");
+            }
+            if (updateUsflLinkForm !== null) {
+                updateUsflLinkForm_searchResult = updateUsflLinkForm.querySelector(".search_result");
             }
 
             loadUsflLinks();
@@ -252,7 +261,6 @@ function coreFunction() {
                     });
 
                     addUsflLinkForm.addEventListener("reset", function (e) {
-                        console.log("form reset");
                         removeFromArr(allUsflTags.selected);
 
                         while (addUsflLinkForm_selectedTags.children.length > 1) {
@@ -260,8 +268,8 @@ function coreFunction() {
                         }
 
                         nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
-                        searchResult.innerHTML = "";
-                        nodeCreator(allUsflTags.arr, searchResult, nodeCreator_divTPL, "resultItem tag");
+                        addUsflLinkForm_searchResult.innerHTML = "";
+                        nodeCreator(allUsflTags.arr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
                         jQuery('#addUsflLinkModal').modal('hide');
                     });
 
@@ -269,7 +277,7 @@ function coreFunction() {
                         if (response) {
                             allUsflTags.arr = JSON.parse(response)["usfl_tags"];
                             console.log("Пришли все возможные теги");
-                            nodeCreator(allUsflTags.arr, searchResult, nodeCreator_divTPL, "resultItem tag");
+                            nodeCreator(allUsflTags.arr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
                         } else {
                             alert("Что-то пошло не так: \r\n" + response);
                         };
@@ -287,8 +295,8 @@ function coreFunction() {
 
                         console.log("Итоговый массив: ");
                         console.log(tempArr);
-                        searchResult.innerHTML = "";
-                        nodeCreator(tempArr, searchResult, nodeCreator_divTPL, "resultItem tag");
+                        addUsflLinkForm_searchResult.innerHTML = "";
+                        nodeCreator(tempArr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
                         // search_result
 
                     });
@@ -332,8 +340,8 @@ function coreFunction() {
                             }
 
                             nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
-                            searchResult.innerHTML = "";
-                            nodeCreator(tempArr, searchResult, nodeCreator_divTPL, "resultItem tag");
+                            addUsflLinkForm_searchResult.innerHTML = "";
+                            nodeCreator(tempArr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
 
                         }
                     })
@@ -375,7 +383,79 @@ function coreFunction() {
                     });
 
                     updateUsflLinkForm.addEventListener("reset", function (e) {
+                        removeFromArr(allUsflTags.selected);
+
+                        while (updateUsflLinkForm_selectedTags.children.length > 1) {
+                            updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
+                        }
+
+                        nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                        updateUsflLinkForm_searchResult.innerHTML = "";
+                        nodeCreator(allUsflTags.arr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
                         jQuery('#updateUsflLinkModal').modal('hide');
+                    });
+
+
+                    updateUsflLinkForm_searchTags.addEventListener("keyup", function (e) {
+                        const regex = new RegExp(this.value, 'i');
+                        const tempArr = [];
+                        allUsflTags.arr.forEach((el, i, arr) => {
+                            if (el["title"].match(regex) ) {
+                                tempArr.push(el);
+                            }
+                        });
+
+                        console.log("Итоговый массив: ");
+                        console.log(tempArr);
+                        updateUsflLinkForm_searchResult.innerHTML = "";
+                        nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                        // search_result
+
+                    });
+
+
+                    updateUsflLinkForm.addEventListener("click", function (e) {
+
+                        if (e.target.classList.contains("tag") && e.target.dataset.id && e.target.dataset.title) {
+                            const tag = e.target;
+                            const selectedTag = {};
+                            selectedTag.id = parseInt(tag.dataset.id);
+                            selectedTag.title = tag.dataset.title;
+
+                            if (!checkIsSelected(allUsflTags.selected, selectedTag, "id" )) {
+                                allUsflTags.selected.push(selectedTag);
+                                while (updateUsflLinkForm_selectedTags.children.length > 1) {
+                                    updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
+                                }
+
+                                nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                                tag.remove();
+                            }
+
+                        }
+
+                        if (e.target.classList.contains("selectedTag") && e.target.dataset.id && e.target.dataset.title) {
+                            const tag = e.target;
+                            const selectedTag = {};
+                            selectedTag.id = parseInt(tag.dataset.id);
+                            selectedTag.title = tag.dataset.title;
+
+                            let tempArr;
+                            removeFromArr(allUsflTags.selected, selectedTag, "id" );
+
+
+                            tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
+
+
+                            while (updateUsflLinkForm_selectedTags.children.length > 1) {
+                                updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
+                            }
+
+                            nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
+                            updateUsflLinkForm_searchResult.innerHTML = "";
+                            nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+
+                        }
                     })
                 }
             }
@@ -402,7 +482,12 @@ function coreFunction() {
 
                     formInputID.value = formInfo.id;
                     formInputTitle.value = formInfo.title;
+                    console.log(formInfo.info.tags);
                     formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
+
+                    // добавить все теги в форму
+                    nodeCreator(allUsflTags.arr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                    // добавить выбранные теги в форму
 
                 } else {
                     console.log("Формы updateUsflLinkForm нет")
