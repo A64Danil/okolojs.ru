@@ -266,6 +266,28 @@ if (count($_POST) != 0) {
                                 }
 
                                 break;
+                            case 'usfl_tags':
+                                $boundDBTable = 'usfl_taglinks';
+                                $boundTagId = $_POST['id'];
+                                // Удалить все связи где link_id = $_POST['id']
+                                $stmtBound = mysqli_prepare($link, "SELECT link_id FROM $boundDBTable WHERE tag_id=?");
+                                $stmtBound->bind_param('i', $boundTagId);
+                                // Найти все записи, содержащие линк с этим тегом
+                                // SELECT `link_id` FROM `usfl_taglinks` WHERE `tag_id` = 2
+
+                                // Будет список ID-шников, например "2 | 106 |107"
+
+                                // Поместить результат в переменую
+                                if (mysqli_stmt_execute($stmtBound)) {
+                                    //echo "Связь добавлена.\n";
+                                    $result = $stmtBound->get_result();
+                                    // TODO: написать функцию которая будет вытаскивать из результата ID нужных Статей для апдейта
+                                    print_r($result);
+                                } else {
+                                    print_r($stmtBound->errorInfo());
+                                }
+
+                                break;
                             default:
                                 break;
                         };
