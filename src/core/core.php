@@ -211,13 +211,64 @@ if (count($_POST) != 0) {
                     };
 
                     $codedTitle = iconv("utf-8", "windows-1251", $newRecordTitle); // смена кодировки
-                    $codedInfo = iconv("utf-8", "windows-1251", $_POST['info']);
 
-                    $stmt = mysqli_prepare($link, "UPDATE $mainDBTable SET title=?, info=? WHERE id=?"); // создание строки запроса
-                    mysqli_stmt_bind_param($stmt, 'ssi', $codedTitle, $codedInfo, $_POST['id']); // экранирования символов для mysql
+
+                    switch ($_POST['db']) {
+                        case 'usfl_tags':
+                            $stmt = mysqli_prepare($link, "UPDATE $mainDBTable SET title=? WHERE id=?"); // создание строки запроса
+                            $stmt->bind_param('si', $codedTitle, $_POST['id']);
+                            break;
+                        case 'somenew':
+                            echo "i равно 1";
+                            break;
+                        default:
+                            $codedInfo = iconv("utf-8", "windows-1251", $_POST['info']);
+                            $stmt = mysqli_prepare($link, "UPDATE $mainDBTable SET title=?, info=? WHERE id=?"); // создание строки запроса
+                            mysqli_stmt_bind_param($stmt, 'ssi', $codedTitle, $codedInfo, $_POST['id']); // экранирования символов для mysql
+                            break;
+                    };
+
 
                     if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
                         echo "Запись обновлена";
+
+                        switch ($_POST['db']) {
+                            case 'usfl_links':
+                                $boundDBTable = 'usfl_taglinks';
+                                $boundLinkId = $_POST['id'];
+                                $newTags = json_decode($_POST['info'])->tags;
+
+                                // Удалить все связи где link_id = $_POST['id']
+                                $stmtBound = mysqli_prepare($link, "DELETE FROM $boundDBTable WHERE link_id=?");
+                                $stmtBound->bind_param('i', $boundLinkId);
+
+                                if (mysqli_stmt_execute($stmtBound)) {
+                                    //echo "Связь добавлена.\n";
+                                } else {
+                                    print_r($stmtBound->errorInfo());
+                                }
+                                mysqli_stmt_close($stmtBound);
+
+
+                                // Создать новые связи по всем тегам из $newTags
+                                for ($i = 0; $i < count($newTags); $i++)
+                                {
+                                    $boundTagId = $newTags[$i]->id;
+                                    $stmtBound = mysqli_prepare($link, "INSERT INTO $boundDBTable(tag_id, link_id) VALUES (?,?)");
+                                    $stmtBound->bind_param('ii', $boundTagId, $boundLinkId);
+
+                                    if (mysqli_stmt_execute($stmtBound)) {
+                                        //echo "Связь добавлена.\n";
+                                    } else {
+                                        print_r($stmtBound->errorInfo());
+                                    }
+                                    mysqli_stmt_close($stmtBound); // закрываем запрос
+                                }
+
+                                break;
+                            default:
+                                break;
+                        };
                     } else {
                         print_r($stmt->errorInfo());
                     }
