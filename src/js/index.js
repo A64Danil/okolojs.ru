@@ -671,6 +671,7 @@ function coreFunction() {
 
                     formInputID.value = formInfo.id;
                     formInputTitle.value = formInfo.title;
+                    delete formInfo.id;
                     formInputInfo.value = JSON.stringify(formInfo, undefined, 4);
 
                 } else {
