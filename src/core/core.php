@@ -272,21 +272,68 @@ if (count($_POST) != 0) {
                                 // Удалить все связи где link_id = $_POST['id']
                                 $stmtBound = mysqli_prepare($link, "SELECT link_id FROM $boundDBTable WHERE tag_id=?");
                                 $stmtBound->bind_param('i', $boundTagId);
-                                // Найти все записи, содержащие линк с этим тегом
-                                // SELECT `link_id` FROM `usfl_taglinks` WHERE `tag_id` = 2
 
-                                // Будет список ID-шников, например "2 | 106 |107"
-
-                                // Поместить результат в переменую
+                                // Найти все записи, содержащие линк с этим тегом. Поместить результат в переменую.
                                 if (mysqli_stmt_execute($stmtBound)) {
-                                    //echo "Связь добавлена.\n";
                                     $result = $stmtBound->get_result();
-                                    // TODO: написать функцию которая будет вытаскивать из результата ID нужных Статей для апдейта
-                                    print_r($result);
+                                    $boundedLinksID = [];
+                                    while ($row = $result->fetch_array(MYSQLI_NUM))
+                                    {
+                                        array_push($boundedLinksID, $row[0]);
+                                    }
+                                    for ($i = 0; $i < count($boundedLinksID); $i++)
+                                    {
+                                        $linkId = $boundedLinksID[$i];
+//                                        echo "\n $linkId";
+                                        // TODO: написать функцию которая будет подменять INFO внутри записей
+                                        $stmtBoundedLink = mysqli_prepare($link, "SELECT * FROM `usfl_links` WHERE id=?");
+                                        $stmtBoundedLink->bind_param('i', $linkId);
+                                        if (mysqli_stmt_execute($stmtBoundedLink)) {
+                                            $result = $stmtBoundedLink->get_result();
+                                            $linkInfo = $result->fetch_array(MYSQLI_NUM);
+
+
+                                            //$linkInfo__Id = '"id": '.$row[0].",\r\n";
+                                            //$linkInfo__Title = '"title": "'.iconv("windows-1251","utf-8", $row[1]).'"';
+                                            $linkInfo__Info = json_decode(iconv("windows-1251","utf-8", $linkInfo[2]));
+                                            $linkInfo__InfoTags = $linkInfo__Info->tags;
+                                            for($z = 0; $z < count($linkInfo__InfoTags); $z++)
+                                            {
+//                                                print_r($value);
+                                                if ($linkInfo__InfoTags[$z]->id == $boundTagId) {
+                                                    $linkInfo__InfoTags[$z]->title = $codedTitle;
+                                                }
+                                            }
+
+//                                            print_r($linkInfo__Info);
+//                                            echo ("\r\n");
+                                            // TODO: отправлтяь на update все записи из цикла
+                                            $linkInfo__codedTitle = iconv("utf-8", "windows-1251",  json_encode($linkInfo__Info->title));
+                                            $linkInfo__codedInfo = iconv("utf-8", "windows-1251",  json_encode($linkInfo__Info));
+                                            $stmtBoundedLinkUpdated = mysqli_prepare($link, "UPDATE `usfl_links` SET title=?, info=? WHERE id=?");
+                                            $stmtBoundedLinkUpdated->bind_param('ssi', $$linkInfo__codedTitle, $linkInfo__codedInfo, $linkId);
+                                            if (mysqli_stmt_execute($stmtBoundedLinkUpdated))
+                                            {
+                                                // success
+                                            }
+                                            else {
+                                                print_r($stmtBoundedLinkUpdated->errorInfo());
+                                            }
+                                            mysqli_stmt_close($stmtBoundedLinkUpdated); // закрываем запрос
+
+                                        } else {
+                                            print_r($stmtBoundedLink->errorInfo());
+                                        }
+                                        mysqli_stmt_close($stmtBoundedLink); // закрываем запрос
+
+                                    }
+
+
                                 } else {
                                     print_r($stmtBound->errorInfo());
                                 }
 
+                                mysqli_stmt_close($stmtBound); // закрываем запрос
                                 break;
                             default:
                                 break;
@@ -449,6 +496,9 @@ function showAsJson($result, $type)
     print '}'."\r\n";
 }
 
+function name() {
+
+}
 
 // useless
 function dbSwitcher($type) {
