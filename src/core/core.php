@@ -269,7 +269,7 @@ if (count($_POST) != 0) {
                             case 'usfl_tags':
                                 $boundDBTable = 'usfl_taglinks';
                                 $boundTagId = $_POST['id'];
-                                // Удалить все связи где link_id = $_POST['id']
+                                // Найти все связи Ссылок с тегом из $_POST['id']
                                 $stmtBound = mysqli_prepare($link, "SELECT link_id FROM $boundDBTable WHERE tag_id=?");
                                 $stmtBound->bind_param('i', $boundTagId);
 
@@ -281,11 +281,10 @@ if (count($_POST) != 0) {
                                     {
                                         array_push($boundedLinksID, $row[0]);
                                     }
+                                    // Для каждой Ссылки сделать выборку всей её инфы
                                     for ($i = 0; $i < count($boundedLinksID); $i++)
                                     {
                                         $linkId = $boundedLinksID[$i];
-//                                        echo "\n $linkId";
-                                        // TODO: написать функцию которая будет подменять INFO внутри записей
                                         $stmtBoundedLink = mysqli_prepare($link, "SELECT * FROM `usfl_links` WHERE id=?");
                                         $stmtBoundedLink->bind_param('i', $linkId);
                                         if (mysqli_stmt_execute($stmtBoundedLink)) {
@@ -293,25 +292,21 @@ if (count($_POST) != 0) {
                                             $linkInfo = $result->fetch_array(MYSQLI_NUM);
 
 
-                                            //$linkInfo__Id = '"id": '.$row[0].",\r\n";
-                                            //$linkInfo__Title = '"title": "'.iconv("windows-1251","utf-8", $row[1]).'"';
                                             $linkInfo__Info = json_decode(iconv("windows-1251","utf-8", $linkInfo[2]));
                                             $linkInfo__InfoTags = $linkInfo__Info->tags;
+                                            // Пройтись по всем тегам, подменить искомый и сделать апдейт записи
                                             for($z = 0; $z < count($linkInfo__InfoTags); $z++)
                                             {
-//                                                print_r($value);
                                                 if ($linkInfo__InfoTags[$z]->id == $boundTagId) {
-                                                    $linkInfo__InfoTags[$z]->title = $codedTitle;
+                                                    $linkInfo__InfoTags[$z]->title = iconv("windows-1251","utf-8", $codedTitle);
                                                 }
                                             }
 
-//                                            print_r($linkInfo__Info);
-//                                            echo ("\r\n");
-                                            // TODO: отправлтяь на update все записи из цикла
-                                            $linkInfo__codedTitle = iconv("utf-8", "windows-1251",  json_encode($linkInfo__Info->title));
-                                            $linkInfo__codedInfo = iconv("utf-8", "windows-1251",  json_encode($linkInfo__Info));
+                                            $linkInfo__codedTitle = iconv("utf-8","windows-1251", $linkInfo__Info->title);
+                                            $linkInfo__codedInfo = iconv("utf-8","windows-1251", json_encode($linkInfo__Info, JSON_UNESCAPED_UNICODE));
+
                                             $stmtBoundedLinkUpdated = mysqli_prepare($link, "UPDATE `usfl_links` SET title=?, info=? WHERE id=?");
-                                            $stmtBoundedLinkUpdated->bind_param('ssi', $$linkInfo__codedTitle, $linkInfo__codedInfo, $linkId);
+                                            $stmtBoundedLinkUpdated->bind_param('ssi', $linkInfo__codedTitle, $linkInfo__codedInfo, $linkId);
                                             if (mysqli_stmt_execute($stmtBoundedLinkUpdated))
                                             {
                                                 // success
@@ -496,8 +491,20 @@ function showAsJson($result, $type)
     print '}'."\r\n";
 }
 
-function name() {
+function changeObjEncode($encodedObj, $fromEncode, $toEncode) {
 
+    $newConvertedObj = new stdClass();
+
+    $newConvertedObj->title  = $encodedObj->title;
+//    $newConvertedObj->title  = iconv($fromEncode, $toEncode, $encodedObj->title);
+    $newConvertedObj->description  = iconv($fromEncode, $toEncode, $encodedObj->description);
+    $newConvertedObj->url = iconv($fromEncode, $toEncode, $encodedObj->url);
+    $newConvertedObj->tags = $encodedObj->tags;
+
+    echo "newConvertedObj \r\n";
+    print_r($newConvertedObj);
+    echo "\r\n";
+    return $newConvertedObj;
 }
 
 // useless
