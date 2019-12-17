@@ -297,11 +297,22 @@ if (count($_POST) != 0) {
                     exit();
                 };
 
+
+
+                switch ($_POST['db']) {
+                    case 'usfl_tags':
+                        changeTagsInLinks($link);
+                        break;
+                    default:
+                        break;
+                };
+
                 $stmt = mysqli_prepare($link, "DELETE FROM $mainDBTable WHERE id=?");
                 mysqli_stmt_bind_param($stmt, 'i', $_POST['id']);
 
                 if (mysqli_stmt_execute($stmt)) { // выполнение подготовленного запроса
                     echo "Запись удалена";
+
                 } else {
                     print_r($stmt->errorInfo());
                 }
@@ -431,7 +442,7 @@ function showAsJson($result, $type)
 }
 
 function changeTagsInLinks($link) {
-    echo "changeTagsInLinks 0:46";
+//    echo "changeTagsInLinks 2:13";
     $tendINFO = json_decode($_POST['info']);
     $newRecordTitle = trim($tendINFO->title);
 
@@ -464,12 +475,29 @@ function changeTagsInLinks($link) {
                 $linkInfo__Info = json_decode(iconv("windows-1251","utf-8", $linkInfo[2]));
                 $linkInfo__InfoTags = $linkInfo__Info->tags;
                 // Пройтись по всем тегам, подменить искомый и сделать апдейт записи
+                //
+//                print_r($linkInfo__InfoTags);
+
                 for($z = 0; $z < count($linkInfo__InfoTags); $z++)
                 {
                     if ($linkInfo__InfoTags[$z]->id == $_POST['id']) {
-                        $linkInfo__InfoTags[$z]->title = $newRecordTitle;
+
+                        switch ($_POST['method']) {
+                            case 'UPDATE':
+                                $linkInfo__InfoTags[$z]->title = $newRecordTitle;
+                                break;
+                            case 'DELETE':
+                                array_splice($linkInfo__Info->tags, $z, 1);
+                                break;
+                        };
+
                     }
                 }
+
+//                print_r($linkInfo__InfoTags);
+//                echo "\r\n Разделение";
+//                print_r($linkInfo__Info);
+
 
                 $linkInfo__codedTitle = iconv("utf-8","windows-1251", $linkInfo__Info->title);
                 $linkInfo__codedInfo = iconv("utf-8","windows-1251", json_encode($linkInfo__Info, JSON_UNESCAPED_UNICODE));
