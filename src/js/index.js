@@ -37,13 +37,13 @@ function coreFunction() {
         };
 
         recordsMainManager("trendsManager");
+        recordsMainManager("rulesManager");
         usflLinksMainManager();
         usflTagsMainManager();
 
 
         function recordsMainManager(mainManagerId) {
             const manager = document.getElementById(mainManagerId);
-            console.log(jQuery(manager));
 
             const addRecordForm = manager.querySelector('.addRecordForm');
             const updateRecordForm = manager.querySelector('.updateRecordForm');
@@ -197,8 +197,9 @@ function coreFunction() {
             // LOAD and SHOW Records helpers
             function loadRecords() {
                 if (manageRecordsTable!== null) {
+                    let db = manageRecordsTable.dataset.loadtype;
                     manageRecordsTable.querySelector("tbody").innerHTML = "";
-                    sendRequest('/core/core.php?id=all&db=trends', showRecordsInManager, manageRecordsTable);
+                    sendRequest('/core/core.php?id=all&db=' + db, showRecordsInManager, manageRecordsTable);
                 }
             }
 
@@ -1088,23 +1089,25 @@ function nodeCreator_divTPL(el, className) {
     return newDiv;
 
 }
+
 // Show More Buttons Services
 function showRecordsInManager(response, table) {
+    let db = table.dataset.loadtype;
     const result = JSON.parse(response);
     // Удалить кнопки, если response пустой
-    if(result["trends"].length === 0) {
+    if(result[db].length === 0) {
         alert("Все записи уже загружены!");
-        const buttons = document.querySelectorAll("[data-place='#trendsTableManage']");
+        const buttons = table.querySelectorAll("[data-action='loadMore']");
         buttons.forEach(el => el.remove());
+    } else {
+        const arrLength = result[db].length;
+        table.dataset.lastid = result[db][arrLength - 1].id;
+        result[db].forEach(function (item) {
+            let newItemROW = manageRecordsTPL(item);
+            table.querySelector('.manageRecordsTable tbody').innerHTML += newItemROW;
+        })
     }
 
-    const arrLength = result["trends"].length;
-    table.dataset.lastid = result["trends"][arrLength - 1].id;
-    result["trends"].forEach(function (item) {
-        let newItemROW = manageRecordsTPL(item);
-        document.querySelector('.manageRecordsTable tbody').innerHTML += newItemROW;
-        // manageTrendsTable.querySelector("tbody").innerHTML += newItemROW;
-    })
 }
 
 
@@ -1165,7 +1168,6 @@ function showMoreData(e) {
     const target = e.target;
 
     if(target.classList.contains("showMore") && target.dataset.action == "loadMore") {
-        console.log("showMoreData");
         const types = ["trends", "faq", "rules"]
         if (types.indexOf(target.dataset.loadtype) === -1) {
             console.log("неизвестный тип " + target.dataset.loadtype);
@@ -1180,15 +1182,7 @@ function showMoreData(e) {
         // let url ="/core/"+ loadtype +".php?id=all&lastid=" + lastID + "&limit=" + limit;
         let url ="/core/core.php?db="+ loadtype +"&id=all&lastid=" + lastID + "&limit=" + limit;
 
-        switch (place) {
-            case "#trendsTableManage":
-                console.log("Будут загружены Тренды в менеджере");
-                sendRequest(url, showRecordsInManager, placeToInput);
-                break;
-            default:
-                console.log("неизвестное место");
-                break;
-        }
+        sendRequest(url, showRecordsInManager, placeToInput);
 
 
     }
@@ -1326,12 +1320,6 @@ function addFieldToInfo(form, field) {
 
     formInfo[field]=  fieldArr;
     form.info.value = JSON.stringify(formInfo, undefined, 4);
-}
-
-function addItemsToSearchResult(place, arr) {
-    console.log(" addItemsToSearchResult");
-    console.log(place);
-    console.log(arr);
 }
 
 

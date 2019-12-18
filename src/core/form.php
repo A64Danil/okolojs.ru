@@ -156,37 +156,187 @@
                     </div>
 
                     <div class="table-responsive" >
-                        <table id="trendsTableManage" class="manageRecordsTable table table-striped table-hover" data-lastid="">
+                        <table id="trendsTableManage" class="manageRecordsTable table table-striped table-hover" data-lastid="" data-loadtype="trends">
                             <thead>
-                            <th>ID</th>
-                            <th>TITLE</th>
-                            <th>EDIT</th>
-                            <th>DELETE</th>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>TITLE</th>
+                                    <th>EDIT</th>
+                                    <th>DELETE</th>
+                                </tr>
                             </thead>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4">
+                                        <button type="button"
+                                                class="btn btn-primary showMore"
+                                                data-action="loadMore"
+                                                data-loadtype="trends"
+                                                data-place="#trendsTableManage">
+                                            Показать еще
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-primary showMore"
+                                                data-action="loadMore"
+                                                data-loadtype="trends"
+                                                data-limit="30"
+                                                data-place="#trendsTableManage">
+                                            Показать еще 30
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tfoot>
                             <tbody>
 
                             </tbody>
                         </table>
-                        <button type="button"
-                                class="btn btn-primary showMore"
-                                data-action="loadMore"
-                                data-loadtype="trends"
-                                data-place="#trendsTableManage">
-                            Показать еще
-                        </button>
-                        <button type="button"
-                                class="btn btn-primary showMore"
-                                data-action="loadMore"
-                                data-loadtype="trends"
-                                data-limit="30"
-                                data-place="#trendsTableManage">
-                            Показать еще 30
-                        </button>
                     </div>
                 </div>
 
-                <div class="rulesManager dataManager tab-pane fade" id="rulesManager" role="tabpanel" aria-labelledby="nav-rules-tab">
-                    rules manager
+                <div class="tab-pane fade" id="rulesManager" role="tabpanel" aria-labelledby="nav-rules-tab">
+                    <div class="innerMenu">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addRuleModal">
+                            Add rule
+                        </button>
+                        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addRuleModal">
+                            Add rule
+                        </button>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="manageForm modal fade addRecordModal" id="addRuleModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Добавить правило</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#rulesSchema" aria-expanded="false" aria-controls="rulesSchema">
+                                                Описание доступных полей
+                                            </button>
+                                        </div>
+
+                                        <div id="rulesSchema" class="collapse">
+                                            <div class="card-body">
+                                                <ul class="schema">
+                                                    <li><b>Title*</b> - название правила (обяз. поле)</li>
+                                                    <li><b>description</b> - краткое описание</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addRecordForm">
+                                        <input type="hidden" name="db" value="rules">
+                                        <div class="form-group">
+                                            <label for="">Введите Info в формате JSON: </label>
+                                            <textarea class="form-control" id="" cols=60 rows=12 name="info">
+{
+    "title": "Новое Правило",
+    "description": "описание правила для сайта"
+}
+                                            </textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Добавить" class="btn btn-success">
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="manageForm modal fade updateRecordModal" id="updateRuleModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Редактировать правило</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" action="https://okolojs.ru/core/rules.php" class="updateRecordForm">
+                                        <input type="hidden" name="db" value="rules">
+                                        <input type="hidden" name="method" value="UPDATE">
+
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2 col-form-label col-form-label-lg">ID </label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" name="id" value="" readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2 col-form-label col-form-label-lg">Title </label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" name="title" value="" disabled readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="">Введите Info в формате JSON: </label>
+                                            <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Сохранить" class="btn btn-success" >
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive" >
+                        <table id="rulesTableManage" class="manageRecordsTable table table-striped table-hover" data-lastid="" data-loadtype="rules">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>TITLE</th>
+                                    <th>EDIT</th>
+                                    <th>DELETE</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4">
+                                        <button type="button"
+                                                class="btn btn-primary showMore"
+                                                data-action="loadMore"
+                                                data-loadtype="rules"
+                                                data-place="#rulesTableManage">
+                                            Показать еще
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-primary showMore"
+                                                data-action="loadMore"
+                                                data-loadtype="rules"
+                                                data-limit="30"
+                                                data-place="#rulesTableManage">
+                                            Показать еще 30
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <div class="faqManager dataManager tab-pane fade" id="faqManager" role="tabpanel" aria-labelledby="nav-faq-tab">
