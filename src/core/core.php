@@ -7,8 +7,6 @@ function show($str)
     echo $str;
 }
 
-//$mainDBTable = 'usfl_links';
-
 
 // Handle GET-request
 if (isset($_GET['id'])) {
@@ -19,21 +17,7 @@ if (isset($_GET['id'])) {
     }
     else
     {
-        switch ($_GET['db']) {
-            case 'usfl_links':
-                $mainDBTable = 'usfl_links';
-                $boundDBTable = 'usfl_taglinks'; // кажется не нужно
-                $selectorSQL = 'usfl_links'; // кажется не нужно
-                $categoryDBTable = 'usfl_tags'; // кажется не нужно
-                break;
-            case 'somenew':
-                echo "i равно 1";
-                break;
-            default:
-                $mainDBTable = $_GET['db'];
-                break;
-        };
-//        echo "Имя таблицы ".$mainDBTable;
+        $mainDBTable = $_GET['db'];
     }
 
 
@@ -198,8 +182,7 @@ if (count($_POST) != 0) {
             //echo "Вы пытаетесь сделать ".$_POST['method']."\r\n";
             if (isset($_POST['info']) && isset($_POST['id']) && $_POST['id'] !== "")
             {
-                $tendINFO = json_decode($_POST['info']);
-                $newRecordTitle = trim($tendINFO->title);
+                $newRecordTitle = trim(json_decode($_POST['info'])->title);
                 if (empty($newRecordTitle)) {
                     echo "Ошибка! Вы не указали title.";
                 } else {
@@ -297,8 +280,6 @@ if (count($_POST) != 0) {
                     exit();
                 };
 
-
-
                 switch ($_POST['db']) {
                     case 'usfl_tags':
                         changeTagsInLinks($link);
@@ -330,8 +311,7 @@ if (count($_POST) != 0) {
     // Add new record form POST
     elseif (isset($_POST['info']))
     {
-        $tendINFO = json_decode($_POST['info']);
-        $newRecordTitle = trim($tendINFO->title);
+        $newRecordTitle = trim(json_decode($_POST['info'])->title);
         if (empty($newRecordTitle)) {
             echo "Ошибка! Вы не указали title.";
         }
@@ -443,8 +423,7 @@ function showAsJson($result, $type)
 
 function changeTagsInLinks($link) {
 //    echo "changeTagsInLinks 2:13";
-    $tendINFO = json_decode($_POST['info']);
-    $newRecordTitle = trim($tendINFO->title);
+    $newRecordTitle = trim(json_decode($_POST['info'])->title);
 
     $boundDBTable = 'usfl_taglinks';
     $boundTagId = $_POST['id'];
@@ -474,9 +453,6 @@ function changeTagsInLinks($link) {
 
                 $linkInfo__Info = json_decode(iconv("windows-1251","utf-8", $linkInfo[2]));
                 $linkInfo__InfoTags = $linkInfo__Info->tags;
-                // Пройтись по всем тегам, подменить искомый и сделать апдейт записи
-                //
-//                print_r($linkInfo__InfoTags);
 
                 for($z = 0; $z < count($linkInfo__InfoTags); $z++)
                 {
@@ -493,10 +469,6 @@ function changeTagsInLinks($link) {
 
                     }
                 }
-
-//                print_r($linkInfo__InfoTags);
-//                echo "\r\n Разделение";
-//                print_r($linkInfo__Info);
 
 
                 $linkInfo__codedTitle = iconv("utf-8","windows-1251", $linkInfo__Info->title);
@@ -527,29 +499,5 @@ function changeTagsInLinks($link) {
 
     mysqli_stmt_close($stmtBound); // закрываем запрос
 
-
-
-}
-
-// Устарело
-function changeObjEncode($encodedObj, $fromEncode, $toEncode) {
-
-    $newConvertedObj = new stdClass();
-
-    $newConvertedObj->title  = $encodedObj->title;
-//    $newConvertedObj->title  = iconv($fromEncode, $toEncode, $encodedObj->title);
-    $newConvertedObj->description  = iconv($fromEncode, $toEncode, $encodedObj->description);
-    $newConvertedObj->url = iconv($fromEncode, $toEncode, $encodedObj->url);
-    $newConvertedObj->tags = $encodedObj->tags;
-
-    echo "newConvertedObj \r\n";
-    print_r($newConvertedObj);
-    echo "\r\n";
-    return $newConvertedObj;
-}
-
-// useless
-function dbSwitcher($type) {
-    $mainDBTable = $type;
 }
 
