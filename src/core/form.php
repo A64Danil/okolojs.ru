@@ -31,8 +31,8 @@
 
             <div class="mainManager tab-content" >
 
-                <div class="trendsManager dataManager tab-pane fade show active" id="trendsManager" role="tabpanel" aria-labelledby="nav-trends-tab">
-                    <div class="trendsManager__menu innerMenu">
+                <div class="tab-pane fade show active" id="trendsManager" role="tabpanel" aria-labelledby="nav-trends-tab">
+                    <div class="innerMenu">
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addTrendModal">
                             Add trend
@@ -42,9 +42,8 @@
                         </button>
                     </div>
 
-
                     <!-- Modal -->
-                    <div class="manageForm modal fade" id="addTrendModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="manageForm modal fade addRecordModal" id="addTrendModal" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
 
@@ -101,7 +100,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <input type="submit" value="Добавить" class="btn btn-success">
-                                            <input type="reset" value="Отменить" class="btn btn-secondary js_CancelEdit">
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
                                         </div>
 
                                     </form>
@@ -111,7 +110,7 @@
                         </div>
                     </div>
 
-                    <div class="manageForm modal fade" id="updateTrendModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="manageForm modal fade updateRecordModal" id="updateTrendModal" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
 
@@ -147,7 +146,7 @@
 
                                         <div class="modal-footer">
                                             <input type="submit" value="Сохранить" class="btn btn-success" >
-                                            <input type="reset" value="Отменить" class="btn btn-secondary js_CancelEdit">
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
                                         </div>
                                     </form>
 
@@ -155,7 +154,6 @@
                             </div>
                         </div>
                     </div>
-
 
                     <div class="table-responsive" >
                         <table id="trendsTableManage" class="manageRecordsTable table table-striped table-hover" data-lastid="">

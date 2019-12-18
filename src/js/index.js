@@ -36,14 +36,14 @@ function coreFunction() {
             selected: []
         };
 
-        trendsMainManager();
+        recordsMainManager("trendsManager");
         usflLinksMainManager();
         usflTagsMainManager();
 
 
-        function trendsMainManager() {
-            console.log("trendsMainManager");
-            const manager = document.getElementById("trendsManager");
+        function recordsMainManager(mainManagerId) {
+            const manager = document.getElementById(mainManagerId);
+            console.log(jQuery(manager));
 
             const addRecordForm = manager.querySelector('.addRecordForm');
             const updateRecordForm = manager.querySelector('.updateRecordForm');
@@ -74,9 +74,8 @@ function coreFunction() {
                     });
 
 
-                    // TODO: доделать селектор
                     addRecordForm.addEventListener("reset", function (e) {
-                        jQuery('#addRecordModal').modal('hide');
+                        jQuery(manager).find('.addRecordModal').modal('hide');
                     })
                 } else {
                     console.log('Формы sendRecord не существует');
@@ -112,9 +111,8 @@ function coreFunction() {
                         }
                     });
 
-                    // TODO: доделать селектор
                     updateRecordForm.addEventListener("reset", function (e) {
-                        jQuery('#updateRecordModal').modal('hide');
+                        jQuery(manager).find('.updateRecordModal').modal('hide');
                     })
                 }
             }
@@ -133,8 +131,7 @@ function coreFunction() {
 
             function addInfoToUpdateRecordForm(info) {
                 if (updateRecordForm) {
-                    // TODO: доделать селектор
-                    jQuery('#updateRecordModal').modal('show');
+                    jQuery(manager).find('.updateRecordModal').modal('show');
                     const formInputID = updateRecordForm.querySelector('[name=id]');
                     const formInputTitle = updateRecordForm.querySelector('[name=title]');
                     const formInputInfo = updateRecordForm.querySelector('[name=info]');
@@ -1104,7 +1101,7 @@ function showRecordsInManager(response, table) {
     const arrLength = result["trends"].length;
     table.dataset.lastid = result["trends"][arrLength - 1].id;
     result["trends"].forEach(function (item) {
-        let newItemROW = manageTrendsTPL(item);
+        let newItemROW = manageRecordsTPL(item);
         document.querySelector('.manageRecordsTable tbody').innerHTML += newItemROW;
         // manageTrendsTable.querySelector("tbody").innerHTML += newItemROW;
     })
@@ -1201,6 +1198,29 @@ function showMoreData(e) {
 
 
 //  --==:: TPL ::==-
+function manageRecordsTPL(item) {
+    const newItem = `
+                        <tr>
+                            <td>${item["id"]}</td>
+                            <td>${item["title"]}</td>
+                            <td>
+                                <form class="editTrendForm" method="GET" action="https://okolojs.ru/core/core.php">
+                                    <input type="hidden" name="id" value="${item["id"]}">
+                                    <input class="btn btn-info js_EditRecordButton" type="submit" value="EDIT" >
+                                </form>
+                            </td>
+                            <td>
+                                <form class="deleteTrendForm" method="POST" action="https://okolojs.ru/core/core.php">
+                                    <input type="hidden" name="db" value="trends">
+                                    <input type="hidden" name="method" value="DELETE">
+                                    <input type="hidden" name="id" value="${item["id"]}">
+                                    <input class="btn btn-danger js_EditRecordButton" type="submit" value="DELETE">
+                                </form>
+                            </td>
+                        </tr>`
+    return newItem;
+}
+
 function manageTrendsTPL(item) {
     const newTrend = `
                         <tr>
