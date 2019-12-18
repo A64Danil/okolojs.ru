@@ -42,6 +42,175 @@ function coreFunction() {
 
 
         function trendsMainManager() {
+            console.log("trendsMainManager");
+            const manager = document.getElementById("trendsManager");
+
+            const addRecordForm = manager.querySelector('.addRecordForm');
+            const updateRecordForm = manager.querySelector('.updateRecordForm');
+            const manageRecordsTable = manager.querySelector('.manageRecordsTable');
+
+
+            loadRecords();
+            addRecordFormControl();
+            updateRecordFormControl();
+            manageRecordsTableControl();
+
+
+            // Add Record
+            function addRecordFormControl() {
+                if (addRecordForm !== null) {
+                    addRecordForm.addEventListener("submit", function (e) {
+                        e.preventDefault();
+
+                        if (isSending) {
+                            alert("Вы уже отправили запрос. Сначала дождитесь ответ.");
+                            return false
+                        }
+                        if(textAreaJsonValidation(addRecordForm)) {
+                            isSending = true;
+                            sendRequest('/core/core.php', addRecordRequest, this, "POST");
+                        }
+
+                    });
+
+
+                    // TODO: доделать селектор
+                    addRecordForm.addEventListener("reset", function (e) {
+                        jQuery('#addRecordModal').modal('hide');
+                    })
+                } else {
+                    console.log('Формы sendRecord не существует');
+                }
+
+            }
+
+            function addRecordRequest(response, form) {
+                if (response === "Запись добавлена") {
+                    alert("Запись добавлена");
+                    form.reset();
+                } else {
+                    alert("Что-то пошло не так: \r\n" + response);
+                }
+                isSending = false;
+                loadRecords();
+            }
+
+
+            // Edit Record
+            function updateRecordFormControl() {
+                if (updateRecordForm) {
+                    updateRecordForm.addEventListener("submit", function (e) {
+                        e.preventDefault();
+
+                        if (isSending) {
+                            alert("Вы уже отправили запрос. Сначала дождитесь ответ.");
+                            return false
+                        }
+                        if(textAreaJsonValidation(updateRecordForm)) {
+                            isSending = true;
+                            sendRequest('/core/core.php', updateRecordRequest, this, "POST");
+                        }
+                    });
+
+                    // TODO: доделать селектор
+                    updateRecordForm.addEventListener("reset", function (e) {
+                        jQuery('#updateRecordModal').modal('hide');
+                    })
+                }
+            }
+
+            function updateRecordRequest(response, form) {
+                loadRecords();
+                if (response === "Запись обновлена") {
+                    alert("Запись обновлена");
+                    form.querySelector('textarea').value = "";
+                    form.reset();
+                } else {
+                    alert("Не удалось обновить. Что-то пошло не так: \r\n" + response);
+                }
+                isSending = false;
+            }
+
+            function addInfoToUpdateRecordForm(info) {
+                if (updateRecordForm) {
+                    // TODO: доделать селектор
+                    jQuery('#updateRecordModal').modal('show');
+                    const formInputID = updateRecordForm.querySelector('[name=id]');
+                    const formInputTitle = updateRecordForm.querySelector('[name=title]');
+                    const formInputInfo = updateRecordForm.querySelector('[name=info]');
+                    const formInfo = JSON.parse(info).trends[0];
+
+                    formInputID.value = formInfo.id;
+                    formInputTitle.value = formInfo.title;
+                    formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
+
+                } else {
+                    console.log("Формы updateRecordForm нет")
+                }
+            }
+
+
+            // Delete Record
+            function deleteRecordRequest(response, form) {
+                loadRecords();
+                if (response === "Запись удалена") {
+                    alert("Запись удалена");
+                    updateRecordForm.reset();
+                } else {
+                    alert("Не удалось удалить запись. Что-то пошло не так: \r\n" + response);
+                }
+            }
+
+
+            // Кнопки EDIT and DELETE
+            function manageRecordsTableControl() {
+                if (manageRecordsTable !== null) {
+                    manageRecordsTable.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        const target = e.target;
+
+                        if (target.classList.contains("js_EditRecordButton")) {
+                            e.preventDefault();
+                            const button = target;
+                            const form = button.parentNode;
+                            const FORM_DATA = jQuery(form).serialize();
+                            // console.log(FORM_DATA);
+                            const formDataObj = paramsToJson(FORM_DATA);
+                            if (parseInt(formDataObj.id) > 0) {
+                                switch(button.value) {
+                                    case 'EDIT':
+                                        sendRequest('/core/core.php?db=trends&id=' + formDataObj.id, addInfoToUpdateRecordForm);
+                                        break;
+                                    case 'DELETE':
+                                        if (confirm("Точно удалить?")) {
+                                            sendRequest('/core/core.php', deleteRecordRequest, form, "POST");
+                                        }
+                                        break;
+                                }
+                            } else {
+                                alert("Что-то пошло не так, передан не верный id: " + formDataObj.id);
+                            }
+                        }
+
+                    });
+                }
+            }
+
+
+            // LOAD and SHOW Records helpers
+            function loadRecords() {
+                if (manageRecordsTable!== null) {
+                    manageRecordsTable.querySelector("tbody").innerHTML = "";
+                    sendRequest('/core/core.php?id=all&db=trends', showRecordsInManager, manageRecordsTable);
+                }
+            }
+
+
+
+
+        }
+
+        function trendsMainManagerOrig() {
 
             const addTrendForm = document.querySelector('.addTrendForm');
             const updateTrendForm = document.querySelector('.updateTrendForm');
@@ -923,6 +1092,25 @@ function nodeCreator_divTPL(el, className) {
 
 }
 // Show More Buttons Services
+function showRecordsInManager(response, table) {
+    const result = JSON.parse(response);
+    // Удалить кнопки, если response пустой
+    if(result["trends"].length === 0) {
+        alert("Все записи уже загружены!");
+        const buttons = document.querySelectorAll("[data-place='#trendsTableManage']");
+        buttons.forEach(el => el.remove());
+    }
+
+    const arrLength = result["trends"].length;
+    table.dataset.lastid = result["trends"][arrLength - 1].id;
+    result["trends"].forEach(function (item) {
+        let newItemROW = manageTrendsTPL(item);
+        document.querySelector('.manageRecordsTable tbody').innerHTML += newItemROW;
+        // manageTrendsTable.querySelector("tbody").innerHTML += newItemROW;
+    })
+}
+
+
 function showTrendsInManager(response, table) {
     const result = JSON.parse(response);
     // Удалить кнопки, если response пустой
@@ -992,12 +1180,13 @@ function showMoreData(e) {
         let placeToInput = document.querySelector(place);
         let lastID = placeToInput.dataset.lastid;
         let limit = target.dataset.limit ? parseInt(target.dataset.limit) : 10 ;
-        let url ="/core/"+ loadtype +".php?id=all&lastid=" + lastID + "&limit=" + limit;
+        // let url ="/core/"+ loadtype +".php?id=all&lastid=" + lastID + "&limit=" + limit;
+        let url ="/core/core.php?db="+ loadtype +"&id=all&lastid=" + lastID + "&limit=" + limit;
 
         switch (place) {
             case "#trendsTableManage":
                 console.log("Будут загружены Тренды в менеджере");
-                sendRequest(url, showTrendsInManager, placeToInput);
+                sendRequest(url, showRecordsInManager, placeToInput);
                 break;
             default:
                 console.log("неизвестное место");
@@ -1018,13 +1207,13 @@ function manageTrendsTPL(item) {
                             <td>${item["id"]}</td>
                             <td>${item["title"]}</td>
                             <td>
-                                <form class="editTrendForm" method="GET" action="https://okolojs.ru/core/db/trends.php">
+                                <form class="editTrendForm" method="GET" action="https://okolojs.ru/core/core.php">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-info js_EditTrendButton" type="submit" value="EDIT" >
                                 </form>
                             </td>
                             <td>
-                                <form class="deleteTrendForm" method="POST" action="https://okolojs.ru/core/db/trends.php">
+                                <form class="deleteTrendForm" method="POST" action="https://okolojs.ru/core/core.php">
                                     <input type="hidden" name="method" value="DELETE">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-danger js_EditTrendButton" type="submit" value="DELETE">
@@ -1093,12 +1282,6 @@ function manageUsflTagsTPL(item) {
                             </td>
                         </tr>`
     return newItem;
-}
-
-
-// Удалить т.к. не нужно
-function tagsInSelectorTPL(item) {
-    return `<option value='${JSON.stringify(item)}'>${item["title"]}</option>`;
 }
 
 

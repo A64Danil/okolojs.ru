@@ -80,13 +80,8 @@
                                         </div>
                                     </div>
 
-                                    <!--
-                                    <a class="btn btn-outline-dark schemaBtn" data-toggle="collapse" href="#trendsSchema" role="button" aria-expanded="false" aria-controls="trendsManager">
-                                        Описание доступных полей
-                                    </a>
-                                    -->
-                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addTrendForm">
-                                        <input type="hidden" value="myguests" name="db">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addRecordForm">
+                                        <input type="hidden" name="db" value="trends">
                                         <div class="form-group">
                                             <label for="">Введите Info в формате JSON: </label>
                                             <textarea class="form-control" id="" cols=60 rows=12 name="info">
@@ -127,7 +122,8 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateTrendForm">
+                                    <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateRecordForm">
+                                        <input type="hidden" name="db" value="trends">
                                         <input type="hidden" name="method" value="UPDATE">
 
                                         <div class="form-group row">
@@ -162,7 +158,7 @@
 
 
                     <div class="table-responsive" >
-                        <table id="trendsTableManage" class="manageTrendsTable table table-striped table-hover" data-lastid="">
+                        <table id="trendsTableManage" class="manageRecordsTable table table-striped table-hover" data-lastid="">
                             <thead>
                             <th>ID</th>
                             <th>TITLE</th>
