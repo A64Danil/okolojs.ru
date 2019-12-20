@@ -44,6 +44,7 @@ function coreFunction() {
 
         function recordsMainManager(mainManagerId) {
             const manager = document.getElementById(mainManagerId);
+            const dbName = manager.querySelector('.manageRecordsTable').dataset.loadtype;
 
             const addRecordForm = manager.querySelector('.addRecordForm');
             const updateRecordForm = manager.querySelector('.updateRecordForm');
@@ -135,7 +136,8 @@ function coreFunction() {
                     const formInputID = updateRecordForm.querySelector('[name=id]');
                     const formInputTitle = updateRecordForm.querySelector('[name=title]');
                     const formInputInfo = updateRecordForm.querySelector('[name=info]');
-                    const formInfo = JSON.parse(info).trends[0];
+
+                    const formInfo = JSON.parse(info)[dbName][0];
 
                     formInputID.value = formInfo.id;
                     formInputTitle.value = formInfo.title;
@@ -176,7 +178,7 @@ function coreFunction() {
                             if (parseInt(formDataObj.id) > 0) {
                                 switch(button.value) {
                                     case 'EDIT':
-                                        sendRequest('/core/core.php?db=trends&id=' + formDataObj.id, addInfoToUpdateRecordForm);
+                                        sendRequest('/core/core.php?db=' + dbName + '&id=' + formDataObj.id, addInfoToUpdateRecordForm);
                                         break;
                                     case 'DELETE':
                                         if (confirm("Точно удалить?")) {
