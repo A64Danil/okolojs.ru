@@ -203,9 +203,6 @@ function coreFunction() {
                 }
             }
 
-
-
-
         }
 
         function trendsMainManagerOrig() {
