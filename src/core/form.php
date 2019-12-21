@@ -567,59 +567,76 @@
 
 
                     <div class="table-responsive" >
-                        <table id="usflTagsTableManage" class="manageUsflTagsTable table table-striped table-hover" data-lastid="">
+                        <table id="usflTagsTableManage" class="manageUsflTagsTable table table-striped table-hover" data-lastid="" data-loadtype="usfl_tags">
                             <thead>
-                            <th>ID</th>
-                            <th>TITLE</th>
-                            <th>EDIT</th>
-                            <th>DELETE</th>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>TITLE</th>
+                                    <th>EDIT</th>
+                                    <th>DELETE</th>
+                                </tr>
                             </thead>
+
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4">
+                                        <button type="button"
+                                                class="btn btn-primary showMore"
+                                                data-action="loadMore"
+                                                data-loadtype="usfl_tags"
+                                                data-place="#usflTagsTableManage">
+                                            Показать еще
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-primary showMore"
+                                                data-action="loadMore"
+                                                data-loadtype="usfl_tags"
+                                                data-limit="30"
+                                                data-place="#usflTagsTableManage">
+                                            Показать еще 30
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tfoot>
                             <tbody>
 
                             </tbody>
                         </table>
-                        <button type="button"
-                                class="btn btn-primary showMore"
-                                data-action="loadMore"
-                                data-loadtype="usflTag"
-                                data-place="#usflTagsTableManage">
-                            Показать еще
-                        </button>
-                        <button type="button"
-                                class="btn btn-primary showMore"
-                                data-action="loadMore"
-                                data-loadtype="usflTag"
-                                data-limit="30"
-                                data-place="#usflTagsTableManage">
-                            Показать еще 30
-                        </button>
                         
-                        <table id="usflLinksTableManage" class="manageUsflLinksTable table table-striped table-hover" data-lastid="">
+                        <table id="usflLinksTableManage" class="manageUsflLinksTable table table-striped table-hover" data-lastid="" data-loadtype="usfl_links">
                             <thead>
-                            <th>ID</th>
-                            <th>TITLE</th>
-                            <th>EDIT</th>
-                            <th>DELETE</th>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>TITLE</th>
+                                    <th>EDIT</th>
+                                    <th>DELETE</th>
+                                </tr>
                             </thead>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4">
+                                        <button type="button"
+                                                class="btn btn-primary showMore"
+                                                data-action="loadMore"
+                                                data-loadtype="usfl_links"
+                                                data-place="#usflLinksTableManage">
+                                            Показать еще
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-primary showMore"
+                                                data-action="loadMore"
+                                                data-loadtype="usfl_links"
+                                                data-limit="30"
+                                                data-place="#usflLinksTableManage">
+                                            Показать еще 30
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tfoot>
                             <tbody>
 
                             </tbody>
                         </table>
-                        <button type="button"
-                                class="btn btn-primary showMore"
-                                data-action="loadMore"
-                                data-loadtype="usflLink"
-                                data-place="#usflLinksTableManage">
-                            Показать еще
-                        </button>
-                        <button type="button"
-                                class="btn btn-primary showMore"
-                                data-action="loadMore"
-                                data-loadtype="usflLink"
-                                data-limit="30"
-                                data-place="#usflLinksTableManage">
-                            Показать еще 30
-                        </button>
                     </div>
                 </div>
 

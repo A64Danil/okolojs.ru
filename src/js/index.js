@@ -1093,6 +1093,9 @@ function nodeCreator_divTPL(el, className) {
 function showRecordsInManager(response, table) {
     let db = table.dataset.loadtype;
     const result = JSON.parse(response);
+    console.log(result);
+    console.log(db);
+    console.log(result[db]);
     // Удалить кнопки, если response пустой
     if(result[db].length === 0) {
         alert("Все записи уже загружены!");
@@ -1167,7 +1170,7 @@ function showMoreData(e) {
     const target = e.target;
 
     if(target.classList.contains("showMore") && target.dataset.action == "loadMore") {
-        const types = ["trends", "faq", "rules"]
+        const types = ["trends", "faq", "rules", "usfl_tags", "usfl_links"]
         if (types.indexOf(target.dataset.loadtype) === -1) {
             console.log("неизвестный тип " + target.dataset.loadtype);
             return false;
