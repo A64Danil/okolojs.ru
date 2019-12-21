@@ -12,7 +12,7 @@ function coreFunction() {
     const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 2020");
+        console.log("Пасхалка для самых любопытных =) 2220");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
         // loadModelAndShowBlock('trends11', "trend-template", 'trends');
         mainEvents();
@@ -39,7 +39,6 @@ function coreFunction() {
         recordsMainManager("trendsManager");
         recordsMainManager("rulesManager");
         usflLinksMainManager();
-        // usflTagsMainManager();
         recordsMainManager("usflManager", "usfl_tags");
 
 
@@ -56,6 +55,26 @@ function coreFunction() {
 
             const dbName = manageRecordsTable.dataset.loadtype;
 
+            switch(managerType) {
+                case 'usfl_links':
+                    const addUsflLinkForm_searchTags = addRecordForm.querySelector('.addUsflLinkForm .searchTags');
+                    const addUsflLinkForm_selectedTags = addRecordForm.querySelector('.addUsflLinkForm .selectedTags');
+
+                    const updateUsflLinkForm_searchTags = updateRecordForm.querySelector('.updateUsflLinkForm .searchTags');
+                    const updateUsflLinkForm_selectedTags = updateRecordForm.querySelector('.updateUsflLinkForm .selectedTags');
+
+                    let addUsflLinkForm_searchResult;
+                    let updateUsflLinkForm_searchResult;
+                    if (addRecordForm !== null) {
+                        addUsflLinkForm_searchResult = addRecordForm.querySelector(".search_result");
+                    }
+                    if (updateRecordForm !== null) {
+                        updateUsflLinkForm_searchResult = updateRecordForm.querySelector(".search_result");
+                    }
+                    break;
+                default:
+                    break;
+            }
 
             loadRecords();
             addRecordFormControl();
@@ -83,6 +102,12 @@ function coreFunction() {
                     addRecordForm.addEventListener("reset", function (e) {
                         !!managerType? jQuery(manager).find('.addRecordModal[data-loadtype="'+ managerType +'"]').modal('hide') : jQuery(manager).find('.addRecordModal').modal('hide');
                     })
+
+                    // sendRequest
+
+                    // addUsflLinkForm_searchTags
+
+                    // addUsflLinkForm
                 } else {
                     console.log('Формы sendRecord не существует');
                 }
@@ -100,6 +125,9 @@ function coreFunction() {
                 loadRecords();
             }
 
+            // jQuery('#addUsflLinkModal').on('shown.bs.modal', function () {
+            //     removeFromArr(allUsflTags.selected);
+            // });
 
             // Edit Record
             function updateRecordFormControl() {
@@ -113,13 +141,31 @@ function coreFunction() {
                         }
                         if(textAreaJsonValidation(updateRecordForm)) {
                             isSending = true;
+                            // TODO: links
+                            // addFieldToInfo(this, "tags");
                             sendRequest('/core/core.php', updateRecordRequest, this, "POST");
                         }
                     });
 
                     updateRecordForm.addEventListener("reset", function (e) {
+
+                        // removeFromArr(allUsflTags.selected);
+                        //
+                        // while (updateUsflLinkForm_selectedTags.children.length > 1) {
+                        //     updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
+                        // }
+                        //
+                        // nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                        // updateUsflLinkForm_searchResult.innerHTML = "";
+                        // nodeCreator(allUsflTags.arr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+
+
                         !!managerType? jQuery(manager).find('.updateRecordModal[data-loadtype="'+ managerType +'"]').modal('hide') : jQuery(manager).find('.updateRecordModal').modal('hide');
                     })
+
+                    // updateUsflLinkForm_searchTags.addEventListener
+
+                    // updateUsflLinkForm.addEventListener
                 }
             }
 
@@ -137,6 +183,8 @@ function coreFunction() {
 
             function addInfoToUpdateRecordForm(info) {
                 if (updateRecordForm) {
+
+                    // LINKS
                     !!managerType? jQuery(manager).find('.updateRecordModal[data-loadtype="'+ managerType +'"]').modal('show') : jQuery(manager).find('.updateRecordModal').modal('show');
 
                     const formInputID = updateRecordForm.querySelector('[name=id]');
@@ -148,6 +196,9 @@ function coreFunction() {
                     formInputTitle.value = formInfo.title;
 
                     switch(managerType) {
+                        case 'usfl_links':
+                            // links
+                            break;
                         case 'usfl_tags':
                             delete formInfo.id;
                             formInputInfo.value = JSON.stringify(formInfo, undefined, 4);
@@ -197,7 +248,6 @@ function coreFunction() {
                                         sendRequest('/core/core.php?db=' + dbName + '&id=' + formDataObj.id, addInfoToUpdateRecordForm);
                                         break;
                                     case 'DELETE':
-                                        console.log(form);
                                         if (confirm("Точно удалить?")) {
                                             sendRequest('/core/core.php', deleteRecordRequest, form, "POST");
                                         }
