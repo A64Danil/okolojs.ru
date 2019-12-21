@@ -39,16 +39,22 @@ function coreFunction() {
         recordsMainManager("trendsManager");
         recordsMainManager("rulesManager");
         usflLinksMainManager();
-        usflTagsMainManager();
+        // usflTagsMainManager();
+        recordsMainManager("usflManager", "usfl_tags");
 
 
-        function recordsMainManager(mainManagerId) {
+        function recordsMainManager(mainManagerId, managerType) {
             const manager = document.getElementById(mainManagerId);
-            const dbName = manager.querySelector('.manageRecordsTable').dataset.loadtype;
+            let manageRecordsTable;
+            !!managerType? manageRecordsTable = manager.querySelector('.manageRecordsTable[data-loadtype="'+ managerType +'"]') : manageRecordsTable = manager.querySelector('.manageRecordsTable');
 
-            const addRecordForm = manager.querySelector('.addRecordForm');
-            const updateRecordForm = manager.querySelector('.updateRecordForm');
-            const manageRecordsTable = manager.querySelector('.manageRecordsTable');
+            let addRecordForm;
+            !!managerType? addRecordForm = manager.querySelector('.addRecordForm[data-loadtype="'+ managerType +'"]') : addRecordForm = manager.querySelector('.addRecordForm');
+
+            let updateRecordForm;
+            !!managerType? updateRecordForm = manager.querySelector('.updateRecordForm[data-loadtype="'+ managerType +'"]') : updateRecordForm = manager.querySelector('.updateRecordForm');
+
+            const dbName = manageRecordsTable.dataset.loadtype;
 
 
             loadRecords();
@@ -74,9 +80,8 @@ function coreFunction() {
 
                     });
 
-
                     addRecordForm.addEventListener("reset", function (e) {
-                        jQuery(manager).find('.addRecordModal').modal('hide');
+                        !!managerType? jQuery(manager).find('.addRecordModal[data-loadtype="'+ managerType +'"]').modal('hide') : jQuery(manager).find('.addRecordModal').modal('hide');
                     })
                 } else {
                     console.log('Формы sendRecord не существует');
@@ -113,7 +118,7 @@ function coreFunction() {
                     });
 
                     updateRecordForm.addEventListener("reset", function (e) {
-                        jQuery(manager).find('.updateRecordModal').modal('hide');
+                        !!managerType? jQuery(manager).find('.updateRecordModal[data-loadtype="'+ managerType +'"]').modal('hide') : jQuery(manager).find('.updateRecordModal').modal('hide');
                     })
                 }
             }
@@ -132,16 +137,27 @@ function coreFunction() {
 
             function addInfoToUpdateRecordForm(info) {
                 if (updateRecordForm) {
-                    jQuery(manager).find('.updateRecordModal').modal('show');
+                    !!managerType? jQuery(manager).find('.updateRecordModal[data-loadtype="'+ managerType +'"]').modal('show') : jQuery(manager).find('.updateRecordModal').modal('show');
+
                     const formInputID = updateRecordForm.querySelector('[name=id]');
                     const formInputTitle = updateRecordForm.querySelector('[name=title]');
                     const formInputInfo = updateRecordForm.querySelector('[name=info]');
 
                     const formInfo = JSON.parse(info)[dbName][0];
-
                     formInputID.value = formInfo.id;
                     formInputTitle.value = formInfo.title;
-                    formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
+
+                    switch(managerType) {
+                        case 'usfl_tags':
+                            delete formInfo.id;
+                            formInputInfo.value = JSON.stringify(formInfo, undefined, 4);
+                            break;
+                        default:
+                            formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
+                            break;
+                    }
+
+
 
                 } else {
                     console.log("Формы updateRecordForm нет")
@@ -181,6 +197,7 @@ function coreFunction() {
                                         sendRequest('/core/core.php?db=' + dbName + '&id=' + formDataObj.id, addInfoToUpdateRecordForm);
                                         break;
                                     case 'DELETE':
+                                        console.log(form);
                                         if (confirm("Точно удалить?")) {
                                             sendRequest('/core/core.php', deleteRecordRequest, form, "POST");
                                         }
@@ -204,176 +221,6 @@ function coreFunction() {
                     sendRequest('/core/core.php?id=all&db=' + db, showRecordsInManager, manageRecordsTable);
                 }
             }
-
-        }
-
-        function trendsMainManagerOrig() {
-
-            const addTrendForm = document.querySelector('.addTrendForm');
-            const updateTrendForm = document.querySelector('.updateTrendForm');
-            const manageTrendsTable = document.querySelector('.manageTrendsTable');
-
-
-            loadTrends();
-            addTrendFormControl();
-            updateTrendFormControl();
-            manageTrendsTableControl();
-
-
-            // Add trend
-            function addTrendFormControl() {
-                if (addTrendForm !== null) {
-                    addTrendForm.addEventListener("submit", function (e) {
-                        e.preventDefault();
-
-
-                        if (isSending) {
-                            alert("Вы уже отправили запрос. Сначала дождитесь ответ.");
-                            return false
-                        }
-                        if(textAreaJsonValidation(addTrendForm)) {
-                            isSending = true;
-                            sendRequest('/core/db/trends.php', addTrendRequest, this, "POST");
-                        }
-
-                    });
-
-                    addTrendForm.addEventListener("reset", function (e) {
-                        jQuery('#addTrendModal').modal('hide');
-                    })
-                } else {
-                    console.log('Формы sendTrend не существует');
-                }
-
-
-
-            }
-
-            function addTrendRequest(response, form) {
-                if (response === "Запись добавлена") {
-                    alert("Запись добавлена");
-                    form.reset();
-                } else {
-                    alert("Что-то пошло не так: \r\n" + response);
-                }
-                isSending = false;
-                loadTrends();
-            }
-
-
-            // Edit trend
-            function updateTrendFormControl() {
-                if (updateTrendForm) {
-                    updateTrendForm.addEventListener("submit", function (e) {
-                        e.preventDefault();
-
-                        if (isSending) {
-                            alert("Вы уже отправили запрос. Сначала дождитесь ответ.");
-                            return false
-                        }
-                        if(textAreaJsonValidation(updateTrendForm)) {
-                            isSending = true;
-                            sendRequest('/core/db/trends.php', updateTrendRequest, this, "POST");
-                        }
-                    });
-
-                    updateTrendForm.addEventListener("reset", function (e) {
-                        jQuery('#updateTrendModal').modal('hide');
-                    })
-                }
-            }
-
-            function updateTrendRequest(response, form) {
-                loadTrends();
-                if (response === "Запись обновлена") {
-                    alert("Запись обновлена");
-                    form.querySelector('textarea').value = "";
-                    form.reset();
-                } else {
-                    alert("Не удалось обновить. Что-то пошло не так: \r\n" + response);
-                }
-                isSending = false;
-            }
-
-            function addInfoToUpdateTrendForm(info) {
-                if (updateTrendForm) {
-                    jQuery('#updateTrendModal').modal('show');
-                    const formInputID = updateTrendForm.querySelector('[name=id]');
-                    const formInputTitle = updateTrendForm.querySelector('[name=title]');
-                    const formInputInfo = updateTrendForm.querySelector('[name=info]');
-                    const formInfo = JSON.parse(info).trends[0];
-
-                    formInputID.value = formInfo.id;
-                    formInputTitle.value = formInfo.title;
-                    formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
-
-                } else {
-                    console.log("Формы updateTrendForm нет")
-                }
-            }
-
-
-            // Delete trend
-            function deleteTrendRequest(response, form) {
-                loadTrends();
-                if (response === "Запись удалена") {
-                    alert("Запись удалена");
-                    updateTrendForm.reset();
-                } else {
-                    alert("Не удалось удалить запись. Что-то пошло не так: \r\n" + response);
-                }
-            }
-
-
-            // Кнопки EDIT and DELETE
-            function manageTrendsTableControl() {
-                if (manageTrendsTable !== null) {
-                    manageTrendsTable.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        const target = e.target;
-
-                        if (target.classList.contains("js_EditTrendButton")) {
-                            e.preventDefault();
-                            const button = target;
-                            const form = button.parentNode;
-                            const FORM_DATA = jQuery(form).serialize();
-                            // console.log(FORM_DATA);
-                            const formDataObj = paramsToJson(FORM_DATA);
-                            if (parseInt(formDataObj.id) > 0) {
-                                switch(button.value) {
-                                    case 'EDIT':
-                                        sendRequest('/core/db/trends.php?id=' + formDataObj.id, addInfoToUpdateTrendForm);
-                                        break;
-                                    case 'DELETE':
-                                        if (confirm("Точно удалить?")) {
-                                            sendRequest('/core/db/trends.php?', deleteTrendRequest, form, "POST");
-                                        }
-
-                                        break;
-                                }
-                            } else {
-                                alert("Что-то пошло не так, передан не верный id: " + formDataObj.id);
-                            }
-
-
-                        }
-
-
-                    });
-                }
-            }
-
-
-            // LOAD and SHOW Trends helpers
-            function loadTrends() {
-                if (manageTrendsTable!== null) {
-                    manageTrendsTable.querySelector("tbody").innerHTML = "";
-                    sendRequest('/core/db/trends.php?id=all', showTrendsInManager, manageTrendsTable);
-                }
-            }
-
-
-
 
         }
 
@@ -737,178 +584,6 @@ function coreFunction() {
 
         }
 
-        function usflTagsMainManager() {
-
-            const addUsflTagForm = document.querySelector('.addUsflTagForm');
-            const updateUsflTagForm = document.querySelector('.updateUsflTagForm');
-            const manageUsflTagsTable = document.querySelector('.manageUsflTagsTable');
-
-
-            loadUsflTags();
-            addUsflTagFormControl();
-            updateUsflTagFormControl();
-            manageUsflTagsTableControl();
-
-
-            // Add usflTag
-            function addUsflTagFormControl() {
-                if (addUsflTagForm !== null) {
-                    addUsflTagForm.addEventListener("submit", function (e) {
-                        e.preventDefault();
-
-
-                        if (isSending) {
-                            alert("Вы уже отправили запрос. Сначала дождитесь ответ.");
-                            return false
-                        }
-                        if(textAreaJsonValidation(addUsflTagForm)) {
-                            isSending = true;
-                            sendRequest('/core/core.php', addUsflTagRequest, this, "POST");
-                        }
-
-                    });
-
-                    addUsflTagForm.addEventListener("reset", function (e) {
-                        jQuery('#addUsflTagModal').modal('hide');
-                    })
-                } else {
-                    console.log('Формы addUsflTag не существует');
-                }
-
-
-
-            }
-
-            function addUsflTagRequest(response, form) {
-                if (response === "Запись добавлена") {
-                    alert("Запись добавлена");
-                    form.reset();
-                } else {
-                    alert("Что-то пошло не так: \r\n" + response);
-                }
-                isSending = false;
-                loadUsflTags();
-            }
-
-
-            // Edit usflTag
-            function updateUsflTagFormControl() {
-                if (updateUsflTagForm) {
-                    updateUsflTagForm.addEventListener("submit", function (e) {
-                        e.preventDefault();
-
-                        if (isSending) {
-                            alert("Вы уже отправили запрос. Сначала дождитесь ответ.");
-                            return false
-                        }
-                        if(textAreaJsonValidation(updateUsflTagForm)) {
-                            isSending = true;
-                            sendRequest('/core/core.php', updateUsflTagRequest, this, "POST");
-                        }
-                    });
-
-                    updateUsflTagForm.addEventListener("reset", function (e) {
-                        jQuery('#updateUsflTagModal').modal('hide');
-                    })
-                }
-            }
-
-            function updateUsflTagRequest(response, form) {
-                loadUsflTags();
-                if (response === "Запись обновлена") {
-                    alert("Запись обновлена");
-                    form.querySelector('textarea').value = "";
-                    form.reset();
-                } else {
-                    alert("Не удалось обновить. Что-то пошло не так: \r\n" + response);
-                }
-                isSending = false;
-            }
-
-            function addInfoToUpdateUsflTagForm(info) {
-                if (updateUsflTagForm) {
-                    jQuery('#updateUsflTagModal').modal('show');
-                    const formInputID = updateUsflTagForm.querySelector('[name=id]');
-                    const formInputTitle = updateUsflTagForm.querySelector('[name=title]');
-                    const formInputInfo = updateUsflTagForm.querySelector('[name=info]');
-                    const formInfo = JSON.parse(info).usfl_tags[0];
-
-                    console.log(formInfo);
-
-                    formInputID.value = formInfo.id;
-                    formInputTitle.value = formInfo.title;
-                    delete formInfo.id;
-                    formInputInfo.value = JSON.stringify(formInfo, undefined, 4);
-
-                } else {
-                    console.log("Формы updateUsflTagForm нет")
-                }
-            }
-
-
-            // Delete usflTag
-            function deleteUsflTagRequest(response, form) {
-                loadUsflTags();
-                if (response === "Запись удалена") {
-                    alert("Запись удалена");
-                    updateUsflTagForm.reset();
-                } else {
-                    alert("Не удалось удалить запись. Что-то пошло не так: \r\n" + response);
-                }
-            }
-
-
-            // Кнопки EDIT and DELETE
-            function manageUsflTagsTableControl() {
-                if (manageUsflTagsTable !== null) {
-                    manageUsflTagsTable.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        const target = e.target;
-
-                        if (target.classList.contains("js_EditUsflTagButton")) {
-                            e.preventDefault();
-                            const button = target;
-                            const form = button.parentNode;
-                            const FORM_DATA = jQuery(form).serialize();
-                            const formDataObj = paramsToJson(FORM_DATA);
-                            if (parseInt(formDataObj.id) > 0) {
-                                switch(button.value) {
-                                    case 'EDIT':
-                                        sendRequest('/core/core.php?db=usfl_tags&id=' + formDataObj.id, addInfoToUpdateUsflTagForm);
-                                        break;
-                                    case 'DELETE':
-                                        if (confirm("Точно удалить?")) {
-                                            sendRequest('/core/core.php', deleteUsflTagRequest, form, "POST");
-                                        }
-
-                                        break;
-                                }
-                            } else {
-                                alert("Что-то пошло не так, передан не верный id: " + formDataObj.id);
-                            }
-
-
-                        }
-
-
-                    });
-                }
-            }
-
-
-            // LOAD and SHOW UsflTags helpers
-            function loadUsflTags() {
-                if (manageUsflTagsTable!== null) {
-                    manageUsflTagsTable.querySelector("tbody").innerHTML = "";
-                    sendRequest('/core/core.php?id=all&db=usfl_tags', showUsflTagsInManager, manageUsflTagsTable);
-                }
-            }
-
-
-
-
-        }
-
 
     }
     function mainEvents() {
@@ -1065,6 +740,29 @@ function removeFromArr(arr, el, key) {
     console.log(arr);
 }
 
+function addFieldToInfo(form, field) {
+
+    const formInfo = JSON.parse(form.info.value);
+    const fieldArr = [];
+
+    form.querySelectorAll("."+field).forEach((el) => {
+        let newObj = {};
+        for(let key in el.dataset) {
+            if (key === "id") {
+                newObj[key] = parseInt(el.dataset[key]);
+            } else {
+                newObj[key] = el.dataset[key];
+            }
+        }
+        fieldArr.push(newObj);
+    });
+
+
+
+    formInfo[field]=  fieldArr;
+    form.info.value = JSON.stringify(formInfo, undefined, 4);
+}
+
 
 function nodeCreator(arr, place, tpl, className, appendMode = "toEnd") {
     // place.innerHTML = "";
@@ -1093,9 +791,10 @@ function nodeCreator_divTPL(el, className) {
 function showRecordsInManager(response, table) {
     let db = table.dataset.loadtype;
     const result = JSON.parse(response);
-    console.log(result);
-    console.log(db);
-    console.log(result[db]);
+    // TODO: почистить консоль логи
+    // console.log(result);
+    // console.log(db);
+    // console.log(result[db]);
     // Удалить кнопки, если response пустой
     if(result[db].length === 0) {
         alert("Все записи уже загружены!");
@@ -1105,31 +804,13 @@ function showRecordsInManager(response, table) {
         const arrLength = result[db].length;
         table.dataset.lastid = result[db][arrLength - 1].id;
         result[db].forEach(function (item) {
-            let newItemROW = manageRecordsTPL(item);
+            let newItemROW = manageRecordsTPL(item, db);
             table.querySelector('.manageRecordsTable tbody').innerHTML += newItemROW;
         })
     }
 
 }
 
-
-function showTrendsInManager(response, table) {
-    const result = JSON.parse(response);
-    // Удалить кнопки, если response пустой
-    if(result["trends"].length === 0) {
-        alert("Все записи уже загружены!");
-        const buttons = document.querySelectorAll("[data-place='#trendsTableManage']");
-        buttons.forEach(el => el.remove());
-    }
-
-    const arrLength = result["trends"].length;
-    table.dataset.lastid = result["trends"][arrLength - 1].id;
-    result["trends"].forEach(function (item) {
-        let newItemROW = manageTrendsTPL(item);
-        document.querySelector('.manageTrendsTable tbody').innerHTML += newItemROW;
-        // manageTrendsTable.querySelector("tbody").innerHTML += newItemROW;
-    })
-}
 function showUsflLinksInManager(response, table) {
     const result = JSON.parse(response);
     // Удалить кнопки, если response пустой
@@ -1144,23 +825,6 @@ function showUsflLinksInManager(response, table) {
     result["usfl_links"].forEach(function (item) {
         let newItemROW = manageUsflLinksTPL(item);
         document.querySelector('.manageUsflLinksTable tbody').innerHTML += newItemROW;
-        // manageTrendsTable.querySelector("tbody").innerHTML += newItemROW;
-    })
-}
-function showUsflTagsInManager(response, table) {
-    const result = JSON.parse(response);
-    // Удалить кнопки, если response пустой
-    if(result["usfl_tags"].length === 0) {
-        alert("Все записи уже загружены!");
-        const buttons = document.querySelectorAll("[data-place='#usflTagsTableManage']");
-        buttons.forEach(el => el.remove());
-    }
-
-    const arrLength = result["usfl_tags"].length;
-    table.dataset.lastid = result["usfl_tags"][arrLength - 1].id;
-    result["usfl_tags"].forEach(function (item) {
-        let newItemROW = manageUsflTagsTPL(item);
-        document.querySelector('.manageUsflTagsTable tbody').innerHTML += newItemROW;
         // manageTrendsTable.querySelector("tbody").innerHTML += newItemROW;
     })
 }
@@ -1194,7 +858,7 @@ function showMoreData(e) {
 
 
 //  --==:: TPL ::==-
-function manageRecordsTPL(item) {
+function manageRecordsTPL(item, dbName) {
     const newItem = `
                         <tr>
                             <td>${item["id"]}</td>
@@ -1207,7 +871,7 @@ function manageRecordsTPL(item) {
                             </td>
                             <td>
                                 <form class="deleteTrendForm" method="POST" action="https://okolojs.ru/core/core.php">
-                                    <input type="hidden" name="db" value="trends">
+                                    <input type="hidden" name="db" value="${dbName}">
                                     <input type="hidden" name="method" value="DELETE">
                                     <input type="hidden" name="id" value="${item["id"]}">
                                     <input class="btn btn-danger js_EditRecordButton" type="submit" value="DELETE">
@@ -1215,28 +879,6 @@ function manageRecordsTPL(item) {
                             </td>
                         </tr>`
     return newItem;
-}
-
-function manageTrendsTPL(item) {
-    const newTrend = `
-                        <tr>
-                            <td>${item["id"]}</td>
-                            <td>${item["title"]}</td>
-                            <td>
-                                <form class="editTrendForm" method="GET" action="https://okolojs.ru/core/core.php">
-                                    <input type="hidden" name="id" value="${item["id"]}">
-                                    <input class="btn btn-info js_EditTrendButton" type="submit" value="EDIT" >
-                                </form>
-                            </td>
-                            <td>
-                                <form class="deleteTrendForm" method="POST" action="https://okolojs.ru/core/core.php">
-                                    <input type="hidden" name="method" value="DELETE">
-                                    <input type="hidden" name="id" value="${item["id"]}">
-                                    <input class="btn btn-danger js_EditTrendButton" type="submit" value="DELETE">
-                                </form>
-                            </td>
-                        </tr>`
-    return newTrend;
 }
 
 function manageUsflLinksTPL(item) {
@@ -1275,53 +917,6 @@ function manageUsflLinksTPL(item) {
                             </td>
                         </tr>`
     return newItem;
-}
-
-function manageUsflTagsTPL(item) {
-    const newItem = `
-                        <tr>
-                            <td>${item["id"]}</td>
-                            <td>${item["title"]}</td>
-                            <td>
-                                <form class="editUsflTagForm" method="GET" action="https://okolojs.ru/core/core.php?db=usfl_links.php">
-                                    <input type="hidden" name="id" value="${item["id"]}">
-                                    <input class="btn btn-info js_EditUsflTagButton" type="submit" value="EDIT" >
-                                </form>
-                            </td>
-                            <td>
-                                <form class="deleteUsflTagForm" method="POST" action="https://okolojs.ru/core/core.php">
-                                    <input type="hidden" name="db" value="usfl_tags">
-                                    <input type="hidden" name="method" value="DELETE">
-                                    <input type="hidden" name="id" value="${item["id"]}">
-                                    <input class="btn btn-danger js_EditUsflTagButton" type="submit" value="DELETE">
-                                </form>
-                            </td>
-                        </tr>`
-    return newItem;
-}
-
-
-function addFieldToInfo(form, field) {
-
-    const formInfo = JSON.parse(form.info.value);
-    const fieldArr = [];
-
-    form.querySelectorAll("."+field).forEach((el) => {
-        let newObj = {};
-        for(let key in el.dataset) {
-            if (key === "id") {
-                newObj[key] = parseInt(el.dataset[key]);
-            } else {
-                newObj[key] = el.dataset[key];
-            }
-        }
-        fieldArr.push(newObj);
-    });
-
-
-
-    formInfo[field]=  fieldArr;
-    form.info.value = JSON.stringify(formInfo, undefined, 4);
 }
 
 

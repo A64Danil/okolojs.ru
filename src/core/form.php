@@ -156,7 +156,7 @@
                     </div>
 
                     <div class="table-responsive" >
-                        <table id="trendsTableManage" class="manageRecordsTable table table-striped table-hover" data-lastid="" data-loadtype="trends">
+                        <table id="trendsTableManager" class="manageRecordsTable table table-striped table-hover" data-lastid="" data-loadtype="trends">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -172,7 +172,7 @@
                                                 class="btn btn-primary showMore"
                                                 data-action="loadMore"
                                                 data-loadtype="trends"
-                                                data-place="#trendsTableManage">
+                                                data-place="#trendsTableManager">
                                             Показать еще
                                         </button>
                                         <button type="button"
@@ -180,7 +180,7 @@
                                                 data-action="loadMore"
                                                 data-loadtype="trends"
                                                 data-limit="30"
-                                                data-place="#trendsTableManage">
+                                                data-place="#trendsTableManager">
                                             Показать еще 30
                                         </button>
                                     </td>
@@ -356,7 +356,7 @@
 
 
                     <!-- Modal -->
-                    <div class="manageForm modal fade" id="addUsflLinkModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="manageForm modal fade addRecordModal" id="addUsflLinkModal" data-loadtype="usfl_links" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
 
@@ -385,7 +385,7 @@
                                         </div>
                                     </div>
 
-                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addUsflLinkForm">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addRecordForm addUsflLinkForm">
                                         <input type="hidden" name="db" value="usfl_links" >
                                         <div class="form-group">
                                             <label for="">Введите Info в формате JSON: </label>
@@ -417,7 +417,7 @@
                         </div>
                     </div>
 
-                    <div class="manageForm modal fade" id="updateUsflLinkModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="manageForm modal fade updateRecordModal" id="updateUsflLinkModal" data-loadtype="usfl_links" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
 
@@ -428,7 +428,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" class="updateUsflLinkForm">
+                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" class="updateRecordForm updateUsflLinkForm">
                                         <input type="hidden" name="db" value="usfl_links">
                                         <input type="hidden" name="method" value="UPDATE">
 
@@ -471,7 +471,7 @@
                     </div>
 
                     <!-- Modal -->
-                    <div class="manageForm modal fade" id="addUsflTagModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="manageForm modal fade addRecordModal" id="addUsflTagModal" data-loadtype="usfl_tags" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
 
@@ -498,7 +498,7 @@
                                         </div>
                                     </div>
 
-                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addUsflTagForm">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" data-loadtype="usfl_tags" class="addRecordForm addUsflTagForm">
                                         <input type="hidden" name="db" value="usfl_tags">
                                         <div class="form-group">
                                             <label for="">Введите Info в формате JSON: </label>
@@ -520,7 +520,7 @@
                         </div>
                     </div>
 
-                    <div class="manageForm modal fade" id="updateUsflTagModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="manageForm modal fade updateRecordModal" id="updateUsflTagModal" data-loadtype="usfl_tags" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
 
@@ -531,7 +531,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" class="updateUsflTagForm">
+                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" data-loadtype="usfl_tags" class="updateRecordForm updateUsflTagForm">
                                         <input type="hidden" name="db" value="usfl_tags">
                                         <input type="hidden" name="method" value="UPDATE">
 
@@ -567,7 +567,7 @@
 
 
                     <div class="table-responsive" >
-                        <table id="usflTagsTableManage" class="manageUsflTagsTable table table-striped table-hover" data-lastid="" data-loadtype="usfl_tags">
+                        <table id="usfl_tagsTableManage" class="manageRecordsTable manageUsflTagsTable table table-striped table-hover" data-lastid="" data-loadtype="usfl_tags">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -584,7 +584,7 @@
                                                 class="btn btn-primary showMore"
                                                 data-action="loadMore"
                                                 data-loadtype="usfl_tags"
-                                                data-place="#usflTagsTableManage">
+                                                data-place="#usfl_tagsTableManage">
                                             Показать еще
                                         </button>
                                         <button type="button"
@@ -592,7 +592,7 @@
                                                 data-action="loadMore"
                                                 data-loadtype="usfl_tags"
                                                 data-limit="30"
-                                                data-place="#usflTagsTableManage">
+                                                data-place="#usfl_tagsTableManage">
                                             Показать еще 30
                                         </button>
                                     </td>
@@ -603,7 +603,7 @@
                             </tbody>
                         </table>
                         
-                        <table id="usflLinksTableManage" class="manageUsflLinksTable table table-striped table-hover" data-lastid="" data-loadtype="usfl_links">
+                        <table id="usfl_linksTableManage" class="manageUsflLinksTable table table-striped table-hover" data-lastid="" data-loadtype="usfl_links">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -619,7 +619,7 @@
                                                 class="btn btn-primary showMore"
                                                 data-action="loadMore"
                                                 data-loadtype="usfl_links"
-                                                data-place="#usflLinksTableManage">
+                                                data-place="#usfl_linksTableManage">
                                             Показать еще
                                         </button>
                                         <button type="button"
@@ -627,7 +627,7 @@
                                                 data-action="loadMore"
                                                 data-loadtype="usfl_links"
                                                 data-limit="30"
-                                                data-place="#usflLinksTableManage">
+                                                data-place="#usfl_linksTableManage">
                                             Показать еще 30
                                         </button>
                                     </td>
