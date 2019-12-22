@@ -12,7 +12,7 @@ function coreFunction() {
     const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 1530");
+        console.log("Пасхалка для самых любопытных =) 1735");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
         // loadModelAndShowBlock('trends11', "trend-template", 'trends');
         mainEvents();
@@ -43,6 +43,8 @@ function coreFunction() {
         recordsMainManager("usflManager", "usfl_tags");
 
 
+        // TODO: после редактирования тегов, так же обновлять список полезных ссылок
+
         function recordsMainManager(mainManagerId, managerType) {
             const manager = document.getElementById(mainManagerId);
 
@@ -52,29 +54,27 @@ function coreFunction() {
 
             const dbName = manageRecordsTable.dataset.loadtype;
 
-            // TODO: 1. Переименовать переменные в универсальные имена
-            let addUsflLinkForm_searchTags;
-            let addUsflLinkForm_selectedTags;
-            let updateUsflLinkForm_searchTags;
-            let updateUsflLinkForm_selectedTags;
+            let addRecordForm_searchTags;
+            let addRecordForm_selectedTags;
+            let updateRecordForm_searchTags;
+            let updateRecordForm_selectedTags;
 
-            let addUsflLinkForm_searchResult;
-            let updateUsflLinkForm_searchResult;
+            let addRecordForm_searchResult;
+            let updateRecordForm_searchResult;
 
             switch(managerType) {
                 case 'usfl_links':
-                    console.log("todo 1");
-                    addUsflLinkForm_searchTags = addRecordForm.querySelector('.addUsflLinkForm .searchTags');
-                    addUsflLinkForm_selectedTags = addRecordForm.querySelector('.addUsflLinkForm .selectedTags');
+                    addRecordForm_searchTags = addRecordForm.querySelector('.searchTags');
+                    addRecordForm_selectedTags = addRecordForm.querySelector('.selectedTags');
 
-                    updateUsflLinkForm_searchTags = updateRecordForm.querySelector('.updateUsflLinkForm .searchTags');
-                    updateUsflLinkForm_selectedTags = updateRecordForm.querySelector('.updateUsflLinkForm .selectedTags');
+                    updateRecordForm_searchTags = updateRecordForm.querySelector('.searchTags');
+                    updateRecordForm_selectedTags = updateRecordForm.querySelector('.selectedTags');
 
                     if (addRecordForm !== null) {
-                        addUsflLinkForm_searchResult = addRecordForm.querySelector(".search_result");
+                        addRecordForm_searchResult = addRecordForm.querySelector(".search_result");
                     }
                     if (updateRecordForm !== null) {
-                        updateUsflLinkForm_searchResult = updateRecordForm.querySelector(".search_result");
+                        updateRecordForm_searchResult = updateRecordForm.querySelector(".search_result");
                     }
 
                     jQuery('#addUsflLinkModal').on('shown.bs.modal', function () {
@@ -105,8 +105,7 @@ function coreFunction() {
                             isSending = true;
                             switch(managerType) {
                                 case 'usfl_links':
-                                    // TODO: 1.5. Протестировать теги при добавлении(links)
-                                    console.log("todo 1.5");
+                                    console.log("todo 1.5 - работает");
                                     addFieldToInfo(this, "tags");
                                     break;
                                 default:
@@ -121,16 +120,16 @@ function coreFunction() {
                         switch(managerType) {
                             case 'usfl_links':
                                 // TODO: 1.4. Вынести в отдельную функцию про теги
-                                console.log("todo 1.4");
+                                console.log("todo 1.4 - работает");
                                 removeFromArr(allUsflTags.selected);
 
-                                while (addUsflLinkForm_selectedTags.children.length > 1) {
-                                    addUsflLinkForm_selectedTags.removeChild(addUsflLinkForm_selectedTags.children[0])
+                                while (addRecordForm_selectedTags.children.length > 1) {
+                                    addRecordForm_selectedTags.removeChild(addRecordForm_selectedTags.children[0])
                                 }
 
-                                nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
-                                addUsflLinkForm_searchResult.innerHTML = "";
-                                nodeCreator(allUsflTags.arr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                                nodeCreator(allUsflTags.selected, addRecordForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                                addRecordForm_searchResult.innerHTML = "";
+                                nodeCreator(allUsflTags.arr, addRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
 
                                 break;
                             default:
@@ -142,21 +141,20 @@ function coreFunction() {
 
                     switch(managerType) {
                         case 'usfl_links':
-                            // TODO: 2. Протестировать все функции из добавления
-                            console.log("todo 2");
+                            console.log("todo 2 - работает");
                             sendRequest('/core/core.php?id=all&db=usfl_tags', function (response) {
                                 if (response) {
                                     allUsflTags.arr = JSON.parse(response)["usfl_tags"];
                                     console.log("Пришли все возможные теги");
-                                    nodeCreator(allUsflTags.arr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                                    nodeCreator(allUsflTags.arr, addRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
                                 } else {
                                     alert("Что-то пошло не так: \r\n" + response);
                                 };
 
                             });
 
-                            // TODO: вынести в отдельную функцию про теги3 ?
-                            addUsflLinkForm_searchTags.addEventListener("keyup", function (e) {
+                            // TODO: вынести в отдельную функцию про теги3 - работает
+                            addRecordForm_searchTags.addEventListener("keyup", function (e) {
                                 const regex = new RegExp(this.value, 'i');
                                 const tempArr = [];
                                 allUsflTags.arr.forEach((el, i, arr) => {
@@ -167,12 +165,12 @@ function coreFunction() {
 
                                 console.log("Итоговый массив: ");
                                 console.log(tempArr);
-                                addUsflLinkForm_searchResult.innerHTML = "";
-                                nodeCreator(tempArr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                                addRecordForm_searchResult.innerHTML = "";
+                                nodeCreator(tempArr, addRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
 
                             });
 
-                            // TODO: вынести в отдельную функцию про теги2 ?
+                            // TODO: вынести в отдельную функцию про теги2 - работает
                             addRecordForm.addEventListener("click", function (e) {
 
                                 if (e.target.classList.contains("tag") && e.target.dataset.id && e.target.dataset.title) {
@@ -183,11 +181,11 @@ function coreFunction() {
 
                                     if (!checkIsSelected(allUsflTags.selected, selectedTag, "id" )) {
                                         allUsflTags.selected.push(selectedTag);
-                                        while (addUsflLinkForm_selectedTags.children.length > 1) {
-                                            addUsflLinkForm_selectedTags.removeChild(addUsflLinkForm_selectedTags.children[0])
+                                        while (addRecordForm_selectedTags.children.length > 1) {
+                                            addRecordForm_selectedTags.removeChild(addRecordForm_selectedTags.children[0])
                                         }
 
-                                        nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                                        nodeCreator(allUsflTags.selected, addRecordForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
                                         tag.remove();
                                     }
 
@@ -206,13 +204,13 @@ function coreFunction() {
                                     tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
 
 
-                                    while (addUsflLinkForm_selectedTags.children.length > 1) {
-                                        addUsflLinkForm_selectedTags.removeChild(addUsflLinkForm_selectedTags.children[0])
+                                    while (addRecordForm_selectedTags.children.length > 1) {
+                                        addRecordForm_selectedTags.removeChild(addRecordForm_selectedTags.children[0])
                                     }
 
-                                    nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
-                                    addUsflLinkForm_searchResult.innerHTML = "";
-                                    nodeCreator(tempArr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                                    nodeCreator(allUsflTags.selected, addRecordForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
+                                    addRecordForm_searchResult.innerHTML = "";
+                                    nodeCreator(tempArr, addRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
 
                                 }
                             });
@@ -258,8 +256,6 @@ function coreFunction() {
 
                             switch(managerType) {
                                 case 'usfl_links':
-                                    // TODO: 3. Протестировать теги при редактировании (links)
-                                    console.log("todo 3");
                                     addFieldToInfo(this, "tags");
                                     break;
                                 default:
@@ -274,16 +270,16 @@ function coreFunction() {
                         switch(managerType) {
                             case 'usfl_links':
                                 // TODO: 4. Вынести в отдельную функцию про теги
-                                console.log("todo 4");
+                                console.log("todo 4 - работает");
                                 removeFromArr(allUsflTags.selected);
 
-                                while (updateUsflLinkForm_selectedTags.children.length > 1) {
-                                    updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
+                                while (updateRecordForm_selectedTags.children.length > 1) {
+                                    updateRecordForm_selectedTags.removeChild(updateRecordForm_selectedTags.children[0])
                                 }
 
-                                nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
-                                updateUsflLinkForm_searchResult.innerHTML = "";
-                                nodeCreator(allUsflTags.arr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                                nodeCreator(allUsflTags.selected, updateRecordForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                                updateRecordForm_searchResult.innerHTML = "";
+                                nodeCreator(allUsflTags.arr, updateRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
 
                                 break;
                             default:
@@ -291,7 +287,7 @@ function coreFunction() {
                         }
 
                         !!managerType? jQuery(manager).find('.updateRecordModal[data-loadtype="'+ managerType +'"]').modal('hide') : jQuery(manager).find('.updateRecordModal').modal('hide');
-                    })
+                    });
 
                     switch(managerType) {
                         case 'usfl_links':
@@ -299,7 +295,7 @@ function coreFunction() {
                             console.log("todo 5");
 
                             // TODO: вынести в отдельную функцию про теги3 ?
-                            updateUsflLinkForm_searchTags.addEventListener("keyup", function (e) {
+                            updateRecordForm_searchTags.addEventListener("keyup", function (e) {
                                 const regex = new RegExp(this.value, 'i');
                                 const tempArr = [];
                                 allUsflTags.arr.forEach((el, i, arr) => {
@@ -310,8 +306,8 @@ function coreFunction() {
 
                                 console.log("Итоговый массив: ");
                                 console.log(tempArr);
-                                updateUsflLinkForm_searchResult.innerHTML = "";
-                                nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                                updateRecordForm_searchResult.innerHTML = "";
+                                nodeCreator(tempArr, updateRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
 
                             });
 
@@ -326,11 +322,11 @@ function coreFunction() {
 
                                     if (!checkIsSelected(allUsflTags.selected, selectedTag, "id" )) {
                                         allUsflTags.selected.push(selectedTag);
-                                        while (updateUsflLinkForm_selectedTags.children.length > 1) {
-                                            updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
+                                        while (updateRecordForm_selectedTags.children.length > 1) {
+                                            updateRecordForm_selectedTags.removeChild(updateRecordForm_selectedTags.children[0])
                                         }
 
-                                        nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                                        nodeCreator(allUsflTags.selected, updateRecordForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
                                         tag.remove();
                                     }
 
@@ -347,13 +343,13 @@ function coreFunction() {
 
 
                                     tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
-                                    while (updateUsflLinkForm_selectedTags.children.length > 1) {
-                                        updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
+                                    while (updateRecordForm_selectedTags.children.length > 1) {
+                                        updateRecordForm_selectedTags.removeChild(updateRecordForm_selectedTags.children[0])
                                     }
 
-                                    nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
-                                    updateUsflLinkForm_searchResult.innerHTML = "";
-                                    nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                                    nodeCreator(allUsflTags.selected, updateRecordForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                                    updateRecordForm_searchResult.innerHTML = "";
+                                    nodeCreator(tempArr, updateRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
 
                                 }
                             });
@@ -396,23 +392,22 @@ function coreFunction() {
 
                     switch(managerType) {
                         case 'usfl_links':
-                            allUsflTags.selected = formInfo.info.tags;
-                            formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
-
-                            // TODO: протестировать теги во время редактирования
                             removeFromArr(allUsflTags.selected);
 
-                            while (updateUsflLinkForm_selectedTags.children.length > 1) {
-                                updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
+                            while (updateRecordForm_selectedTags.children.length > 1) {
+                                updateRecordForm_selectedTags.removeChild(updateRecordForm_selectedTags.children[0])
                             }
+
+                            allUsflTags.selected = formInfo.info.tags;
+                            formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
 
                             let tempArr;
                             tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
 
 
-                            nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
-                            updateUsflLinkForm_searchResult.innerHTML = "";
-                            nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                            nodeCreator(allUsflTags.selected, updateRecordForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
+                            updateRecordForm_searchResult.innerHTML = "";
+                            nodeCreator(tempArr, updateRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
 
                             break;
                         case 'usfl_tags':
