@@ -385,7 +385,7 @@
                                         </div>
                                     </div>
 
-                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addRecordForm addUsflLinkForm">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" data-loadtype="usfl_links" class="addRecordForm addUsflLinkForm">
                                         <input type="hidden" name="db" value="usfl_links" >
                                         <div class="form-group">
                                             <label for="">Введите Info в формате JSON: </label>
@@ -428,7 +428,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" class="updateRecordForm updateUsflLinkForm">
+                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" data-loadtype="usfl_links" class="updateRecordForm updateUsflLinkForm">
                                         <input type="hidden" name="db" value="usfl_links">
                                         <input type="hidden" name="method" value="UPDATE">
 
@@ -498,7 +498,7 @@
                                         </div>
                                     </div>
 
-                                    <form method="POST" action="https://okolojs.ru/core/core.php" data-loadtype="usfl_tags" class="addRecordForm addUsflTagForm">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" data-loadtype="usfl_tags" class="addRecordForm">
                                         <input type="hidden" name="db" value="usfl_tags">
                                         <div class="form-group">
                                             <label for="">Введите Info в формате JSON: </label>
@@ -531,7 +531,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" data-loadtype="usfl_tags" class="updateRecordForm updateUsflTagForm">
+                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" data-loadtype="usfl_tags" class="updateRecordForm">
                                         <input type="hidden" name="db" value="usfl_tags">
                                         <input type="hidden" name="method" value="UPDATE">
 
@@ -603,7 +603,7 @@
                             </tbody>
                         </table>
                         
-                        <table id="usfl_linksTableManage" class="manageUsflLinksTable table table-striped table-hover" data-lastid="" data-loadtype="usfl_links">
+                        <table id="usfl_linksTableManage" class="manageRecordsTable manageUsflLinksTable table table-striped table-hover" data-lastid="" data-loadtype="usfl_links">
                             <thead>
                                 <tr>
                                     <th>ID</th>

@@ -12,7 +12,7 @@ function coreFunction() {
     const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 1350");
+        console.log("Пасхалка для самых любопытных =) 1530");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
         // loadModelAndShowBlock('trends11', "trend-template", 'trends');
         mainEvents();
@@ -38,36 +38,38 @@ function coreFunction() {
 
         recordsMainManager("trendsManager");
         recordsMainManager("rulesManager");
-        usflLinksMainManager();
-        // recordsMainManager("usflManager", "usfl_links");
+        // usflLinksMainManager();
+        recordsMainManager("usflManager", "usfl_links");
         recordsMainManager("usflManager", "usfl_tags");
 
 
         function recordsMainManager(mainManagerId, managerType) {
             const manager = document.getElementById(mainManagerId);
-            let manageRecordsTable;
-            !!managerType? manageRecordsTable = manager.querySelector('.manageRecordsTable[data-loadtype="'+ managerType +'"]') : manageRecordsTable = manager.querySelector('.manageRecordsTable');
 
-            let addRecordForm;
-            !!managerType? addRecordForm = manager.querySelector('.addRecordForm[data-loadtype="'+ managerType +'"]') : addRecordForm = manager.querySelector('.addRecordForm');
-
-            let updateRecordForm;
-            !!managerType? updateRecordForm = manager.querySelector('.updateRecordForm[data-loadtype="'+ managerType +'"]') : updateRecordForm = manager.querySelector('.updateRecordForm');
+            const manageRecordsTable = !!managerType? manager.querySelector('.manageRecordsTable[data-loadtype="'+ managerType +'"]') :  manager.querySelector('.manageRecordsTable');
+            const addRecordForm = !!managerType? manager.querySelector('.addRecordForm[data-loadtype="'+ managerType +'"]'): manager.querySelector('.addRecordForm');
+            const updateRecordForm = !!managerType? manager.querySelector('.updateRecordForm[data-loadtype="'+ managerType +'"]'): manager.querySelector('.updateRecordForm');
 
             const dbName = manageRecordsTable.dataset.loadtype;
 
+            // TODO: 1. Переименовать переменные в универсальные имена
+            let addUsflLinkForm_searchTags;
+            let addUsflLinkForm_selectedTags;
+            let updateUsflLinkForm_searchTags;
+            let updateUsflLinkForm_selectedTags;
+
+            let addUsflLinkForm_searchResult;
+            let updateUsflLinkForm_searchResult;
+
             switch(managerType) {
                 case 'usfl_links':
-                    // TODO: 1. Переименовать переменные в универсальные имена
                     console.log("todo 1");
-                    const addUsflLinkForm_searchTags = addRecordForm.querySelector('.addUsflLinkForm .searchTags');
-                    const addUsflLinkForm_selectedTags = addRecordForm.querySelector('.addUsflLinkForm .selectedTags');
+                    addUsflLinkForm_searchTags = addRecordForm.querySelector('.addUsflLinkForm .searchTags');
+                    addUsflLinkForm_selectedTags = addRecordForm.querySelector('.addUsflLinkForm .selectedTags');
 
-                    const updateUsflLinkForm_searchTags = updateRecordForm.querySelector('.updateUsflLinkForm .searchTags');
-                    const updateUsflLinkForm_selectedTags = updateRecordForm.querySelector('.updateUsflLinkForm .selectedTags');
+                    updateUsflLinkForm_searchTags = updateRecordForm.querySelector('.updateUsflLinkForm .searchTags');
+                    updateUsflLinkForm_selectedTags = updateRecordForm.querySelector('.updateUsflLinkForm .selectedTags');
 
-                    let addUsflLinkForm_searchResult;
-                    let updateUsflLinkForm_searchResult;
                     if (addRecordForm !== null) {
                         addUsflLinkForm_searchResult = addRecordForm.querySelector(".search_result");
                     }
@@ -171,7 +173,7 @@ function coreFunction() {
                             });
 
                             // TODO: вынести в отдельную функцию про теги2 ?
-                            addUsflLinkForm.addEventListener("click", function (e) {
+                            addRecordForm.addEventListener("click", function (e) {
 
                                 if (e.target.classList.contains("tag") && e.target.dataset.id && e.target.dataset.title) {
                                     const tag = e.target;
@@ -314,7 +316,7 @@ function coreFunction() {
                             });
 
                             // TODO: вынести в отдельную функцию про теги2 ?
-                            updateUsflLinkForm.addEventListener("click", function (e) {
+                            updateRecordForm.addEventListener("click", function (e) {
 
                                 if (e.target.classList.contains("tag") && e.target.dataset.id && e.target.dataset.title) {
                                     const tag = e.target;
@@ -1073,6 +1075,7 @@ function showRecordsInManager(response, table) {
 
 }
 
+// TODO: скоро будет не нужна
 function showUsflLinksInManager(response, table) {
     const result = JSON.parse(response);
     // Удалить кнопки, если response пустой
@@ -1121,10 +1124,25 @@ function showMoreData(e) {
 
 //  --==:: TPL ::==-
 function manageRecordsTPL(item, dbName) {
+    let itemCategories = "";
+
+    if (item["info"] && item["info"]["tags"] && item["info"]["tags"].length > 0) {
+        itemCategories = "<br> Tags: ";
+        item["info"]["tags"].forEach((el, i, arr) => {
+            // console.log(el.id);
+            // console.log(el.title);
+            let newTagInRow = el.title + ` (${el.id})`;
+            if (arr.length !== (i+1)) newTagInRow += ", ";
+            itemCategories += newTagInRow;
+            // console.log(itemCategories);
+        });
+    };
+
+
     const newItem = `
                         <tr>
                             <td>${item["id"]}</td>
-                            <td>${item["title"]}</td>
+                            <td>${item["title"]} ${itemCategories} </td>
                             <td>
                                 <form class="editTrendForm" method="GET" action="https://okolojs.ru/core/core.php">
                                     <input type="hidden" name="id" value="${item["id"]}">
@@ -1143,6 +1161,7 @@ function manageRecordsTPL(item, dbName) {
     return newItem;
 }
 
+// TODO: скоро будет не нужна
 function manageUsflLinksTPL(item) {
     let itemCategories = "";
 
