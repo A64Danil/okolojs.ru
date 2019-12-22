@@ -12,7 +12,7 @@ function coreFunction() {
     const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 1735");
+        console.log("Пасхалка для самых любопытных =) 1745");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
         // loadModelAndShowBlock('trends11', "trend-template", 'trends');
         mainEvents();
@@ -77,7 +77,7 @@ function coreFunction() {
                         updateRecordForm_searchResult = updateRecordForm.querySelector(".search_result");
                     }
 
-                    jQuery('#addUsflLinkModal').on('shown.bs.modal', function () {
+                    jQuery(manager).find('.addRecordModal[data-loadtype="'+ managerType +'"]').on('shown.bs.modal', function () {
                         removeFromArr(allUsflTags.selected);
                     });
                     break;
@@ -105,7 +105,6 @@ function coreFunction() {
                             isSending = true;
                             switch(managerType) {
                                 case 'usfl_links':
-                                    console.log("todo 1.5 - работает");
                                     addFieldToInfo(this, "tags");
                                     break;
                                 default:
@@ -120,7 +119,6 @@ function coreFunction() {
                         switch(managerType) {
                             case 'usfl_links':
                                 // TODO: 1.4. Вынести в отдельную функцию про теги
-                                console.log("todo 1.4 - работает");
                                 removeFromArr(allUsflTags.selected);
 
                                 while (addRecordForm_selectedTags.children.length > 1) {
@@ -141,7 +139,6 @@ function coreFunction() {
 
                     switch(managerType) {
                         case 'usfl_links':
-                            console.log("todo 2 - работает");
                             sendRequest('/core/core.php?id=all&db=usfl_tags', function (response) {
                                 if (response) {
                                     allUsflTags.arr = JSON.parse(response)["usfl_tags"];
@@ -149,8 +146,7 @@ function coreFunction() {
                                     nodeCreator(allUsflTags.arr, addRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
                                 } else {
                                     alert("Что-то пошло не так: \r\n" + response);
-                                };
-
+                                }
                             });
 
                             // TODO: вынести в отдельную функцию про теги3 - работает
@@ -214,7 +210,6 @@ function coreFunction() {
 
                                 }
                             });
-
 
                             break;
                         default:
@@ -378,8 +373,6 @@ function coreFunction() {
 
             function addInfoToUpdateRecordForm(info) {
                 if (updateRecordForm) {
-
-
                     !!managerType? jQuery(manager).find('.updateRecordModal[data-loadtype="'+ managerType +'"]').modal('show') : jQuery(manager).find('.updateRecordModal').modal('show');
 
                     const formInputID = updateRecordForm.querySelector('[name=id]');
@@ -480,366 +473,6 @@ function coreFunction() {
                     sendRequest('/core/core.php?id=all&db=' + db, showRecordsInManager, manageRecordsTable);
                 }
             }
-
-        }
-
-        function usflLinksMainManager() {
-
-            const addUsflLinkForm = document.querySelector('.addUsflLinkForm');
-            const addUsflLinkForm_searchTags = document.querySelector('.addUsflLinkForm .searchTags');
-            const addUsflLinkForm_selectedTags = document.querySelector('.addUsflLinkForm .selectedTags');
-
-            const updateUsflLinkForm = document.querySelector('.updateUsflLinkForm');
-            const updateUsflLinkForm_searchTags = document.querySelector('.updateUsflLinkForm .searchTags');
-            const updateUsflLinkForm_selectedTags = document.querySelector('.updateUsflLinkForm .selectedTags');
-
-            const manageUsflLinksTable = document.querySelector('.manageUsflLinksTable');
-
-            let addUsflLinkForm_searchResult;
-            let updateUsflLinkForm_searchResult;
-            if (addUsflLinkForm !== null) {
-                addUsflLinkForm_searchResult = addUsflLinkForm.querySelector(".search_result");
-            }
-            if (updateUsflLinkForm !== null) {
-                updateUsflLinkForm_searchResult = updateUsflLinkForm.querySelector(".search_result");
-            }
-
-            loadUsflLinks();
-            addUsflLinkFormControl();
-            updateUsflLinkFormControl();
-            manageUsflLinksTableControl();
-
-
-            // Add usflLink
-            function addUsflLinkFormControl(callback) {
-                if (addUsflLinkForm !== null) {
-
-                    addUsflLinkForm.addEventListener("submit", function (e) {
-                        e.preventDefault();
-
-
-                        if (isSending) {
-                            alert("Вы уже отправили запрос. Сначала дождитесь ответ.");
-                            return false
-                        }
-                        if(textAreaJsonValidation(addUsflLinkForm)) {
-                            isSending = true;
-                            addFieldToInfo(this, "tags");
-                            sendRequest('/core/core.php', addUsflLinkRequest, this, "POST");
-                        }
-
-                    });
-
-                    addUsflLinkForm.addEventListener("reset", function (e) {
-                        removeFromArr(allUsflTags.selected);
-
-                        while (addUsflLinkForm_selectedTags.children.length > 1) {
-                            addUsflLinkForm_selectedTags.removeChild(addUsflLinkForm_selectedTags.children[0])
-                        }
-
-                        nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
-                        addUsflLinkForm_searchResult.innerHTML = "";
-                        nodeCreator(allUsflTags.arr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
-                        jQuery('#addUsflLinkModal').modal('hide');
-                    });
-
-                    sendRequest('/core/core.php?id=all&db=usfl_tags', function (response) {
-                        if (response) {
-                            allUsflTags.arr = JSON.parse(response)["usfl_tags"];
-                            console.log("Пришли все возможные теги");
-                            nodeCreator(allUsflTags.arr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
-                        } else {
-                            alert("Что-то пошло не так: \r\n" + response);
-                        };
-
-                    });
-
-                    addUsflLinkForm_searchTags.addEventListener("keyup", function (e) {
-                        const regex = new RegExp(this.value, 'i');
-                        const tempArr = [];
-                        allUsflTags.arr.forEach((el, i, arr) => {
-                            if (el["title"].match(regex) ) {
-                                tempArr.push(el);
-                            }
-                        });
-
-                        console.log("Итоговый массив: ");
-                        console.log(tempArr);
-                        addUsflLinkForm_searchResult.innerHTML = "";
-                        nodeCreator(tempArr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
-
-                    });
-
-
-                    addUsflLinkForm.addEventListener("click", function (e) {
-
-                        if (e.target.classList.contains("tag") && e.target.dataset.id && e.target.dataset.title) {
-                            const tag = e.target;
-                            const selectedTag = {};
-                            selectedTag.id = parseInt(tag.dataset.id);
-                            selectedTag.title = tag.dataset.title;
-
-                            if (!checkIsSelected(allUsflTags.selected, selectedTag, "id" )) {
-                                allUsflTags.selected.push(selectedTag);
-                                while (addUsflLinkForm_selectedTags.children.length > 1) {
-                                    addUsflLinkForm_selectedTags.removeChild(addUsflLinkForm_selectedTags.children[0])
-                                }
-
-                                nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
-                                tag.remove();
-                            }
-
-                        }
-
-                        if (e.target.classList.contains("selectedTag") && e.target.dataset.id && e.target.dataset.title) {
-                            const tag = e.target;
-                            const selectedTag = {};
-                            selectedTag.id = parseInt(tag.dataset.id);
-                            selectedTag.title = tag.dataset.title;
-
-                            let tempArr;
-                            removeFromArr(allUsflTags.selected, selectedTag, "id" );
-
-
-                            tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
-
-
-                            while (addUsflLinkForm_selectedTags.children.length > 1) {
-                                addUsflLinkForm_selectedTags.removeChild(addUsflLinkForm_selectedTags.children[0])
-                            }
-
-                            nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
-                            addUsflLinkForm_searchResult.innerHTML = "";
-                            nodeCreator(tempArr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
-
-                        }
-                    })
-                } else {
-                    console.log('Формы addUsflLink не существует');
-                }
-
-
-
-            }
-
-            function addUsflLinkRequest(response, form) {
-                if (response === "Запись добавлена") {
-                    alert("Запись добавлена");
-                    form.reset();
-                } else {
-                    alert("Что-то пошло не так: \r\n" + response);
-                }
-                isSending = false;
-                loadUsflLinks();
-            }
-
-            jQuery('#addUsflLinkModal').on('shown.bs.modal', function () {
-                removeFromArr(allUsflTags.selected);
-            });
-
-
-            // Edit usflLink
-            function updateUsflLinkFormControl() {
-                if (updateUsflLinkForm) {
-                    updateUsflLinkForm.addEventListener("submit", function (e) {
-                        e.preventDefault();
-
-                        if (isSending) {
-                            alert("Вы уже отправили запрос. Сначала дождитесь ответ.");
-                            return false
-                        }
-                        if(textAreaJsonValidation(updateUsflLinkForm)) {
-                            isSending = true;
-                            addFieldToInfo(this, "tags");
-                            sendRequest('/core/core.php', updateUsflLinkRequest, this, "POST");
-                        }
-                    });
-
-                    updateUsflLinkForm.addEventListener("reset", function (e) {
-                        removeFromArr(allUsflTags.selected);
-
-                        while (updateUsflLinkForm_selectedTags.children.length > 1) {
-                            updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
-                        }
-
-                        nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
-                        updateUsflLinkForm_searchResult.innerHTML = "";
-                        nodeCreator(allUsflTags.arr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
-                        jQuery('#updateUsflLinkModal').modal('hide');
-                    });
-
-
-                    updateUsflLinkForm_searchTags.addEventListener("keyup", function (e) {
-                        const regex = new RegExp(this.value, 'i');
-                        const tempArr = [];
-                        allUsflTags.arr.forEach((el, i, arr) => {
-                            if (el["title"].match(regex) ) {
-                                tempArr.push(el);
-                            }
-                        });
-
-                        console.log("Итоговый массив: ");
-                        console.log(tempArr);
-                        updateUsflLinkForm_searchResult.innerHTML = "";
-                        nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
-                        // search_result
-
-                    });
-
-
-                    updateUsflLinkForm.addEventListener("click", function (e) {
-
-                        if (e.target.classList.contains("tag") && e.target.dataset.id && e.target.dataset.title) {
-                            const tag = e.target;
-                            const selectedTag = {};
-                            selectedTag.id = parseInt(tag.dataset.id);
-                            selectedTag.title = tag.dataset.title;
-
-                            if (!checkIsSelected(allUsflTags.selected, selectedTag, "id" )) {
-                                allUsflTags.selected.push(selectedTag);
-                                while (updateUsflLinkForm_selectedTags.children.length > 1) {
-                                    updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
-                                }
-
-                                nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
-                                tag.remove();
-                            }
-
-                        }
-
-                        if (e.target.classList.contains("selectedTag") && e.target.dataset.id && e.target.dataset.title) {
-                            const tag = e.target;
-                            const selectedTag = {};
-                            selectedTag.id = parseInt(tag.dataset.id);
-                            selectedTag.title = tag.dataset.title;
-
-                            let tempArr;
-                            removeFromArr(allUsflTags.selected, selectedTag, "id" );
-
-
-                            tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
-                            while (updateUsflLinkForm_selectedTags.children.length > 1) {
-                                updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
-                            }
-
-                            nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
-                            updateUsflLinkForm_searchResult.innerHTML = "";
-                            nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
-
-                        }
-                    })
-                }
-            }
-
-            function updateUsflLinkRequest(response, form) {
-                loadUsflLinks();
-                if (response === "Запись обновлена") {
-                    alert("Запись обновлена");
-                    form.querySelector('textarea').value = "";
-                    form.reset();
-                } else {
-                    alert("Не удалось обновить. Что-то пошло не так: \r\n" + response);
-                }
-                isSending = false;
-            }
-
-            function addInfoToUpdateUsflLinkForm(info) {
-                if (updateUsflLinkForm) {
-                    removeFromArr(allUsflTags.selected);
-
-                    while (updateUsflLinkForm_selectedTags.children.length > 1) {
-                        updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
-                    }
-
-                    jQuery('#updateUsflLinkModal').modal('show');
-                    const formInputID = updateUsflLinkForm.querySelector('[name=id]');
-                    const formInputTitle = updateUsflLinkForm.querySelector('[name=title]');
-                    const formInputInfo = updateUsflLinkForm.querySelector('[name=info]');
-                    const formInfo = JSON.parse(info).usfl_links[0];
-
-                    formInputID.value = formInfo.id;
-                    formInputTitle.value = formInfo.title;
-                    allUsflTags.selected = formInfo.info.tags;
-                    formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
-
-
-                    let tempArr;
-                    tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
-
-
-                    nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
-                    updateUsflLinkForm_searchResult.innerHTML = "";
-                    nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
-
-                } else {
-                    console.log("Формы updateUsflLinkForm нет")
-                }
-            }
-
-
-
-
-            // Delete usflLink
-            function deleteUsflLinkRequest(response, form) {
-                loadUsflLinks();
-                if (response === "Запись удалена") {
-                    alert("Запись удалена");
-                    updateUsflLinkForm.reset();
-                } else {
-                    alert("Не удалось удалить запись. Что-то пошло не так: \r\n" + response);
-                }
-            }
-
-
-            // Кнопки EDIT and DELETE
-            function manageUsflLinksTableControl() {
-                if (manageUsflLinksTable !== null) {
-                    manageUsflLinksTable.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        const target = e.target;
-
-                        if (target.classList.contains("js_EditUsflLinkButton")) {
-                            e.preventDefault();
-                            const button = target;
-                            const form = button.parentNode;
-                            const FORM_DATA = jQuery(form).serialize();
-                            // console.log(FORM_DATA);
-                            const formDataObj = paramsToJson(FORM_DATA);
-                            if (parseInt(formDataObj.id) > 0) {
-                                switch(button.value) {
-                                    case 'EDIT':
-                                        sendRequest('/core/core.php?db=usfl_links&id=' + formDataObj.id, addInfoToUpdateUsflLinkForm);
-                                        break;
-                                    case 'DELETE':
-                                        if (confirm("Точно удалить?")) {
-                                            sendRequest('/core/core.php', deleteUsflLinkRequest, form, "POST");
-                                        }
-
-                                        break;
-                                }
-                            } else {
-                                alert("Что-то пошло не так, передан не верный id: " + formDataObj.id);
-                            }
-
-
-                        }
-
-
-                    });
-                }
-            }
-
-
-            // LOAD and SHOW UsflLinks helpers
-            function loadUsflLinks() {
-                if (manageUsflLinksTable!== null) {
-                    manageUsflLinksTable.querySelector("tbody").innerHTML = "";
-                    sendRequest('/core/core.php?id=all&db=usfl_links', showUsflLinksInManager, manageUsflLinksTable);
-                }
-            }
-
-
-
 
         }
 
@@ -1070,26 +703,6 @@ function showRecordsInManager(response, table) {
 
 }
 
-// TODO: скоро будет не нужна
-function showUsflLinksInManager(response, table) {
-    const result = JSON.parse(response);
-    // Удалить кнопки, если response пустой
-    if(result["usfl_links"].length === 0) {
-        alert("Все записи уже загружены!");
-        const buttons = document.querySelectorAll("[data-place='#usflLinksTableManage']");
-        buttons.forEach(el => el.remove());
-    }
-
-    const arrLength = result["usfl_links"].length;
-    table.dataset.lastid = result["usfl_links"][arrLength - 1].id;
-    result["usfl_links"].forEach(function (item) {
-        let newItemROW = manageUsflLinksTPL(item);
-        document.querySelector('.manageUsflLinksTable tbody').innerHTML += newItemROW;
-        // manageTrendsTable.querySelector("tbody").innerHTML += newItemROW;
-    })
-}
-
-
 function showMoreData(e) {
     const target = e.target;
 
@@ -1115,7 +728,6 @@ function showMoreData(e) {
 
 
 }
-
 
 //  --==:: TPL ::==-
 function manageRecordsTPL(item, dbName) {
@@ -1156,44 +768,6 @@ function manageRecordsTPL(item, dbName) {
     return newItem;
 }
 
-// TODO: скоро будет не нужна
-function manageUsflLinksTPL(item) {
-    let itemCategories = "";
-
-    // console.log(item);
-
-    if (item["info"]["tags"] && item["info"]["tags"].length > 0) {
-        item["info"]["tags"].forEach((el, i, arr) => {
-           // console.log(el.id);
-           // console.log(el.title);
-           let newTagInRow = el.title + ` (${el.id})`;
-           if (arr.length !== (i+1)) newTagInRow += ", ";
-           itemCategories += newTagInRow;
-           // console.log(itemCategories);
-        });
-    };
-
-    const newItem = `
-                        <tr>
-                            <td>${item["id"]}</td>
-                            <td>${item["title"]} <br> Tags: ${itemCategories} </td>
-                            <td>
-                                <form class="editUsflLinkForm" method="GET" action="https://okolojs.ru/core/core.php?db=usfl_links">
-                                    <input type="hidden" name="id" value="${item["id"]}">
-                                    <input class="btn btn-info js_EditUsflLinkButton" type="submit" value="EDIT" >
-                                </form>
-                            </td>
-                            <td>
-                                <form class="deleteUsflLinkForm" method="POST" action="https://okolojs.ru/core/core.php">
-                                    <input type="hidden" name="db" value="usfl_links">
-                                    <input type="hidden" name="method" value="DELETE">
-                                    <input type="hidden" name="id" value="${item["id"]}">
-                                    <input class="btn btn-danger js_EditUsflLinkButton" type="submit" value="DELETE">
-                                </form>
-                            </td>
-                        </tr>`
-    return newItem;
-}
 
 
 
