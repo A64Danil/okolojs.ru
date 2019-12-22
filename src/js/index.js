@@ -12,7 +12,7 @@ function coreFunction() {
     const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 1950");
+        console.log("Пасхалка для самых любопытных =) 2040");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
         // loadModelAndShowBlock('trends11', "trend-template", 'trends');
         mainEvents();
@@ -43,7 +43,6 @@ function coreFunction() {
 
 
         // TODO: после редактирования тегов, так же обновлять список полезных ссылок
-        // TODO: после клика на TAG из поиска - отчищать строку поиска
 
         function recordsMainManager(mainManagerId, managerType) {
             const manager = document.getElementById(mainManagerId);
@@ -329,7 +328,6 @@ function coreFunction() {
 
             // Manage Tags
             function tagsController(e, selectedTagsPlace, searchTagsPlace) {
-                console.log("tagsController");
                 const tag = e.target;
                 const selectedTag = {};
 
@@ -341,6 +339,9 @@ function coreFunction() {
                         allUsflTags.selected.push(selectedTag);
                         manageTags(selectedTagsPlace, allUsflTags.selected);
                         tag.remove();
+                        let searchTags = selectedTagsPlace.querySelector(".searchTags");
+                        searchTags.value = "";
+                        searchTags.dispatchEvent(new Event('keyup'));
                     }
 
                 }
@@ -380,8 +381,8 @@ function coreFunction() {
                 // console.log("Итоговый массив: ");
                 // console.log(tempArr);
                 let filteredTempArr = tempArr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
-                console.log("Фильтрованный массив: ");
-                console.log(filteredTempArr);
+                // console.log("Фильтрованный массив: ");
+                // console.log(filteredTempArr);
 
                 resultPlace.innerHTML = "";
                 nodeCreator(filteredTempArr, resultPlace, nodeCreator_divTPL, "resultItem tag");}
