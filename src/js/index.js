@@ -12,7 +12,7 @@ function coreFunction() {
     const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 2220");
+        console.log("Пасхалка для самых любопытных =) 1320");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
         // loadModelAndShowBlock('trends11', "trend-template", 'trends');
         mainEvents();
@@ -39,6 +39,7 @@ function coreFunction() {
         recordsMainManager("trendsManager");
         recordsMainManager("rulesManager");
         usflLinksMainManager();
+        // recordsMainManager("usflManager", "usfl_links");
         recordsMainManager("usflManager", "usfl_tags");
 
 
@@ -57,6 +58,7 @@ function coreFunction() {
 
             switch(managerType) {
                 case 'usfl_links':
+                    // TODO: 1. Переименовать переменные в универсальные имена
                     const addUsflLinkForm_searchTags = addRecordForm.querySelector('.addUsflLinkForm .searchTags');
                     const addUsflLinkForm_selectedTags = addRecordForm.querySelector('.addUsflLinkForm .selectedTags');
 
@@ -71,6 +73,11 @@ function coreFunction() {
                     if (updateRecordForm !== null) {
                         updateUsflLinkForm_searchResult = updateRecordForm.querySelector(".search_result");
                     }
+
+                    // TODO: раскоментировать
+                    // jQuery('#addUsflLinkModal').on('shown.bs.modal', function () {
+                    //     removeFromArr(allUsflTags.selected);
+                    // });
                     break;
                 default:
                     break;
@@ -94,20 +101,106 @@ function coreFunction() {
                         }
                         if(textAreaJsonValidation(addRecordForm)) {
                             isSending = true;
+                            // LINKS
+                            // addFieldToInfo(this, "tags");
                             sendRequest('/core/core.php', addRecordRequest, this, "POST");
                         }
 
                     });
 
                     addRecordForm.addEventListener("reset", function (e) {
+                        // removeFromArr(allUsflTags.selected);
+                        //
+                        // while (addUsflLinkForm_selectedTags.children.length > 1) {
+                        //     addUsflLinkForm_selectedTags.removeChild(addUsflLinkForm_selectedTags.children[0])
+                        // }
+                        //
+                        // nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                        // addUsflLinkForm_searchResult.innerHTML = "";
+                        // nodeCreator(allUsflTags.arr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+
                         !!managerType? jQuery(manager).find('.addRecordModal[data-loadtype="'+ managerType +'"]').modal('hide') : jQuery(manager).find('.addRecordModal').modal('hide');
                     })
 
-                    // sendRequest
+                    // sendRequest('/core/core.php?id=all&db=usfl_tags', function (response) {
+                    //     if (response) {
+                    //         allUsflTags.arr = JSON.parse(response)["usfl_tags"];
+                    //         console.log("Пришли все возможные теги");
+                    //         nodeCreator(allUsflTags.arr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                    //     } else {
+                    //         alert("Что-то пошло не так: \r\n" + response);
+                    //     };
+                    //
+                    // });
 
-                    // addUsflLinkForm_searchTags
+                    /*
+                    addUsflLinkForm_searchTags.addEventListener("keyup", function (e) {
+                        const regex = new RegExp(this.value, 'i');
+                        const tempArr = [];
+                        allUsflTags.arr.forEach((el, i, arr) => {
+                            if (el["title"].match(regex) ) {
+                                tempArr.push(el);
+                            }
+                        });
 
-                    // addUsflLinkForm
+                        console.log("Итоговый массив: ");
+                        console.log(tempArr);
+                        addUsflLinkForm_searchResult.innerHTML = "";
+                        nodeCreator(tempArr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+
+                    });
+
+                     */
+
+
+                    // ==========================================
+                    /*
+
+                    addUsflLinkForm.addEventListener("click", function (e) {
+
+                if (e.target.classList.contains("tag") && e.target.dataset.id && e.target.dataset.title) {
+                    const tag = e.target;
+                    const selectedTag = {};
+                    selectedTag.id = parseInt(tag.dataset.id);
+                    selectedTag.title = tag.dataset.title;
+
+                    if (!checkIsSelected(allUsflTags.selected, selectedTag, "id" )) {
+                        allUsflTags.selected.push(selectedTag);
+                        while (addUsflLinkForm_selectedTags.children.length > 1) {
+                            addUsflLinkForm_selectedTags.removeChild(addUsflLinkForm_selectedTags.children[0])
+                        }
+
+                        nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                        tag.remove();
+                    }
+
+                }
+
+                if (e.target.classList.contains("selectedTag") && e.target.dataset.id && e.target.dataset.title) {
+                    const tag = e.target;
+                    const selectedTag = {};
+                    selectedTag.id = parseInt(tag.dataset.id);
+                    selectedTag.title = tag.dataset.title;
+
+                    let tempArr;
+                    removeFromArr(allUsflTags.selected, selectedTag, "id" );
+
+
+                    tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
+
+
+                    while (addUsflLinkForm_selectedTags.children.length > 1) {
+                        addUsflLinkForm_selectedTags.removeChild(addUsflLinkForm_selectedTags.children[0])
+                    }
+
+                    nodeCreator(allUsflTags.selected, addUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
+                    addUsflLinkForm_searchResult.innerHTML = "";
+                    nodeCreator(tempArr, addUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+
+                }
+            })
+
+                     */
                 } else {
                     console.log('Формы sendRecord не существует');
                 }
@@ -125,9 +218,7 @@ function coreFunction() {
                 loadRecords();
             }
 
-            // jQuery('#addUsflLinkModal').on('shown.bs.modal', function () {
-            //     removeFromArr(allUsflTags.selected);
-            // });
+
 
             // Edit Record
             function updateRecordFormControl() {
@@ -163,9 +254,69 @@ function coreFunction() {
                         !!managerType? jQuery(manager).find('.updateRecordModal[data-loadtype="'+ managerType +'"]').modal('hide') : jQuery(manager).find('.updateRecordModal').modal('hide');
                     })
 
-                    // updateUsflLinkForm_searchTags.addEventListener
+                    /*
+                    updateUsflLinkForm_searchTags.addEventListener("keyup", function (e) {
+                        const regex = new RegExp(this.value, 'i');
+                        const tempArr = [];
+                        allUsflTags.arr.forEach((el, i, arr) => {
+                            if (el["title"].match(regex) ) {
+                                tempArr.push(el);
+                            }
+                        });
 
-                    // updateUsflLinkForm.addEventListener
+                        console.log("Итоговый массив: ");
+                        console.log(tempArr);
+                        updateUsflLinkForm_searchResult.innerHTML = "";
+                        nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+
+                    });
+                     */
+
+
+                    // =====================================
+                    /*
+                    updateUsflLinkForm.addEventListener("click", function (e) {
+
+                if (e.target.classList.contains("tag") && e.target.dataset.id && e.target.dataset.title) {
+                    const tag = e.target;
+                    const selectedTag = {};
+                    selectedTag.id = parseInt(tag.dataset.id);
+                    selectedTag.title = tag.dataset.title;
+
+                    if (!checkIsSelected(allUsflTags.selected, selectedTag, "id" )) {
+                        allUsflTags.selected.push(selectedTag);
+                        while (updateUsflLinkForm_selectedTags.children.length > 1) {
+                            updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
+                        }
+
+                        nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                        tag.remove();
+                    }
+
+                }
+
+                if (e.target.classList.contains("selectedTag") && e.target.dataset.id && e.target.dataset.title) {
+                    const tag = e.target;
+                    const selectedTag = {};
+                    selectedTag.id = parseInt(tag.dataset.id);
+                    selectedTag.title = tag.dataset.title;
+
+                    let tempArr;
+                    removeFromArr(allUsflTags.selected, selectedTag, "id" );
+
+
+                    tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
+                    while (updateUsflLinkForm_selectedTags.children.length > 1) {
+                        updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
+                    }
+
+                    nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag tags", "toStart");
+                    updateUsflLinkForm_searchResult.innerHTML = "";
+                    nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+
+                }
+            })
+                     */
                 }
             }
 
@@ -183,21 +334,36 @@ function coreFunction() {
 
             function addInfoToUpdateRecordForm(info) {
                 if (updateRecordForm) {
+                    // TODO: переместить в нижний свитч
+                    // removeFromArr(allUsflTags.selected);
+                    //
+                    // while (updateUsflLinkForm_selectedTags.children.length > 1) {
+                    //     updateUsflLinkForm_selectedTags.removeChild(updateUsflLinkForm_selectedTags.children[0])
+                    // }
 
-                    // LINKS
                     !!managerType? jQuery(manager).find('.updateRecordModal[data-loadtype="'+ managerType +'"]').modal('show') : jQuery(manager).find('.updateRecordModal').modal('show');
 
                     const formInputID = updateRecordForm.querySelector('[name=id]');
                     const formInputTitle = updateRecordForm.querySelector('[name=title]');
                     const formInputInfo = updateRecordForm.querySelector('[name=info]');
-
                     const formInfo = JSON.parse(info)[dbName][0];
+
                     formInputID.value = formInfo.id;
                     formInputTitle.value = formInfo.title;
 
                     switch(managerType) {
                         case 'usfl_links':
-                            // links
+                            allUsflTags.selected = formInfo.info.tags;
+                            formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
+
+                            // let tempArr;
+                            // tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
+                            //
+                            //
+                            // nodeCreator(allUsflTags.selected, updateUsflLinkForm_selectedTags, nodeCreator_divTPL, "resultItem selectedTag", "toStart");
+                            // updateUsflLinkForm_searchResult.innerHTML = "";
+                            // nodeCreator(tempArr, updateUsflLinkForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+
                             break;
                         case 'usfl_tags':
                             delete formInfo.id;
@@ -207,8 +373,6 @@ function coreFunction() {
                             formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
                             break;
                     }
-
-
 
                 } else {
                     console.log("Формы updateRecordForm нет")
