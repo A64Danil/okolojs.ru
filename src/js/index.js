@@ -12,7 +12,7 @@ function coreFunction() {
     const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 1927");
+        console.log("Пасхалка для самых любопытных =) 1950");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
         // loadModelAndShowBlock('trends11', "trend-template", 'trends');
         mainEvents();
@@ -43,6 +43,7 @@ function coreFunction() {
 
 
         // TODO: после редактирования тегов, так же обновлять список полезных ссылок
+        // TODO: после клика на TAG из поиска - отчищать строку поиска
 
         function recordsMainManager(mainManagerId, managerType) {
             const manager = document.getElementById(mainManagerId);
@@ -142,36 +143,8 @@ function coreFunction() {
                             });
 
                             addRecordForm.addEventListener("click", function (e) {
-
-                                if (e.target.classList.contains("tag") && e.target.dataset.id && e.target.dataset.title) {
-                                    const tag = e.target;
-                                    const selectedTag = {};
-                                    selectedTag.id = parseInt(tag.dataset.id);
-                                    selectedTag.title = tag.dataset.title;
-
-                                    if (!checkIsSelected(allUsflTags.selected, selectedTag, "id" )) {
-                                        allUsflTags.selected.push(selectedTag);
-                                        manageTags(addRecordForm_selectedTags, allUsflTags.selected);
-                                        tag.remove();
-                                    }
-
-                                }
-
-                                if (e.target.classList.contains("selectedTag") && e.target.dataset.id && e.target.dataset.title) {
-                                    const tag = e.target;
-                                    const selectedTag = {};
-                                    selectedTag.id = parseInt(tag.dataset.id);
-                                    selectedTag.title = tag.dataset.title;
-
-                                    let tempArr;
-                                    removeFromArr(allUsflTags.selected, selectedTag, "id" );
-                                    tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
-
-                                    manageTags(addRecordForm_selectedTags, allUsflTags.selected, addRecordForm_searchResult, tempArr);
-
-                                }
+                                tagsController(e, addRecordForm_selectedTags, addRecordForm_searchResult);
                             });
-
                             break;
                         default:
                             break;
@@ -234,41 +207,11 @@ function coreFunction() {
                         case 'usfl_links':
                             updateRecordForm_searchTags.addEventListener("keyup", function (e) {
                                 searchTags(this, updateRecordForm_searchResult);
-
                             });
 
-                            // TODO: вынести в отдельную функцию про теги2 ?
                             updateRecordForm.addEventListener("click", function (e) {
-
-                                if (e.target.classList.contains("tag") && e.target.dataset.id && e.target.dataset.title) {
-                                    const tag = e.target;
-                                    const selectedTag = {};
-                                    selectedTag.id = parseInt(tag.dataset.id);
-                                    selectedTag.title = tag.dataset.title;
-
-                                    if (!checkIsSelected(allUsflTags.selected, selectedTag, "id" )) {
-                                        allUsflTags.selected.push(selectedTag);
-                                        manageTags(updateRecordForm_selectedTags, allUsflTags.selected);
-                                        tag.remove();
-                                    }
-
-                                }
-
-                                if (e.target.classList.contains("selectedTag") && e.target.dataset.id && e.target.dataset.title) {
-                                    const tag = e.target;
-                                    const selectedTag = {};
-                                    selectedTag.id = parseInt(tag.dataset.id);
-                                    selectedTag.title = tag.dataset.title;
-
-                                    let tempArr;
-                                    removeFromArr(allUsflTags.selected, selectedTag, "id" );
-                                    tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
-
-                                    manageTags(updateRecordForm_selectedTags, allUsflTags.selected, updateRecordForm_searchResult, tempArr);
-
-                                }
+                                tagsController(e, updateRecordForm_selectedTags, updateRecordForm_searchResult);
                             });
-
                             break;
                         default:
                             break;
@@ -385,6 +328,34 @@ function coreFunction() {
             }
 
             // Manage Tags
+            function tagsController(e, selectedTagsPlace, searchTagsPlace) {
+                console.log("tagsController");
+                const tag = e.target;
+                const selectedTag = {};
+
+                if (e.target.classList.contains("tag") && e.target.dataset.id && e.target.dataset.title) {
+                    selectedTag.id = parseInt(tag.dataset.id);
+                    selectedTag.title = tag.dataset.title;
+
+                    if (!checkIsSelected(allUsflTags.selected, selectedTag, "id" )) {
+                        allUsflTags.selected.push(selectedTag);
+                        manageTags(selectedTagsPlace, allUsflTags.selected);
+                        tag.remove();
+                    }
+
+                }
+
+                if (e.target.classList.contains("selectedTag") && e.target.dataset.id && e.target.dataset.title) {
+                    selectedTag.id = parseInt(tag.dataset.id);
+                    selectedTag.title = tag.dataset.title;
+
+                    removeFromArr(allUsflTags.selected, selectedTag, "id" );
+                    let tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
+
+                    manageTags(selectedTagsPlace, allUsflTags.selected, searchTagsPlace, tempArr);
+                }
+            }
+
             function manageTags(selectedTagsPlace, selectedTagsArr, searchTagsPlace,  searchTagsArr) {
                 while (selectedTagsPlace.children.length > 1) {
                     selectedTagsPlace.removeChild(selectedTagsPlace.children[0])
