@@ -645,7 +645,6 @@ function showMoreData(e) {
         let placeToInput = document.querySelector(place);
         let lastID = placeToInput.dataset.lastid;
         let limit = target.dataset.limit ? parseInt(target.dataset.limit) : 10 ;
-        // let url ="/core/"+ loadtype +".php?id=all&lastid=" + lastID + "&limit=" + limit;
         let url ="/core/core.php?db="+ loadtype +"&id=all&lastid=" + lastID + "&limit=" + limit;
 
         sendRequest(url, showRecordsInManager, placeToInput);
