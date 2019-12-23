@@ -12,7 +12,7 @@ function coreFunction() {
     const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 2040");
+        console.log("Пасхалка для самых любопытных =) 1340");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
         // loadModelAndShowBlock('trends11', "trend-template", 'trends');
         mainEvents();
@@ -80,6 +80,11 @@ function coreFunction() {
                         removeFromArr(allUsflTags.selected);
                     });
                     break;
+                case 'usfl_tags':
+                    if (addRecordForm !== null) {
+                        addRecordForm_searchResult = manager.querySelector('.addRecordForm[data-loadtype="usfl_links"] .search_result');
+                    }
+                    break;
                 default:
                     break;
             }
@@ -127,15 +132,7 @@ function coreFunction() {
 
                     switch(managerType) {
                         case 'usfl_links':
-                            sendRequest('/core/core.php?id=all&db=usfl_tags', function (response) {
-                                if (response) {
-                                    allUsflTags.arr = JSON.parse(response)["usfl_tags"];
-                                    console.log("Пришли все возможные теги");
-                                    nodeCreator(allUsflTags.arr, addRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
-                                } else {
-                                    alert("Что-то пошло не так: \r\n" + response);
-                                }
-                            });
+                            loadTags();
 
                             addRecordForm_searchTags.addEventListener("keyup", function (e) {
                                 searchTags(this, addRecordForm_searchResult);
@@ -222,6 +219,16 @@ function coreFunction() {
 
             function updateRecordRequest(response, form) {
                 loadRecords();
+
+                switch(managerType) {
+                    case 'usfl_tags':
+                        loadRecords('usfl_links');
+                        loadTags();
+                        break;
+                    default:
+                        break;
+                }
+
                 if (response === "Запись обновлена") {
                     alert("Запись обновлена");
                     form.querySelector('textarea').value = "";
@@ -318,12 +325,26 @@ function coreFunction() {
             }
 
             // LOAD and SHOW Records helpers
-            function loadRecords() {
-                if (manageRecordsTable!== null) {
-                    let db = manageRecordsTable.dataset.loadtype;
-                    manageRecordsTable.querySelector("tbody").innerHTML = "";
-                    sendRequest('/core/core.php?id=all&db=' + db, showRecordsInManager, manageRecordsTable);
+            function loadRecords(dbName) {
+                const recordsTable = !!dbName? manager.querySelector('.manageRecordsTable[data-loadtype="'+ dbName +'"]') : manageRecordsTable;
+                if (recordsTable!== null) {
+                    let db = recordsTable.dataset.loadtype;
+                    recordsTable.querySelector("tbody").innerHTML = "";
+                    sendRequest('/core/core.php?id=all&db=' + db, showRecordsInManager, recordsTable);
                 }
+            }
+
+            function loadTags() {
+                sendRequest('/core/core.php?id=all&db=usfl_tags', function (response) {
+                    if (response) {
+                        allUsflTags.arr = JSON.parse(response)["usfl_tags"];
+                        console.log("Пришли все возможные теги");
+                        addRecordForm_searchResult.innerHTML = "";
+                        nodeCreator(allUsflTags.arr, addRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                    } else {
+                        alert("Что-то пошло не так: \r\n" + response);
+                    }
+                });
             }
 
             // Manage Tags
@@ -570,10 +591,8 @@ function addFieldToInfo(form, field) {
 
 
 function nodeCreator(arr, place, tpl, className, appendMode = "toEnd") {
-    // place.innerHTML = "";
     arr.forEach(el => {
         const newItem = tpl(el, className);
-        // place.innerHTML += newItem;
         appendMode === "toStart" ? place.prepend(newItem) : place.appendChild(newItem);
 
     })
