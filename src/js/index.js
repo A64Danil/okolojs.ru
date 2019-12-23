@@ -12,7 +12,7 @@ function coreFunction() {
     const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 1340");
+        console.log("Пасхалка для самых любопытных =) 1550");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
         // loadModelAndShowBlock('trends11', "trend-template", 'trends');
         mainEvents();
@@ -40,9 +40,6 @@ function coreFunction() {
         recordsMainManager("rulesManager");
         recordsMainManager("usflManager", "usfl_links");
         recordsMainManager("usflManager", "usfl_tags");
-
-
-        // TODO: после редактирования тегов, так же обновлять список полезных ссылок
 
         function recordsMainManager(mainManagerId, managerType) {
             const manager = document.getElementById(mainManagerId);
@@ -76,9 +73,7 @@ function coreFunction() {
                         updateRecordForm_searchResult = updateRecordForm.querySelector(".search_result");
                     }
 
-                    jQuery(manager).find('.addRecordModal[data-loadtype="'+ managerType +'"]').on('shown.bs.modal', function () {
-                        removeFromArr(allUsflTags.selected);
-                    });
+                    jQuery(manager).find('.addRecordModal[data-loadtype="'+ managerType +'"]').on('shown.bs.modal', () => removeFromArr(allUsflTags.selected));
                     break;
                 case 'usfl_tags':
                     if (addRecordForm !== null) {
@@ -133,14 +128,8 @@ function coreFunction() {
                     switch(managerType) {
                         case 'usfl_links':
                             loadTags();
-
-                            addRecordForm_searchTags.addEventListener("keyup", function (e) {
-                                searchTags(this, addRecordForm_searchResult);
-                            });
-
-                            addRecordForm.addEventListener("click", function (e) {
-                                tagsController(e, addRecordForm_selectedTags, addRecordForm_searchResult);
-                            });
+                            addRecordForm_searchTags.addEventListener("keyup", function(e) {searchTags(this, addRecordForm_searchResult)});
+                            addRecordForm.addEventListener("click", e => tagsController(e, addRecordForm_selectedTags, addRecordForm_searchResult));
                             break;
                         default:
                             break;
@@ -154,6 +143,15 @@ function coreFunction() {
             }
 
             function addRecordRequest(response, form) {
+                loadRecords();
+
+                switch(managerType) {
+                    case 'usfl_tags':
+                        loadTags();
+                        break;
+                    default:
+                        break;
+                }
                 if (response === "Запись добавлена") {
                     alert("Запись добавлена");
                     form.reset();
@@ -161,7 +159,6 @@ function coreFunction() {
                     alert("Что-то пошло не так: \r\n" + response);
                 }
                 isSending = false;
-                loadRecords();
             }
 
 
@@ -201,18 +198,12 @@ function coreFunction() {
 
                     switch(managerType) {
                         case 'usfl_links':
-                            updateRecordForm_searchTags.addEventListener("keyup", function (e) {
-                                searchTags(this, updateRecordForm_searchResult);
-                            });
-
-                            updateRecordForm.addEventListener("click", function (e) {
-                                tagsController(e, updateRecordForm_selectedTags, updateRecordForm_searchResult);
-                            });
+                            updateRecordForm_searchTags.addEventListener("keyup", function(e) {searchTags(this, updateRecordForm_searchResult)});
+                            updateRecordForm.addEventListener("click", (e) => tagsController(e, updateRecordForm_selectedTags, updateRecordForm_searchResult));
                             break;
                         default:
                             break;
                     }
-
 
                 }
             }
@@ -258,8 +249,7 @@ function coreFunction() {
                             allUsflTags.selected = formInfo.info.tags;
                             formInputInfo.value = JSON.stringify(formInfo.info, undefined, 4);
 
-                            let tempArr;
-                            tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
+                            let tempArr = allUsflTags.arr.filter( commonTag => !allUsflTags.selected.find(selectedTag => commonTag.id === selectedTag.id));
 
                             manageTags(updateRecordForm_selectedTags, allUsflTags.selected, updateRecordForm_searchResult, tempArr);
 
@@ -282,6 +272,16 @@ function coreFunction() {
             // Delete Record
             function deleteRecordRequest(response, form) {
                 loadRecords();
+
+                switch(managerType) {
+                    case 'usfl_tags':
+                        loadRecords('usfl_links');
+                        loadTags();
+                        break;
+                    default:
+                        break;
+                }
+
                 if (response === "Запись удалена") {
                     alert("Запись удалена");
                     updateRecordForm.reset();
@@ -395,9 +395,7 @@ function coreFunction() {
                 const regex = new RegExp(searchInput.value, 'i');
                 const tempArr = [];
                 allUsflTags.arr.forEach((el, i, arr) => {
-                    if (el["title"].match(regex) ) {
-                        tempArr.push(el);
-                    }
+                    if (el["title"].match(regex)) tempArr.push(el);
                 });
                 // console.log("Итоговый массив: ");
                 // console.log(tempArr);
@@ -413,7 +411,7 @@ function coreFunction() {
 
     }
     function mainEvents() {
-        console.log("Вешает все обработяики")
+        console.log("Вешает все обработчики");
         document.body.addEventListener('click', showMoreData)
     }
 
@@ -551,8 +549,6 @@ function checkIsSelected(arr, el, key) {
 }
 
 function removeFromArr(arr, el, key) {
-    console.log(arr);
-
     if(!el) {
         arr.splice(0);
     } else {
@@ -563,7 +559,6 @@ function removeFromArr(arr, el, key) {
         }
     }
 
-    console.log(arr);
 }
 
 function addFieldToInfo(form, field) {
