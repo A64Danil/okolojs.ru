@@ -41,7 +41,7 @@ module.exports = {
                 use: [
                     {
                         loader: 'file-loader',
-                        options: {name: 'img/[name].[ext]'}
+                        options: {name: 'img/[name].[ext]', esModule: false}
                     }
                 ]
             },
@@ -138,10 +138,10 @@ module.exports = {
                 from: './src/img',
                 to: './img'
             },
-            {
+           /* {
                 from: './src/uploads',
                 to: './uploads'
-            },
+            },*/
             {
                 from: './src/model',
                 to: './model'
