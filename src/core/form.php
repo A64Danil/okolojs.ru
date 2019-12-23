@@ -385,7 +385,7 @@
                                         </div>
                                     </div>
 
-                                    <form method="POST" action="https://okolojs.ru/core/core.php" data-loadtype="usfl_links" class="addRecordForm addUsflLinkForm">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" data-loadtype="usfl_links" class="addRecordForm">
                                         <input type="hidden" name="db" value="usfl_links" >
                                         <div class="form-group">
                                             <label for="">Введите Info в формате JSON: </label>
@@ -407,7 +407,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <input type="submit" value="Добавить" class="btn btn-success">
-                                            <input type="reset" value="Отменить" class="btn btn-secondary js_CancelEdit">
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
                                         </div>
 
                                     </form>
@@ -428,7 +428,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" data-loadtype="usfl_links" class="updateRecordForm updateUsflLinkForm">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" data-loadtype="usfl_links" class="updateRecordForm">
                                         <input type="hidden" name="db" value="usfl_links">
                                         <input type="hidden" name="method" value="UPDATE">
 
@@ -461,7 +461,7 @@
 
                                         <div class="modal-footer">
                                             <input type="submit" value="Сохранить" class="btn btn-success" >
-                                            <input type="reset" value="Отменить" class="btn btn-secondary js_CancelEdit">
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
                                         </div>
                                     </form>
 
@@ -510,7 +510,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <input type="submit" value="Добавить" class="btn btn-success">
-                                            <input type="reset" value="Отменить" class="btn btn-secondary js_CancelEdit">
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
                                         </div>
 
                                     </form>
@@ -556,7 +556,7 @@
 
                                         <div class="modal-footer">
                                             <input type="submit" value="Сохранить" class="btn btn-success" >
-                                            <input type="reset" value="Отменить" class="btn btn-secondary js_CancelEdit">
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
                                         </div>
                                     </form>
 
@@ -567,7 +567,7 @@
 
 
                     <div class="table-responsive" >
-                        <table id="usfl_tagsTableManage" class="manageRecordsTable manageUsflTagsTable table table-striped table-hover" data-lastid="" data-loadtype="usfl_tags">
+                        <table id="usfl_tagsTableManage" class="manageRecordsTable table table-striped table-hover" data-lastid="" data-loadtype="usfl_tags">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -603,7 +603,7 @@
                             </tbody>
                         </table>
                         
-                        <table id="usfl_linksTableManage" class="manageRecordsTable manageUsflLinksTable table table-striped table-hover" data-lastid="" data-loadtype="usfl_links">
+                        <table id="usfl_linksTableManage" class="manageRecordsTable table table-striped table-hover" data-lastid="" data-loadtype="usfl_links">
                             <thead>
                                 <tr>
                                     <th>ID</th>
