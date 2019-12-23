@@ -27,6 +27,10 @@ module.exports = {
         './src/js/index.js',
         './src/scss/style.scss',
     ],
+    // entry: {
+    //     app: './src/js/index.js',
+    //     adminApp: './src/js/admin.js',
+    // },
     output: {
         filename: './js/bundle.js'
     },

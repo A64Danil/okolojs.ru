@@ -121,7 +121,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="https://okolojs.ru/core/trends.php" class="updateRecordForm">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="updateRecordForm">
                                         <input type="hidden" name="db" value="trends">
                                         <input type="hidden" name="method" value="UPDATE">
 
@@ -267,7 +267,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="https://okolojs.ru/core/rules.php" class="updateRecordForm">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="updateRecordForm">
                                         <input type="hidden" name="db" value="rules">
                                         <input type="hidden" name="method" value="UPDATE">
 
@@ -531,7 +531,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="https://okolojs.ru/core/db/usfl.php" data-loadtype="usfl_tags" class="updateRecordForm">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" data-loadtype="usfl_tags" class="updateRecordForm">
                                         <input type="hidden" name="db" value="usfl_tags">
                                         <input type="hidden" name="method" value="UPDATE">
 
