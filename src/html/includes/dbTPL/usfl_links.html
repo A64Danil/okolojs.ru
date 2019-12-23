@@ -1,0 +1,21 @@
+<div class="records" id="usfl_links">
+    Загружаем...
+</div>
+
+
+<script id="usfl_links-template" type="text/x-handlebars-template">
+    {{#each usfl_links}}
+    <div class="record">
+        <div class="record__title">{{title}}</div>
+        {{#if info.description}}<div class="record__description">{{info.description}}</div>{{/if}}
+        {{#if info.tags}}
+            <div class="record__tags">
+                {{#each info.tags}}
+                    <div>{{title}}</div>
+                {{/each}}
+            </div>
+        {{/if}}
+        {{#if info.url}}<div class="record__link"><a href="{{info.url}}">Ссылка-источник</a></div>{{/if}}
+    </div>
+    {{/each}}
+</script>

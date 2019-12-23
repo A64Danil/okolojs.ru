@@ -1,4 +1,25 @@
 $font-stack: -apple-system, BlinkMacSystemFont,Roboto,'Open Sans','Helvetica Neue',sans-serif;
+$nearWhite-color: #FDFDF4;
+
+$breakpoints: (
+        'xs': ('(min-width: 576px)'),
+        'sm': ('(min-width: 768px)'),
+        'md': ('(min-width: 992px)'),
+        'lg': ('(min-width: 1200px)'),
+        'xl': ('(min-width: 1600px)'),
+);
+
+
+@mixin respond-to($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media #{inspect(map-get($breakpoints, $breakpoint))} {
+      @content;
+    }
+  } @else {
+    @error 'Не указано значение для `#{$breakpoint}`';
+  }
+}
+
 
 //@import "~bootstrap/scss/bootstrap";
 @import "~bootstrap/scss/functions";
@@ -118,6 +139,76 @@ header {
 
 
 
+
+
+//RECORDS
+
+.records {
+}
+
+.record {
+  margin-bottom: 1rem;
+}
+
+.record__difficulty {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.record__title {
+  font-size: 1.2rem;
+}
+
+.record__description {
+  color: #565656;
+  padding-bottom: 0.5rem;
+}
+.record__author {
+  font-weight: 500;
+}
+
+.record__status {
+  font-style: italic;
+}
+
+.record__tags {
+  display: flex;
+  //justify-content: space-between;
+  flex-wrap: wrap;
+}
+.record__tags > div {
+  padding: 5px;
+  margin-right: 10px;
+  font-size: 14px;
+  color: #555;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+.categoryList {
+  padding: 0;
+  margin: 0 0 20px;
+  display: flex;
+  //justify-content: space-between;
+  flex-wrap: wrap;
+}
+.categoryList li {
+  padding: 10px 20px;
+  margin: 0 10px 20px 0;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px 0px #555;
+  list-style: none;
+  cursor: pointer;
+}
+.categoryList li:hover {
+  box-shadow: 0px 1px 4px 0px #333;
+  transform: translate(0px, 1px);
+  background-color: $nearWhite-color;
+
+}
+
 //ТРЭНДЫ
 
 .trends {
@@ -148,34 +239,16 @@ header {
   font-style: italic;
 }
 
+// USFL LIKS
+
+
+// Rules
+
 
 .rulesList {}
 .rulesList li b {
   //font-weight: 500;
 }
-
-
-// USFL LIKS
-.categoryList {
-  padding: 0;
-  margin: 0;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-.categoryList li {
-  padding: 10px 20px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0px 2px 4px 0px #555;
-  list-style: none;
-}
-.categoryList li:hover {
-  box-shadow: 0px 1px 4px 0px #333;
-  transform: translate(0px, 1px);
-
-}
-
 // Manag
 .mainManagerMenu {
   margin-bottom: 20px;

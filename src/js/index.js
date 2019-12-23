@@ -14,7 +14,8 @@ function coreFunction() {
 
         console.log("Пасхалка для самых любопытных =) 1550");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
-        // loadModelAndShowBlock('trends11', "trend-template", 'trends');
+        loadAndShowInfo('usfl_links', "usfl_links-template", 'usfl_links');
+        loadAndShowInfo('usfl_tags', "usfl_tags-template", 'usfl_tags');
         mainEvents();
 
         if (mainManager) {
@@ -464,6 +465,53 @@ function loadModelAndShowBlock(blockid, tpl, filename) {
 
 }
 
+function loadAndShowInfo(blockid, tpl, dbName) {
+    const BLOCK = document.getElementById(blockid);
+    const SOURCE = document.getElementById(tpl);
+    if (BLOCK === null) {
+        console.log("Нет места для вывода " + blockid);
+        return false;
+    }
+
+    if (SOURCE === null) {
+        console.log("Нет шаблона " + tpl + "для рендеринга");
+        return false;
+    }
+
+    if (!dbName) {
+        console.log("Не указана базаданных, dbName is " + dbName);
+        return false;
+    } else {
+        console.log("Start render ", blockid, tpl, dbName);
+        const SRCHTML = SOURCE.innerHTML;
+        const template = Handlebars.compile(SRCHTML);
+
+
+        // 1. Создаём новый объект XMLHttpRequest
+        const xhr = new XMLHttpRequest();
+
+        // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
+        // xhr.open('GET', 'model/'+dbName+'.json', true);
+        xhr.open('GET', 'core/core.php?id=all&db='+dbName, true);
+
+        // 3. Отсылаем запрос
+        xhr.send();
+
+        // 4. Если код ответа сервера не 200, то это ошибка
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                // вывести результат
+
+                const result = template(JSON.parse(xhr.responseText));
+                BLOCK.innerHTML = result;
+            }
+        }
+    }
+
+
+
+}
+
 
 //  --==:: HELPERS ::==-
 function sendRequest(url, callback, form, method = "GET") {
@@ -584,7 +632,6 @@ function addFieldToInfo(form, field) {
     form.info.value = JSON.stringify(formInfo, undefined, 4);
 }
 
-
 function nodeCreator(arr, place, tpl, className, appendMode = "toEnd") {
     arr.forEach(el => {
         const newItem = tpl(el, className);
@@ -693,7 +740,6 @@ function manageRecordsTPL(item, dbName) {
                         </tr>`
     return newItem;
 }
-
 
 
 

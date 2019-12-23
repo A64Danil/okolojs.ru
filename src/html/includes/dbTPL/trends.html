@@ -1,0 +1,22 @@
+<div class="trends" id="trends2">
+    Загружаем...
+</div>
+
+
+<script id="trend-template" type="text/x-handlebars-template">
+    {{#each trends}}
+    <div class="trend">
+        {{#if difficulty}} <div class="trend__difficulty" title="Требуемый уровень подготовки">{{difficulty}}</div>{{/if}}
+        <div class="trend__title">{{title}}</div>
+        <div class="trend__title">{{info.titleOriginal}}</div>
+        {{#if titleOriginal}} <div class="trend__titleOriginal">{{titleOriginal}}</div> {{/if}}
+        {{#if description}}<div class="trend__description">{{description}}</div>{{/if}}
+        <div class="trend__language">Язык: {{language}}</div>
+        {{#if author}}<div class="trend__author">Автор: {{author}}</div>{{/if}}
+        <div class="trend__link"><a href="{{info.url}}">Ссылка на курс {{info.url}}</a></div>
+        {{#if published}}<div class="trend__published">Появился в сети: {{published}}</div>{{/if}}
+        {{#if started}}<div class="trend__started">Старт тренда у нас: {{started}}</div>{{/if}}
+        {{#if status}}<div class="trend__status">{{status}}</div>{{/if}}
+    </div>
+    {{/each}}
+</script>
