@@ -58,16 +58,39 @@ if (isset($_GET['id'])) {
                     }
                     else
                     {
-                        $boundDBTable = 'usfl_taglinks';
-                        $tagId = $_GET['tagsid'];
+                        $reqTagsID = preg_replace('/\s/', '', $_GET['tagsid']);
+                        if (strlen($reqTagsID) > 0) {
+                            $reqTagsID = explode(",", $reqTagsID);
 
-                        $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable  INNER JOIN $boundDBTable ON $mainDBTable.id = $boundDBTable.link_id  WHERE `tag_id` = ? AND `link_id` < ?  ORDER BY `id` DESC LIMIT ?");
-                        $stmt->bind_param("iii", $tagId,$lastId, $reqLimit);
-//                        $mainDBTable = $_GET['db'];
-//                        SELECT * FROM `usfl_links` INNER JOIN `usfl_taglinks` ON `usfl_links`.id = `usfl_taglinks`.link_id  WHERE tag_id = 7 LIMIT 0 , 30
+                            $goodReqTagsIDArr = array(); // Сюда запишем результат;
+                            // Проверки на валидность каждого отдельного ID в запросе
+                            foreach ( $reqTagsID as $checkedTagsID) {
+                                if (strpos($checkedTagsID, '.') !== false) {
+                                    echo 'Не правильный ID в строке запроса: "'.$checkedTagsID.'". Найден лишний символ в строке';
+                                    return false;
+                                }
+
+                                if (!is_numeric($checkedTagsID)) {
+                                    echo 'Не правильный ID в строке запроса: "'.$checkedTagsID.'". Это точно не numeric. Проверьте запрос и попробуйте снова';
+                                    return false;
+                                } else {
+                                    $checkedTagsID = (integer) $checkedTagsID;
+                                    !in_array($checkedTagsID, $goodReqTagsIDArr) ? array_push($goodReqTagsIDArr, $checkedTagsID) : null; // Если такого ID еще нет, то добавить
+                                }
+                            }
+
+                            $boundDBTable = 'usfl_taglinks';
+                            $clause = implode(',', array_fill(0, count($goodReqTagsIDArr), '?'));
+                            $params = $goodReqTagsIDArr;
+                            $params[] = $lastId;
+                            $params[] = $reqLimit;
+
+                            $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable  INNER JOIN $boundDBTable ON $mainDBTable.id = $boundDBTable.link_id  WHERE `tag_id` IN (" . $clause . ") AND `link_id` < ? GROUP BY `link_id` ORDER BY `id` DESC LIMIT ?");
+                            $stmt->bind_param(str_repeat('i', count($goodReqTagsIDArr))."ii" ,...$params);
+                        }
+
                     }
 
-                    // Иначе - запрос где передан один тег
 
                     if (!$stmt->execute()) {
                         echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
@@ -77,7 +100,7 @@ if (isset($_GET['id'])) {
 
                     break;
                 case 'somenew':
-                    echo "usfl_taglinks";
+                    echo "usfl_taglinksOFF";
 
                     $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` DESC LIMIT ?");
 // TODO: useless
