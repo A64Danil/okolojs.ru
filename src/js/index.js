@@ -420,14 +420,19 @@ function coreFunction() {
             usflLinks__categoryList.addEventListener('click', function (e) {
                 let target = e.target;
                 if (target.tagName === "LI") {
-                    console.log("Кликнули на тег");
-                    let tagid = target.dataset.tagid;
-                    let url ="core/core.php?db=usfl_links&id=all&tagsid="+tagid;
-                    // &lastid=" + lastID + "&limit=" + limit;
-                    // id=all&db=usfl_links&limit=3&lastid=130&tagsid=7,3,4
-                    // sendRequest(url, showRecordsInManager);
-                    loadAndShowData('usfl_links', "usfl_links-template", url)
-                    // sendRequest(url, callback, form, );
+                    target.classList.toggle("active");
+                    let selectedTags = this.querySelectorAll("li.active");
+                    let selectedTagsID = "";
+                    for(let i = 0; i < selectedTags.length; i++) {
+                        let tagid = selectedTags[i].dataset.tagid;
+                        if (i !== selectedTags.length - 1) {
+                            selectedTagsID += tagid + ",";
+                        } else {
+                            selectedTagsID += tagid;
+                        }
+                    }
+                    let url ="core/core.php?db=usfl_links&id=all&tagsid="+selectedTagsID;
+                    loadAndShowData('usfl_links', "usfl_links-template", url);
                 };
             })
         }
@@ -551,7 +556,7 @@ function loadAndShowData(blockid, tpl, url) {
         console.log("Не указан url, url is " + url);
         return false;
     } else {
-        console.log("Start render ", blockid, tpl, url);
+        // console.log("Start render ", blockid, tpl, url);
         const SRCHTML = SOURCE.innerHTML;
         const template = Handlebars.compile(SRCHTML);
 
