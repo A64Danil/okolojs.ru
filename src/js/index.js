@@ -433,7 +433,7 @@ function coreFunction() {
                     }
                     let url ="core/core.php?db=usfl_links&id=all&tagsid="+selectedTagsID;
                     loadAndShowData('usfl_links', "usfl_links-template", url);
-                };
+                }
             })
         }
 
@@ -539,7 +539,7 @@ function loadAndShowInfo(blockid, tpl, dbName) {
 }
 
 function loadAndShowData(blockid, tpl, url) {
-    console.log("loadAndShowData")
+    console.log("loadAndShowData");
     const BLOCK = document.getElementById(blockid);
     const SOURCE = document.getElementById(tpl);
     if (BLOCK === null) {
@@ -731,7 +731,7 @@ function showRecordsInManager(response, table) {
     let db = table.dataset.loadtype;
     const result = JSON.parse(response);
     // TODO: почистить консоль логи
-    // console.log(result);
+    console.log(result);
     // console.log(db);
     // console.log(result[db]);
     // Удалить кнопки, если response пустой
@@ -746,6 +746,65 @@ function showRecordsInManager(response, table) {
             let newItemROW = manageRecordsTPL(item, db);
             table.querySelector('.manageRecordsTable tbody').innerHTML += newItemROW;
         })
+    }
+
+}
+
+function loadMoreData(url, place, tpl) {
+    const BLOCK = place;
+    const SOURCE = document.getElementById(tpl);
+
+    if (BLOCK === null) {
+        console.log("Нет места для вывода " + place);
+        return false;
+    }
+
+    if (SOURCE === null) {
+        console.log("Нет шаблона " + tpl + "для рендеринга");
+        return false;
+    }
+
+    if (!url) {
+        console.log("Не указан url, url is " + url);
+        return false;
+    } else {
+        // console.log("Start render ", blockid, tpl, url);
+        const SRCHTML = SOURCE.innerHTML;
+        const template = Handlebars.compile(SRCHTML);
+        const db = place.dataset.loadtype;
+
+        // 1. Создаём новый объект XMLHttpRequest
+        const xhr = new XMLHttpRequest();
+
+        // 2. Конфигурируем его
+        xhr.open('GET', url, true);
+
+        // 3. Отсылаем запрос
+        xhr.send();
+
+        // 4. Если код ответа сервера не 200, то это ошибка
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                // вывести результат
+                const result = JSON.parse(xhr.responseText);
+                const resultHBS = template(result);
+
+                // TODO: почистить консоль логи
+                // console.log(result);
+                // console.log(db);
+                console.log(result[db]);
+                // Удалить кнопки, если response пустой
+                if(result[db].length === 0) {
+                    alert("Все записи уже загружены!");
+                    const buttons = place.querySelectorAll("[data-action='loadMore']");
+                    buttons.forEach(el => el.remove());
+                } else {
+                    const arrLength = result[db].length;
+                    place.dataset.lastid = result[db][arrLength - 1].id;
+                    BLOCK.innerHTML += resultHBS;
+                }
+            }
+        }
     }
 
 }
@@ -767,7 +826,18 @@ function showMoreData(e) {
         let limit = target.dataset.limit ? parseInt(target.dataset.limit) : 10 ;
         let url ="/core/core.php?db="+ loadtype +"&id=all&lastid=" + lastID + "&limit=" + limit;
 
-        sendRequest(url, showRecordsInManager, placeToInput);
+
+        switch(target.dataset.callback) {
+            case 'loadData':
+                console.log("showMoreData from buttons");
+                loadMoreData(url, placeToInput, "usfl_links-template");
+                break;
+            case 'usfl_tags':
+                break;
+            default:
+                sendRequest(url, showRecordsInManager, placeToInput);
+                break;
+        }
 
 
     }

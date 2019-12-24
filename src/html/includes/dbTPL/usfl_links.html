@@ -1,4 +1,4 @@
-<div class="records" id="usfl_links">
+<div class="records" id="usfl_links" data-lastid="" data-loadtype="usfl_links" >
     Загружаем...
 </div>
 
@@ -18,4 +18,11 @@
         {{#if info.url}}<div class="record__link"><a href="{{info.url}}">Ссылка-источник</a></div>{{/if}}
     </div>
     {{/each}}
+
+    <button type="button" class="btn btn-primary showMore" data-action="loadMore" data-callback="loadData" data-loadtype="usfl_links" data-place="#usfl_links">
+        Показать еще
+    </button>
+    <button type="button" class="btn btn-primary showMore" data-action="loadMore" data-callback="loadData" data-loadtype="usfl_links" data-limit="30" data-place="#usfl_links">
+        Показать еще 30
+    </button>
 </script>
