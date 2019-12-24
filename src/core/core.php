@@ -146,17 +146,10 @@ if (isset($_GET['id'])) {
                 exit();
             }
 
-            if(count($goodReqIDArr) == 1)
-            {
-                $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE id=?");
-                $stmt->bind_param("i", $goodReqIDArr[0]);
-            }
-            elseif (count($goodReqIDArr) > 1)
-            {
-                $clause = implode(',', array_fill(0, count($goodReqIDArr), '?'));
-                $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE id IN (" . $clause . ") GROUP BY `id`");
-                $stmt->bind_param(str_repeat('i', count($goodReqIDArr)), ...$goodReqIDArr);
-            }
+            $clause = implode(',', array_fill(0, count($goodReqIDArr), '?'));
+            $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE id IN (" . $clause . ") GROUP BY `id`");
+            $stmt->bind_param(str_repeat('i', count($goodReqIDArr)), ...$goodReqIDArr);
+
 
             if (!$stmt->execute()) {
                 echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
