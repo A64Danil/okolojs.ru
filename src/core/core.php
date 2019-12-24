@@ -50,7 +50,35 @@ if (isset($_GET['id'])) {
             // Здесь будет свитч
             // TODO: свитч не нужен, убрать и оставить дефол
             switch ($mainDBTable) {
-                case 'usfl_linksOFF':
+                case 'usfl_links':
+                    // Если теги не переданы, то обычный запрос
+                    if (!isset($_GET['tagsid'])) {
+                        $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` DESC LIMIT ?");
+                        $stmt->bind_param("ii", $lastId, $reqLimit);
+                    }
+                    else
+                    {
+                        $boundDBTable = 'usfl_taglinks';
+                        $tagId = $_GET['tagsid'];
+
+                        $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable  INNER JOIN $boundDBTable ON $mainDBTable.id = $boundDBTable.link_id  WHERE `tag_id` = ? AND `link_id` < ?  ORDER BY `id` DESC LIMIT ?");
+                        $stmt->bind_param("iii", $tagId,$lastId, $reqLimit);
+//                        $mainDBTable = $_GET['db'];
+//                        SELECT * FROM `usfl_links` INNER JOIN `usfl_taglinks` ON `usfl_links`.id = `usfl_taglinks`.link_id  WHERE tag_id = 7 LIMIT 0 , 30
+                    }
+
+                    // Иначе - запрос где передан один тег
+
+                    if (!$stmt->execute()) {
+                        echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
+                    }
+                    $result = $stmt->get_result();
+                    showAsJson($result, $_GET['db']);
+
+                    break;
+                case 'somenew':
+                    echo "usfl_taglinks";
+
                     $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` DESC LIMIT ?");
 // TODO: useless
 //                    $stmt2 = $mysqli->prepare("SELECT usfl_tags.id, usfl_tags.title
@@ -68,9 +96,6 @@ if (isset($_GET['id'])) {
                     }
                     $result = $stmt->get_result();
                     showAsJson($result, $_GET['db']);
-                    break;
-                case 'somenew':
-                    echo "i равно 1";
                     break;
                 default:
                     $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` DESC LIMIT ?");

@@ -414,6 +414,21 @@ function coreFunction() {
     function mainEvents() {
         console.log("Вешает все обработчики");
         document.body.addEventListener('click', showMoreData)
+
+        let usflLinks__categoryList = document.querySelector(".usflLinks__categoryList");
+        if (usflLinks__categoryList !== null) {
+            usflLinks__categoryList.addEventListener('click', function (e) {
+                let target = e.target;
+                if (target.tagName === "LI") {
+                    console.log("Кликнули на тег");
+                    // let url ="/core/core.php?db="+ loadtype +"&id=all&lastid=" + lastID + "&limit=" + limit;
+                    // sendRequest(url, showRecordsInManager, placeToInput);
+                    // sendRequest(url, callback, form, );
+                };
+            })
+        }
+
+
     }
 
 }
