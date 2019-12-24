@@ -51,7 +51,6 @@ if (isset($_GET['id'])) {
             // TODO: свитч не нужен, убрать и оставить дефол
             switch ($mainDBTable) {
                 case 'usfl_links':
-                    // Если теги не переданы, то обычный запрос
                     if (!isset($_GET['tagsid'])) {
                         $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` DESC LIMIT ?");
                         $stmt->bind_param("ii", $lastId, $reqLimit);
@@ -76,16 +75,13 @@ if (isset($_GET['id'])) {
 
                     }
 
-
                     if (!$stmt->execute()) {
                         echo "Не удалось выполнить запрос: (" . $stmt->errno . ") " . $stmt->error;
                     }
                     $result = $stmt->get_result();
                     showAsJson($result, $_GET['db']);
-
                     break;
-                case 'somenew':
-                    echo "usfl_taglinksOFF";
+                case 'usfl_taglinksOFF':
 
                     $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` DESC LIMIT ?");
 // TODO: useless
@@ -117,8 +113,6 @@ if (isset($_GET['id'])) {
                     showAsJson($result, $_GET['db']);
                     break;
             };
-
-
 
             $stmt->close(); /* закрываем запрос */
             $mysqli->close();  /* закрываем соединение */

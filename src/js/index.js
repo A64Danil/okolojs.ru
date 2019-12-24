@@ -421,8 +421,12 @@ function coreFunction() {
                 let target = e.target;
                 if (target.tagName === "LI") {
                     console.log("Кликнули на тег");
-                    // let url ="/core/core.php?db="+ loadtype +"&id=all&lastid=" + lastID + "&limit=" + limit;
-                    // sendRequest(url, showRecordsInManager, placeToInput);
+                    let tagid = target.dataset.tagid;
+                    let url ="core/core.php?db=usfl_links&id=all&tagsid="+tagid;
+                    // &lastid=" + lastID + "&limit=" + limit;
+                    // id=all&db=usfl_links&limit=3&lastid=130&tagsid=7,3,4
+                    // sendRequest(url, showRecordsInManager);
+                    loadAndShowData('usfl_links', "usfl_links-template", url)
                     // sendRequest(url, callback, form, );
                 };
             })
@@ -480,6 +484,8 @@ function loadModelAndShowBlock(blockid, tpl, filename) {
 
 }
 
+
+// LOAD INFO
 function loadAndShowInfo(blockid, tpl, dbName) {
     const BLOCK = document.getElementById(blockid);
     const SOURCE = document.getElementById(tpl);
@@ -517,6 +523,53 @@ function loadAndShowInfo(blockid, tpl, dbName) {
             if (this.readyState == 4) {
                 // вывести результат
 
+                const result = template(JSON.parse(xhr.responseText));
+                BLOCK.innerHTML = result;
+            }
+        }
+    }
+
+
+
+}
+
+function loadAndShowData(blockid, tpl, url) {
+    console.log("loadAndShowData")
+    const BLOCK = document.getElementById(blockid);
+    const SOURCE = document.getElementById(tpl);
+    if (BLOCK === null) {
+        console.log("Нет места для вывода " + blockid);
+        return false;
+    }
+
+    if (SOURCE === null) {
+        console.log("Нет шаблона " + tpl + "для рендеринга");
+        return false;
+    }
+
+    if (!url) {
+        console.log("Не указан url, url is " + url);
+        return false;
+    } else {
+        console.log("Start render ", blockid, tpl, url);
+        const SRCHTML = SOURCE.innerHTML;
+        const template = Handlebars.compile(SRCHTML);
+
+
+        // 1. Создаём новый объект XMLHttpRequest
+        const xhr = new XMLHttpRequest();
+
+        // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
+        // xhr.open('GET', 'model/'+dbName+'.json', true);
+        xhr.open('GET', url, true);
+
+        // 3. Отсылаем запрос
+        xhr.send();
+
+        // 4. Если код ответа сервера не 200, то это ошибка
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                // вывести результат
                 const result = template(JSON.parse(xhr.responseText));
                 BLOCK.innerHTML = result;
             }
