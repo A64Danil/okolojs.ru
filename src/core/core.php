@@ -62,22 +62,7 @@ if (isset($_GET['id'])) {
                         if (strlen($reqTagsID) > 0) {
                             $reqTagsID = explode(",", $reqTagsID);
 
-                            $goodReqTagsIDArr = array(); // Сюда запишем результат;
-                            // Проверки на валидность каждого отдельного ID в запросе
-                            foreach ( $reqTagsID as $checkedTagsID) {
-                                if (strpos($checkedTagsID, '.') !== false) {
-                                    echo 'Не правильный ID в строке запроса: "'.$checkedTagsID.'". Найден лишний символ в строке';
-                                    return false;
-                                }
-
-                                if (!is_numeric($checkedTagsID)) {
-                                    echo 'Не правильный ID в строке запроса: "'.$checkedTagsID.'". Это точно не numeric. Проверьте запрос и попробуйте снова';
-                                    return false;
-                                } else {
-                                    $checkedTagsID = (integer) $checkedTagsID;
-                                    !in_array($checkedTagsID, $goodReqTagsIDArr) ? array_push($goodReqTagsIDArr, $checkedTagsID) : null; // Если такого ID еще нет, то добавить
-                                }
-                            }
+                            if (!($goodReqTagsIDArr = checkAndPushValidID($reqTagsID))) exit;
 
                             $boundDBTable = 'usfl_taglinks';
                             $clause = implode(',', array_fill(0, count($goodReqTagsIDArr), '?'));
@@ -151,23 +136,7 @@ if (isset($_GET['id'])) {
         if (strlen($reqID) > 0) {
             $reqID = explode(",", $reqID);
 
-            $goodReqIDArr = array(); // Сюда запишем результат;
-
-            // Проверки на валидность каждого отдельного ID в запросе
-            foreach ( $reqID as $checkedID) {
-                if (strpos($checkedID, '.') !== false) {
-                    echo 'Не правильный ID в строке запроса: "'.$checkedID.'". Найден лишний символ в строке';
-                    return false;
-                }
-
-                if (!is_numeric($checkedID)) {
-                    echo 'Не правильный ID в строке запроса: "'.$checkedID.'". Это точно не numeric. Проверьте запрос и попробуйте снова';
-                    return false;
-                } else {
-                    $checkedID = (integer) $checkedID;
-                    !in_array($checkedID, $goodReqIDArr) ? array_push($goodReqIDArr, $checkedID) : null; // Если такого ID еще нет, то добавить
-                }
-            }
+            if (!($goodReqIDArr = checkAndPushValidID($reqID))) exit;
 
             // Коннектимся к БД
             $mysqli = new mysqli($host, $user, $password, $database);
@@ -467,6 +436,28 @@ function showAsJson($result, $type)
     }
     print ']'."\r\n";
     print '}'."\r\n";
+}
+
+
+// Проверки на валидность каждого отдельного ID в запросе
+function checkAndPushValidID($originArr) {
+    $newChekedArr = array();
+    foreach ( $originArr as $checkedID) {
+        if (strpos($checkedID, '.') !== false) {
+            echo 'Не правильный ID в строке запроса: "'.$checkedID.'". Найден лишний символ в строке';
+            return false;
+        }
+
+        if (!is_numeric($checkedID)) {
+            echo 'Не правильный ID в строке запроса: "'.$checkedID.'". Это точно не numeric. Проверьте запрос и попробуйте снова';
+            return false;
+        } else {
+            $checkedID = (integer) $checkedID;
+            !in_array($checkedID, $newChekedArr) ? array_push($newChekedArr, $checkedID) : null; // Если такого ID еще нет, то добавить
+        }
+    }
+
+    return $newChekedArr;
 }
 
 function changeTagsInLinks($link) {
