@@ -14,9 +14,12 @@ function coreFunction() {
 
         console.log("Пасхалка для самых любопытных =) 1550");
         loadModelAndShowBlock('trends', "trend-template", 'trends');
-        loadAndShowInfo('usfl_links', "usfl_links-template", 'usfl_links');
+        // loadAndShowInfo('usfl_links', "usfl_links-template", 'usfl_links');
         loadAndShowInfo('usfl_tags', "usfl_tags-template", 'usfl_tags');
         mainEvents();
+
+        // Доделать нормальную переменную
+        loadInfo(usfl_links);
 
         if (mainManager) {
             console.log("Вы в админке");
@@ -413,7 +416,7 @@ function coreFunction() {
     }
     function mainEvents() {
         console.log("Вешает все обработчики");
-        document.body.addEventListener('click', showMoreData)
+        document.body.addEventListener('click', showMoreData);
 
         let usflLinks__categoryList = document.querySelector(".usflLinks__categoryList");
         if (usflLinks__categoryList !== null) {
@@ -529,7 +532,7 @@ function loadAndShowInfo(blockid, tpl, dbName) {
                 // вывести результат
 
                 const result = template(JSON.parse(xhr.responseText));
-                BLOCK.innerHTML = result;
+                BLOCK.querySelector('.output').innerHTML = result;
             }
         }
     }
@@ -576,7 +579,7 @@ function loadAndShowData(blockid, tpl, url) {
             if (this.readyState == 4) {
                 // вывести результат
                 const result = template(JSON.parse(xhr.responseText));
-                BLOCK.innerHTML = result;
+                BLOCK.querySelector('.output').innerHTML = result;
             }
         }
     }
@@ -585,6 +588,66 @@ function loadAndShowData(blockid, tpl, url) {
 
 }
 
+function loadInfo(mainNode) {
+    console.log("loadInfo 21:07");
+    console.log(mainNode);
+
+    const BLOCK = mainNode.querySelector('.output');
+    const mainNodeData = mainNode.dataset;
+
+    // const SOURCE = document.getElementById(tpl);
+    if (BLOCK === null) {
+        console.log("Нет места для вывода " + blockid);
+        return false;
+    }
+
+
+    // Формируем URL
+    let db = mainNodeData.loadtype;
+    let lastID = mainNodeData.lastid;
+    let limit = mainNodeData.limit ? parseInt(mainNodeData.limit) : 10 ;
+    let url ="/core/core.php?db="+ db +"&id=all&lastid=" + lastID + "&limit=" + limit;
+    console.log(url);
+
+    const SOURCE = document.getElementById(mainNodeData.tplid);
+    // console.log("Start render ", blockid, tpl, url);
+    const template = Handlebars.compile(SOURCE.innerHTML);
+
+
+    // 1. Создаём новый объект XMLHttpRequest
+    const xhr = new XMLHttpRequest();
+
+    // 2. Конфигурируем его
+    xhr.open('GET', url, true);
+
+    // 3. Отсылаем запрос
+    xhr.send();
+
+    // 4. Если код ответа сервера не 200, то это ошибка
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            // вывести результат
+            const response = JSON.parse(xhr.responseText)
+            const resultHBS = template(response);
+
+            // TODO: почистить консоль логи
+            // console.log(response);
+            // console.log(db);
+            // console.log(response[db]);
+            // Удалить кнопки, если response пустой
+            if(response[db].length === 0) {
+                alert("Все записи уже загружены!");
+                const buttons = mainNode.querySelectorAll("[data-action='loadLikeControls']");
+                buttons.forEach(el => el.remove());
+            } else {
+                const arrLength = response[db].length;
+                mainNode.dataset.lastid = response[db][arrLength - 1].id;
+                lastID === "" ? BLOCK.innerHTML = resultHBS : BLOCK.innerHTML += resultHBS;
+            }
+        }
+    }
+
+}
 
 //  --==:: HELPERS ::==-
 function sendRequest(url, callback, form, method = "GET") {
@@ -751,7 +814,8 @@ function showRecordsInManager(response, table) {
 }
 
 function loadMoreData(url, place, tpl) {
-    const BLOCK = place;
+    const BLOCK = place.querySelector(".output");
+    console.log(BLOCK);
     const SOURCE = document.getElementById(tpl);
 
     if (BLOCK === null) {
@@ -811,6 +875,7 @@ function loadMoreData(url, place, tpl) {
 
 function showMoreData(e) {
     const target = e.target;
+    const targetParent = target.parentNode;
 
     if(target.classList.contains("showMore") && target.dataset.action == "loadMore") {
         const types = ["trends", "faq", "rules", "usfl_tags", "usfl_links"]
@@ -819,6 +884,8 @@ function showMoreData(e) {
             return false;
         }
 
+
+        // Часть для старого функционала
         let loadtype = target.dataset.loadtype;
         let place = target.dataset.place;
         let placeToInput = document.querySelector(place);
@@ -829,7 +896,7 @@ function showMoreData(e) {
 
         switch(target.dataset.callback) {
             case 'loadData':
-                console.log("showMoreData from buttons");
+                console.log("showMoreData from loadData");
                 loadMoreData(url, placeToInput, "usfl_links-template");
                 break;
             case 'usfl_tags':
@@ -842,8 +909,28 @@ function showMoreData(e) {
 
     }
 
+    if(targetParent.classList.contains("controls") && target.dataset.action == "loadLikeControls") {
+        loadInfo(targetParent.parentNode);
+
+    }
+
 
 }
+
+// Алгоритм подгрузки данных
+// Узнаем ссылку, место и шаблон
+// Отправляем запрос на сервер
+// Получаем ответ
+// Проверяем, что в ответе есть записи. Если нет, то удаляем кнопки. Если есть, то...
+// Последний id из ответа пишем в last-id "места"
+// Ответ из запроса отправляем в хендлбарс по шаблону
+
+// 1) Загрузить все данные из всех списков -> loadAllInfo => lists.forEach( el => loadInfo(list))
+// 2) Загрузить данные из списка, учитывая теги -> при клике на теги исправляем data-tags в таблице и загружаем loadInfo(list)
+// 3) Загрузить данные из списка, учитывая lastid -> запускаем loadInfo(list)
+
+// loadInfo
+
 
 //  --==:: TPL ::==-
 function manageRecordsTPL(item, dbName) {
