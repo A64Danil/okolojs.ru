@@ -13,19 +13,22 @@ function coreFunction() {
     function init() {
 
         console.log("Пасхалка для самых любопытных =) 1550");
-        loadModelAndShowBlock('trends', "trend-template", 'trends');
-        // loadAndShowInfo('usfl_links', "usfl_links-template", 'usfl_links');
-        loadAndShowInfo('usfl_tags', "usfl_tags-template", 'usfl_tags');
         mainEvents();
 
-        // Доделать нормальную переменную
-        loadInfo(usfl_links);
 
         if (mainManager) {
             console.log("Вы в админке");
             initManager();
         } else {
             console.log("Вы не в админке, доп. скрипты грузить не надо");
+
+            // Доделать нормальную переменную
+            // loadAndShowInfo('usfl_tags', "usfl_tags-template", 'usfl_tags');
+            loadModelAndShowBlock('trends', "trend-template", 'trends');
+            // loadAndShowInfo('usfl_links', "usfl_links-template", 'usfl_links');
+
+
+            findAllRecordsLists();
 
         }
 
@@ -420,10 +423,14 @@ function coreFunction() {
 
         let usflLinks__categoryList = document.querySelector(".usflLinks__categoryList");
         if (usflLinks__categoryList !== null) {
+
             usflLinks__categoryList.addEventListener('click', function (e) {
                 let target = e.target;
                 if (target.tagName === "LI") {
                     target.classList.toggle("active");
+                    let filtredPlace = document.getElementById(usflLinks__categoryList.dataset.label);
+                    filtredPlace.querySelector(".controls").classList.remove("none");
+
                     let selectedTags = this.querySelectorAll("li.active");
                     let selectedTagsID = "";
                     for(let i = 0; i < selectedTags.length; i++) {
@@ -435,13 +442,9 @@ function coreFunction() {
                         }
                     }
 
-                    const filtredPlace = document.getElementById(usflLinks__categoryList.dataset.label);
                     filtredPlace.dataset.lastid = "";
                     filtredPlace.dataset.tags = selectedTagsID;
                     loadInfo(filtredPlace);
-                    // TODO: удалить исходную функцию
-                    // let url ="core/core.php?db=usfl_links&id=all&tagsid="+selectedTagsID;
-                    // loadAndShowData('usfl_links', "usfl_links-template", url);
                 }
             })
         }
@@ -548,7 +551,6 @@ function loadAndShowInfo(blockid, tpl, dbName) {
 }
 
 function loadAndShowData(blockid, tpl, url) {
-    console.log("loadAndShowData");
     const BLOCK = document.getElementById(blockid);
     const SOURCE = document.getElementById(tpl);
     if (BLOCK === null) {
@@ -594,9 +596,17 @@ function loadAndShowData(blockid, tpl, url) {
 
 }
 
+function findAllRecordsLists() {
+    document.querySelectorAll('.records').forEach( el => {
+        if (el.getAttribute("id") !== "") {
+            console.log(el);
+            loadInfo(el);
+        }
+    })
+}
+
 function loadInfo(mainNode) {
-    console.log("loadInfo 21:07");
-    console.log(mainNode);
+    console.log("loadInfo 23:06");
 
     const BLOCK = mainNode.querySelector('.output');
     const mainNodeData = mainNode.dataset;
@@ -613,11 +623,17 @@ function loadInfo(mainNode) {
     let lastID = mainNodeData.lastid;
     let tags = mainNodeData.tags;
     let limit = mainNodeData.limit ? parseInt(mainNodeData.limit) : 10 ;
-    let url ="/core/core.php?db="+ db +"&id=all&lastid=" + lastID + "&tagsid=" + tags + "&limit=" + limit;
+
+
+    let url ="/core/core.php?db="+ db +"&id=all" + "&limit=" + limit;
+    if (lastID) url += "&lastid=" + lastID;
+    if (tags) url += "&tagsid=" + tags;
+
+
     console.log(url);
 
     const SOURCE = document.getElementById(mainNodeData.tplid);
-    // console.log("Start render ", blockid, tpl, url);
+    console.log(mainNodeData.tplid);
     const template = Handlebars.compile(SOURCE.innerHTML);
 
 
@@ -644,12 +660,11 @@ function loadInfo(mainNode) {
             // Удалить кнопки, если response пустой
             if(response[db].length === 0) {
                 alert("Все записи уже загружены!");
-                const buttons = mainNode.querySelectorAll("[data-action='loadLikeControls']");
-                buttons.forEach(el => el.remove());
+                mainNode.querySelector(".controls").classList.add("none");
             } else {
                 const arrLength = response[db].length;
                 mainNode.dataset.lastid = response[db][arrLength - 1].id;
-                lastID === "" ? BLOCK.innerHTML = resultHBS : BLOCK.innerHTML += resultHBS;
+                lastID ? BLOCK.innerHTML += resultHBS : BLOCK.innerHTML = resultHBS;
             }
         }
     }

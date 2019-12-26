@@ -144,6 +144,11 @@ header {
 //RECORDS
 
 .records {
+  .controls {
+    &.none {
+      display: none;
+    }
+  }
 }
 
 .record {
