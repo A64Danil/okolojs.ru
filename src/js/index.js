@@ -434,8 +434,14 @@ function coreFunction() {
                             selectedTagsID += tagid;
                         }
                     }
-                    let url ="core/core.php?db=usfl_links&id=all&tagsid="+selectedTagsID;
-                    loadAndShowData('usfl_links', "usfl_links-template", url);
+
+                    const filtredPlace = document.getElementById(usflLinks__categoryList.dataset.label);
+                    filtredPlace.dataset.lastid = "";
+                    filtredPlace.dataset.tags = selectedTagsID;
+                    loadInfo(filtredPlace);
+                    // TODO: удалить исходную функцию
+                    // let url ="core/core.php?db=usfl_links&id=all&tagsid="+selectedTagsID;
+                    // loadAndShowData('usfl_links', "usfl_links-template", url);
                 }
             })
         }
@@ -605,8 +611,9 @@ function loadInfo(mainNode) {
     // Формируем URL
     let db = mainNodeData.loadtype;
     let lastID = mainNodeData.lastid;
+    let tags = mainNodeData.tags;
     let limit = mainNodeData.limit ? parseInt(mainNodeData.limit) : 10 ;
-    let url ="/core/core.php?db="+ db +"&id=all&lastid=" + lastID + "&limit=" + limit;
+    let url ="/core/core.php?db="+ db +"&id=all&lastid=" + lastID + "&tagsid=" + tags + "&limit=" + limit;
     console.log(url);
 
     const SOURCE = document.getElementById(mainNodeData.tplid);

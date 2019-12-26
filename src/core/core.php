@@ -51,7 +51,7 @@ if (isset($_GET['id'])) {
             // TODO: свитч не нужен, убрать и оставить дефол
             switch ($mainDBTable) {
                 case 'usfl_links':
-                    if (!isset($_GET['tagsid'])) {
+                    if (!isset($_GET['tagsid']) || $_GET['tagsid'] === "") {
                         $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` DESC LIMIT ?");
                         $stmt->bind_param("ii", $lastId, $reqLimit);
                     }
