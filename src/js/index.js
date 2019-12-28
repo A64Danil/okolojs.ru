@@ -12,7 +12,7 @@ function coreFunction() {
     const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 1550");
+        console.log("Пасхалка для самых любопытных =) 2110");
         mainEvents();
 
 
@@ -45,13 +45,15 @@ function coreFunction() {
 
         recordsMainManager("trendsManager");
         recordsMainManager("rulesManager");
+        recordsMainManager("faqManager");
         recordsMainManager("usflManager", "usfl_links");
         recordsMainManager("usflManager", "usfl_tags");
 
         function recordsMainManager(mainManagerId, managerType) {
             const manager = document.getElementById(mainManagerId);
-
+            // console.log(manager);
             const manageRecordsTable = !!managerType? manager.querySelector('.manageRecordsTable[data-loadtype="'+ managerType +'"]') :  manager.querySelector('.manageRecordsTable');
+            // console.log(manageRecordsTable);
             const addRecordForm = !!managerType? manager.querySelector('.addRecordForm[data-loadtype="'+ managerType +'"]'): manager.querySelector('.addRecordForm');
             const updateRecordForm = !!managerType? manager.querySelector('.updateRecordForm[data-loadtype="'+ managerType +'"]'): manager.querySelector('.updateRecordForm');
 
@@ -894,7 +896,7 @@ function showMoreData(e) {
     const targetParent = target.parentNode;
 
     if(target.classList.contains("showMore") && target.dataset.action == "loadMore") {
-        const types = ["trends", "faq", "rules", "usfl_tags", "usfl_links"]
+        const types = ["trends", "faq", "rules", "usfl_tags", "usfl_links"];
         if (types.indexOf(target.dataset.loadtype) === -1) {
             console.log("неизвестный тип " + target.dataset.loadtype);
             return false;
