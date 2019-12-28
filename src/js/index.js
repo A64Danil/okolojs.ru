@@ -606,7 +606,7 @@ function findAllRecordsLists() {
 }
 
 function loadInfo(mainNode) {
-    console.log("loadInfo 23:06");
+    // console.log("loadInfo 23:06");
 
     const BLOCK = mainNode.querySelector('.output');
     const mainNodeData = mainNode.dataset;
@@ -617,23 +617,17 @@ function loadInfo(mainNode) {
         return false;
     }
 
-
     // Формируем URL
     let db = mainNodeData.loadtype;
     let lastID = mainNodeData.lastid;
     let tags = mainNodeData.tags;
     let limit = mainNodeData.limit ? parseInt(mainNodeData.limit) : 10 ;
 
-
     let url ="/core/core.php?db="+ db +"&id=all" + "&limit=" + limit;
     if (lastID) url += "&lastid=" + lastID;
     if (tags) url += "&tagsid=" + tags;
 
-
-    console.log(url);
-
     const SOURCE = document.getElementById(mainNodeData.tplid);
-    console.log(mainNodeData.tplid);
     const template = Handlebars.compile(SOURCE.innerHTML);
 
 

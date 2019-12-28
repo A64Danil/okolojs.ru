@@ -149,10 +149,17 @@ header {
       display: none;
     }
   }
+  .output {
+
+  }
 }
 
 .record {
-  margin-bottom: 1rem;
+  margin-bottom: 1.8rem;
+
+  a, a:hover {
+    color: unset;
+  }
 }
 
 .record__difficulty {
