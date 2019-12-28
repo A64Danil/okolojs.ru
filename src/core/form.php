@@ -88,10 +88,10 @@
     "title": "Новый Тренд",
     "titleOriginal": "New Trend",
     "description": "",
+    "language": "",
     "difficulty": "",
     "author": "",
     "url": "",
-    "started": "",
     "published": "",
     "started": "",
     "status": ""
@@ -339,7 +339,7 @@
                     </div>
                 </div>
 
-                <div class="faqManager dataManager tab-pane fade" id="faqManager" role="tabpanel" aria-labelledby="nav-faq-tab">
+                <div class="tab-pane fade" id="faqManager" role="tabpanel" aria-labelledby="nav-faq-tab">
                     <div class="innerMenu">
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addFaqModal">
