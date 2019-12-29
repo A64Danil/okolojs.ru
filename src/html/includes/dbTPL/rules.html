@@ -1,0 +1,15 @@
+<div class="records" id="rules" data-lastid="" data-loadtype="rules" data-tags="" data-tplid="rules-template" >
+    <ul class="output">
+        Загружаем...
+    </ul>
+</div>
+
+
+<script id="rules-template" type="text/x-handlebars-template">
+    {{#each rules}}
+    <li class="record">
+            <div class="record__title">{{title}}</div>
+            {{#if info.description}}<div class="record__description">{{info.description}}</div>{{/if}}
+    </li>
+    {{/each}}
+</script>

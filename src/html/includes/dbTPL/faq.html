@@ -1,0 +1,15 @@
+<div class="records" id="faq" data-lastid="" data-loadtype="faq" data-tags="" data-tplid="faq-template" >
+    <ul class="output">
+        Загружаем...
+    </ul>
+</div>
+
+
+<script id="faq-template" type="text/x-handlebars-template">
+    {{#each faq}}
+    <li class="record">
+            <div class="record__title">{{title}}</div>
+            {{#if info.description}}<div class="record__description">{{info.description}}</div>{{/if}}
+    </li>
+    {{/each}}
+</script>
