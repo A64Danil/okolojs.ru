@@ -12,7 +12,7 @@ function coreFunction() {
     const mainManager = document.querySelector('.mainManager');
     function init() {
 
-        console.log("Пасхалка для самых любопытных =) 2110");
+        console.log("Пасхалка для самых любопытных =) 1510");
         mainEvents();
 
 
@@ -21,13 +21,6 @@ function coreFunction() {
             initManager();
         } else {
             console.log("Вы не в админке, доп. скрипты грузить не надо");
-
-            // Доделать нормальную переменную
-            // loadAndShowInfo('usfl_tags', "usfl_tags-template", 'usfl_tags');
-            loadModelAndShowBlock('trends', "trend-template", 'trends');
-            // loadAndShowInfo('usfl_links', "usfl_links-template", 'usfl_links');
-
-
             findAllRecordsLists();
 
         }
@@ -456,148 +449,7 @@ function coreFunction() {
 
 }
 
-// Устаревшая функция, заменить на новую когда база заработает
-function loadModelAndShowBlock(blockid, tpl, filename) {
-    const BLOCK = document.getElementById(blockid);
-    const SOURCE = document.getElementById(tpl);
-    if (BLOCK === null) {
-        console.log("Нет места для вывода " + blockid);
-        return false;
-    }
-
-    if (SOURCE === null) {
-        console.log("Нет шаблона " + tpl + "для рендеринга");
-        return false;
-    }
-
-    if (!filename) {
-        console.log("Не указана модель данных, filename is " + filename);
-        return false;
-    } else {
-        console.log("Start render ", blockid, tpl, filename);
-        const SRCHTML = SOURCE.innerHTML;
-        const template = Handlebars.compile(SRCHTML);
-
-
-        // 1. Создаём новый объект XMLHttpRequest
-        const xhr = new XMLHttpRequest();
-
-        // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
-        xhr.open('GET', 'model/'+filename+'.json', true);
-
-        // 3. Отсылаем запрос
-        xhr.send();
-
-        // 4. Если код ответа сервера не 200, то это ошибка
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4) {
-                // вывести результат
-
-                const result = template(JSON.parse(xhr.responseText));
-                BLOCK.innerHTML = result;
-            }
-        }
-    }
-
-
-
-}
-
-
 // LOAD INFO
-function loadAndShowInfo(blockid, tpl, dbName) {
-    const BLOCK = document.getElementById(blockid);
-    const SOURCE = document.getElementById(tpl);
-    if (BLOCK === null) {
-        console.log("Нет места для вывода " + blockid);
-        return false;
-    }
-
-    if (SOURCE === null) {
-        console.log("Нет шаблона " + tpl + "для рендеринга");
-        return false;
-    }
-
-    if (!dbName) {
-        console.log("Не указана базаданных, dbName is " + dbName);
-        return false;
-    } else {
-        console.log("Start render ", blockid, tpl, dbName);
-        const SRCHTML = SOURCE.innerHTML;
-        const template = Handlebars.compile(SRCHTML);
-
-
-        // 1. Создаём новый объект XMLHttpRequest
-        const xhr = new XMLHttpRequest();
-
-        // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
-        // xhr.open('GET', 'model/'+dbName+'.json', true);
-        xhr.open('GET', 'core/core.php?id=all&db='+dbName, true);
-
-        // 3. Отсылаем запрос
-        xhr.send();
-
-        // 4. Если код ответа сервера не 200, то это ошибка
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4) {
-                // вывести результат
-
-                const result = template(JSON.parse(xhr.responseText));
-                BLOCK.querySelector('.output').innerHTML = result;
-            }
-        }
-    }
-
-
-
-}
-
-function loadAndShowData(blockid, tpl, url) {
-    const BLOCK = document.getElementById(blockid);
-    const SOURCE = document.getElementById(tpl);
-    if (BLOCK === null) {
-        console.log("Нет места для вывода " + blockid);
-        return false;
-    }
-
-    if (SOURCE === null) {
-        console.log("Нет шаблона " + tpl + "для рендеринга");
-        return false;
-    }
-
-    if (!url) {
-        console.log("Не указан url, url is " + url);
-        return false;
-    } else {
-        // console.log("Start render ", blockid, tpl, url);
-        const SRCHTML = SOURCE.innerHTML;
-        const template = Handlebars.compile(SRCHTML);
-
-
-        // 1. Создаём новый объект XMLHttpRequest
-        const xhr = new XMLHttpRequest();
-
-        // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
-        // xhr.open('GET', 'model/'+dbName+'.json', true);
-        xhr.open('GET', url, true);
-
-        // 3. Отсылаем запрос
-        xhr.send();
-
-        // 4. Если код ответа сервера не 200, то это ошибка
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4) {
-                // вывести результат
-                const result = template(JSON.parse(xhr.responseText));
-                BLOCK.querySelector('.output').innerHTML = result;
-            }
-        }
-    }
-
-
-
-}
-
 function findAllRecordsLists() {
     document.querySelectorAll('.records').forEach( el => {
         if (el.getAttribute("id") !== "") {
@@ -935,20 +787,6 @@ function showMoreData(e) {
 
 }
 
-// Алгоритм подгрузки данных
-// Узнаем ссылку, место и шаблон
-// Отправляем запрос на сервер
-// Получаем ответ
-// Проверяем, что в ответе есть записи. Если нет, то удаляем кнопки. Если есть, то...
-// Последний id из ответа пишем в last-id "места"
-// Ответ из запроса отправляем в хендлбарс по шаблону
-
-// 1) Загрузить все данные из всех списков -> loadAllInfo => lists.forEach( el => loadInfo(list))
-// 2) Загрузить данные из списка, учитывая теги -> при клике на теги исправляем data-tags в таблице и загружаем loadInfo(list)
-// 3) Загрузить данные из списка, учитывая lastid -> запускаем loadInfo(list)
-
-// loadInfo
-
 
 //  --==:: TPL ::==-
 function manageRecordsTPL(item, dbName) {
@@ -989,31 +827,3 @@ function manageRecordsTPL(item, dbName) {
     return newItem;
 }
 
-
-
-Accordion.prototype.dropdown = function (e) {
-    var $el = e.data.el;
-    $this = $(this),
-    $next = $this.next();
-
-    console.log(isAnimation);
-
-    if (!isAnimation) { // если не анимирован
-        isAnimation = true // чтобы не запустили повторно
-        console.log(3);
-        $next.slideToggle();
-
-        $this.parent().toggleClass('open');
-
-        if (!e.data.multiple) {
-            $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
-        }
-
-
-        setTimeout(function () {
-
-            isAnimation = false  // чтобы запустили снова
-        }, 2000)
-    }
-
-};

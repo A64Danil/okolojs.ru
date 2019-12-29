@@ -1,22 +1,24 @@
-<div class="trends" id="trends2">
-    Загружаем...
+<div class="records" id="trends" data-lastid="" data-loadtype="trends" data-tags="" data-tplid="trends-template">
+    <div class="output">
+        Загружаем...
+    </div>
 </div>
 
 
-<script id="trend-template" type="text/x-handlebars-template">
+<script id="trends-template" type="text/x-handlebars-template">
     {{#each trends}}
     <div class="trend">
         {{#if difficulty}} <div class="trend__difficulty" title="Требуемый уровень подготовки">{{difficulty}}</div>{{/if}}
         <div class="trend__title">{{title}}</div>
         <div class="trend__title">{{info.titleOriginal}}</div>
-        {{#if titleOriginal}} <div class="trend__titleOriginal">{{titleOriginal}}</div> {{/if}}
-        {{#if description}}<div class="trend__description">{{description}}</div>{{/if}}
-        <div class="trend__language">Язык: {{language}}</div>
-        {{#if author}}<div class="trend__author">Автор: {{author}}</div>{{/if}}
-        <div class="trend__link"><a href="{{info.url}}">Ссылка на курс {{info.url}}</a></div>
-        {{#if published}}<div class="trend__published">Появился в сети: {{published}}</div>{{/if}}
-        {{#if started}}<div class="trend__started">Старт тренда у нас: {{started}}</div>{{/if}}
-        {{#if status}}<div class="trend__status">{{status}}</div>{{/if}}
+        {{#if info.titleOriginal}} <div class="trend__titleOriginal">{{info.titleOriginal}}</div> {{/if}}
+        {{#if info.description}}<div class="trend__description">{{info.description}}</div>{{/if}}
+        <div class="trend__language">Язык: {{info.language}}</div>
+        {{#if info.author}}<div class="trend__author">Автор: {{info.author}}</div>{{/if}}
+        <div class="trend__link"><a href="{{info.url}}">Ссылка на курс</a></div>
+        {{#if info.published}}<div class="trend__published">Появился в сети: {{info.published}}</div>{{/if}}
+        {{#if info.started}}<div class="trend__started">Старт тренда у нас: {{info.started}}</div>{{/if}}
+        {{#if info.status}}<div class="trend__status">{{info.status}}</div>{{/if}}
     </div>
     {{/each}}
 </script>
