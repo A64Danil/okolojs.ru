@@ -36,6 +36,12 @@ if (isset($_GET['id'])) {
             $lastId = (int)$_GET['lastid'];
         }
 
+        if (empty($_GET['sortdir'])) {
+            $sortDir = "DESC";
+        } else {
+            $sortDir = $_GET['sortdir'];
+        }
+
         // Проверкаа на валидность
         if ($reqLimit > 0 && $lastId > 0)
         {
@@ -45,14 +51,14 @@ if (isset($_GET['id'])) {
                 exit();
             }
             // Если будет тормозить переписать на
-            //SELECT * FROM `myguests` INNER JOIN (SELECT id FROM `myguests` ORDER BY `id` DESC LIMIT 40,10 ) AS lim USING(id)
+            //SELECT * FROM `myguests` INNER JOIN (SELECT id FROM `myguests` ORDER BY `id` $sortDir LIMIT 40,10 ) AS lim USING(id)
 
             // Здесь будет свитч
             // TODO: свитч не нужен, убрать и оставить дефол
             switch ($mainDBTable) {
                 case 'usfl_links':
                     if (!isset($_GET['tagsid']) || $_GET['tagsid'] === "") {
-                        $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` DESC LIMIT ?");
+                        $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` $sortDir LIMIT ?");
                         $stmt->bind_param("ii", $lastId, $reqLimit);
                     }
                     else
@@ -69,7 +75,7 @@ if (isset($_GET['id'])) {
                             $params[] = $lastId;
                             $params[] = $reqLimit;
 
-                            $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable  INNER JOIN $boundDBTable ON $mainDBTable.id = $boundDBTable.link_id  WHERE `tag_id` IN (" . $clause . ") AND `link_id` < ? GROUP BY `link_id` ORDER BY `id` DESC LIMIT ?");
+                            $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable  INNER JOIN $boundDBTable ON $mainDBTable.id = $boundDBTable.link_id  WHERE `tag_id` IN (" . $clause . ") AND `link_id` < ? GROUP BY `link_id` ORDER BY `id` $sortDir LIMIT ?");
                             $stmt->bind_param(str_repeat('i', count($goodReqTagsIDArr))."ii" ,...$params);
                         }
 
@@ -83,7 +89,7 @@ if (isset($_GET['id'])) {
                     break;
                 case 'usfl_taglinksOFF':
 
-                    $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` DESC LIMIT ?");
+                    $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` $sortDir LIMIT ?");
 // TODO: useless
 //                    $stmt2 = $mysqli->prepare("SELECT usfl_tags.id, usfl_tags.title
 //FROM (($mainDBTable
@@ -102,7 +108,7 @@ if (isset($_GET['id'])) {
                     showAsJson($result, $_GET['db']);
                     break;
                 default:
-                    $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` DESC LIMIT ?");
+                    $stmt = $mysqli->prepare("SELECT * FROM $mainDBTable WHERE `id`<? ORDER BY `id` $sortDir LIMIT ?");
                     // LastID, limit,
                     $stmt->bind_param("ii", $lastId, $reqLimit);
 
