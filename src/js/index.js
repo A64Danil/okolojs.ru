@@ -474,12 +474,14 @@ function loadInfo(mainNode) {
     // Формируем URL
     let db = mainNodeData.loadtype;
     let lastID = mainNodeData.lastid;
+    let sortDir = mainNodeData.sortdir;
     let tags = mainNodeData.tags;
     let limit = mainNodeData.limit ? parseInt(mainNodeData.limit) : 10 ;
 
     let url ="/core/core.php?db="+ db +"&id=all" + "&limit=" + limit;
     if (lastID) url += "&lastid=" + lastID;
     if (tags) url += "&tagsid=" + tags;
+    if (sortDir) url += "&sortdir=" + sortDir;
 
     const SOURCE = document.getElementById(mainNodeData.tplid);
     const template = Handlebars.compile(SOURCE.innerHTML);
