@@ -1,5 +1,5 @@
 <% var data = {
-title: "Правила",
+title: "Инфо",
 author: "Danil X"
 }; %>
 
@@ -42,8 +42,18 @@ author: "Danil X"
                 <%= _.template(require('html-loader!./../includes/dbTPL/rules.html'))(data) %>
             </div>
 
-        </div>
 
+
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <p>Ответы на ваши вопросы</p>
+                <ul>
+                    <li>Раздел находится в процессе наполнения</li>
+                </ul>
+                <%= _.template(require('html-loader!./../includes/dbTPL/faq.html'))(data) %>
+            </div>
+        </div>
     </div>
 </section>
 
