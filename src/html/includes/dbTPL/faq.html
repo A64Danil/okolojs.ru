@@ -1,15 +1,27 @@
 <div class="records" id="faq" data-lastid="" data-loadtype="faq" data-tags="" data-tplid="faq-template" >
-    <ul class="output">
+    <div id="accordionQuests" class="output">
         Загружаем...
-    </ul>
+    </div>
 </div>
 
 
 <script id="faq-template" type="text/x-handlebars-template">
     {{#each faq}}
-    <li class="record">
-            <div class="record__title">{{title}}</div>
-            {{#if info.description}}<div class="record__description">{{info.description}}</div>{{/if}}
-    </li>
+    <div class="card">
+        <div class="card-header" id="quest-{{id}}">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseQuest{{id}}" aria-expanded="false" aria-controls="collapseQuest{{id}}">
+                    {{title}}
+                </button>
+            </h5>
+        </div>
+
+        <div id="collapseQuest{{id}}" class="collapse" aria-labelledby="quest-{{id}}" data-parent="#accordionQuests">
+            <div class="card-body">
+                {{info.description}}
+            </div>
+        </div>
+
+    </div>
     {{/each}}
 </script>
