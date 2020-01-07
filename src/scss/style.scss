@@ -178,6 +178,37 @@ header {
 
 .record__title {
   font-size: 1.2rem;
+  .anchor {
+    opacity: 0;
+    pointer-events: none;
+  }
+  &:hover {
+    .anchor {
+      opacity: 0.6;
+      pointer-events: unset;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.card {
+  .anchor {
+    opacity: 0;
+    pointer-events: none;
+  }
+  &:hover {
+    .anchor {
+      opacity: 0.6;
+      pointer-events: unset;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
 }
 
 .record__description {

@@ -10,7 +10,7 @@
     {{#each rules}}
     <li class="record">
             <a id="ruleAnchor{{id}}"></a>
-            <div class="record__title">{{title}}</div>
+            <div class="record__title">{{title}} <a class="anchor" href="#ruleAnchor{{id}}">#</a></div>
             {{#if info.description}}<div class="record__description">{{info.description}}</div>{{/if}}
     </li>
     {{/each}}
