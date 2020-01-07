@@ -9,6 +9,7 @@
 <script id="rules-template" type="text/x-handlebars-template">
     {{#each rules}}
     <li class="record">
+            <a id="ruleAnchor{{id}}"></a>
             <div class="record__title">{{title}}</div>
             {{#if info.description}}<div class="record__description">{{info.description}}</div>{{/if}}
     </li>

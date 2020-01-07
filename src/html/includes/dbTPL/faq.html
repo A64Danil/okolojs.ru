@@ -8,7 +8,8 @@
 <script id="faq-template" type="text/x-handlebars-template">
     {{#each faq}}
     <div class="card">
-        <div class="card-header" id="quest-{{id}}">
+        <a id="questAnchor{{id}}"></a>
+        <div class="card-header" id="questID{{id}}">
             <h5 class="mb-0">
                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapseQuest{{id}}" aria-expanded="false" aria-controls="collapseQuest{{id}}">
                     {{title}}
@@ -16,7 +17,7 @@
             </h5>
         </div>
 
-        <div id="collapseQuest{{id}}" class="collapse" aria-labelledby="quest-{{id}}" data-parent="#accordionQuests">
+        <div id="collapseQuest{{id}}" class="collapse" aria-labelledby="questID{{id}}" data-parent="#accordionQuests">
             <div class="card-body">
                 {{info.description}}
             </div>
