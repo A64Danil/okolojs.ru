@@ -88,6 +88,15 @@ header {
   padding-bottom: 1rem;
 }
 
+.row > div {
+  position: relative;
+}
+
+//a {
+//  &.anchor {
+//  }
+//}
+
 .navbar {
   padding: 0;
 }
@@ -223,6 +232,14 @@ header {
 
 .categoryList li.active {
   background-color: #ccc;
+}
+
+// Info Page
+
+.infoPage {
+  .row {
+    margin-bottom: 40px;
+  }
 }
 
 //ТРЭНДЫ

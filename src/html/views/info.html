@@ -24,13 +24,22 @@ author: "Danil X"
                     <span class="logo__desc logo__desc--small logo__desc--subtitle"> <%= data.title %> </span>
                 </div>
 
+                <p>Основная информация о нас.</p>
+
+                <ul>
+                    <li><a href="#rules">Правила нашего чата</a></li>
+                    <li><a href="#faq">FAQ - список вопросов</a></li>
+                    <li><a href="#help">Помощь проекту</a></li>
+                    <li><a href="#contacts">Контакты</a></li>
+                </ul>
+                
             </div>
         </div>
     </div>
 </section>
 
 
-<section class="mainBlock">
+<section class="mainBlock infoPage">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -38,6 +47,11 @@ author: "Danil X"
             </div>
 
             <div class="col-12">
+                <a id="rules"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Правила чата</span>
+                </div>
                 <p>Простые правила для поддержания комфортной обстановки (будут обовляться и дополняться)</p>
                 <%= _.template(require('html-loader!./../includes/dbTPL/rules.html'))(data) %>
             </div>
@@ -47,11 +61,32 @@ author: "Danil X"
         </div>
         <div class="row">
             <div class="col-12">
-                <p>Ответы на ваши вопросы</p>
-                <ul>
-                    <li>Раздел находится в процессе наполнения</li>
-                </ul>
+                <a id="faq"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> F.A.Q.</span>
+                </div>
                 <%= _.template(require('html-loader!./../includes/dbTPL/faq.html'))(data) %>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="help"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Help</span>
+                </div>
+                <p>Помочь проекту можно двумя путями. Первый - делом. Можно взять репозиторий сайта, форкнуть себе и доработать. Задания можно узнать у админов.Второй - материально. Собранные средства пойду на оплату хостинга для сайта. </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="contacts"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Контакты</span>
+                </div>
+                <p>Пишите к нам в телеграмм канал!</p>
             </div>
         </div>
     </div>
