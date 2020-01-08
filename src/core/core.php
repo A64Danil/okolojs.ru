@@ -405,8 +405,20 @@ function showAsJson($result, $type)
     print '{ "'.$type.'": ['."\r\n";
     $teller = 0;
     while ($row = $result->fetch_array(MYSQLI_NUM))
+//    while ($row = $result -> fetch_assoc())
     {
         $teller++;
+
+
+//        echo "===========";
+//        while ($rowKey = current($row)) {
+//            echo key($row).'<br />';
+//            echo $rowKey.'<br />';
+//            next($row);
+//        }
+//        echo "===========";
+
+
         $Id = '"id": '.$row[0].",\r\n";
         $Title = '"title": "'.iconv("windows-1251","utf-8", $row[1]).'"';
         count($row) == 2 ? $Title .= "\r\n" : $Title .= ",\r\n";
