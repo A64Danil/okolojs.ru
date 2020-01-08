@@ -21,6 +21,7 @@
             <nav class="mainManagerMenu">
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <a class="nav-item nav-link active" id="nav-trends-tab" data-toggle="tab" href="#trendsManager" role="tab" aria-controls="trendsManager" aria-selected="true">Trends</a>
+                    <a class="nav-item nav-link" id="nav-news-tab" data-toggle="tab" href="#newsManager" role="tab" aria-controls="newsManager" aria-selected="true">News</a>
                     <a class="nav-item nav-link" id="nav-rules-tab" data-toggle="tab" href="#rulesManager" role="tab" aria-controls="rulesManager" aria-selected="false">Rules</a>
                     <a class="nav-item nav-link" id="nav-faq-tab" data-toggle="tab" href="#faqManager" role="tab" aria-controls="faqManager" aria-selected="false">FAQ</a>
                     <a class="nav-item nav-link" id="nav-usfl-tab" data-toggle="tab" href="#usflManager" role="tab" aria-controls="usflManager" aria-selected="false">
@@ -181,6 +182,168 @@
                                                 data-loadtype="trends"
                                                 data-limit="30"
                                                 data-place="#trendsTableManager">
+                                            Показать еще 30
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="newsManager" role="tabpanel" aria-labelledby="nav-news-tab">
+                    <div class="innerMenu">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addNewModal">
+                            Add new
+                        </button>
+                        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addNewModal">
+                            Add new
+                        </button>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="manageForm modal fade addRecordModal" id="addNewModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Добавить новость</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#newsSchema" aria-expanded="false" aria-controls="newsSchema">
+                                                Описание доступных полей
+                                            </button>
+                                        </div>
+
+                                        <div id="newsSchema" class="collapse">
+                                            <div class="card-body">
+                                                <ul class="schema">
+                                                    <li><b>Title*</b> - название новостьа (обяз. поле)</li>
+                                                    <li><b>titleOriginal</b> - название без перевода</li>
+                                                    <li><b>description</b> - краткое описание</li>
+                                                    <li><b>language</b> - язык новостьа</li>
+                                                    <li><b>difficulty</b> - сложость </li>
+                                                    <li><b>author</b> - автор новостьа</li>
+                                                    <li><b>url</b> - ссылка на новость</li>
+                                                    <li><b>published</b> - дата появления в сети</li>
+                                                    <li><b>started</b> - дата, когда новость стал актуален у нас</li>
+                                                    <li><b>status</b> - статус новостьа на текущий момент</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addRecordForm">
+                                        <input type="hidden" name="db" value="news">
+                                        <div class="form-group">
+                                            <label for="">Введите Info в формате JSON: </label>
+                                            <textarea class="form-control" id="" cols=60 rows=12 name="info">
+{
+    "title": "Новый Новость",
+    "titleOriginal": "New New",
+    "description": "",
+    "language": "",
+    "difficulty": "",
+    "author": "",
+    "url": "",
+    "published": "",
+    "started": "",
+    "status": ""
+}
+                                            </textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Добавить" class="btn btn-success">
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="manageForm modal fade updateRecordModal" id="updateNewModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Редактировать новость</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="updateRecordForm">
+                                        <input type="hidden" name="db" value="news">
+                                        <input type="hidden" name="method" value="UPDATE">
+
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2 col-form-label col-form-label-lg">ID </label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" name="id" value="" readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2 col-form-label col-form-label-lg">Title </label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" name="title" value="" disabled readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="">Введите Info в формате JSON: </label>
+                                            <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Сохранить" class="btn btn-success" >
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive" >
+                        <table id="newsTableManager" class="manageRecordsTable table table-striped table-hover" data-lastid="" data-loadtype="news">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>TITLE</th>
+                                    <th>EDIT</th>
+                                    <th>DELETE</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4">
+                                        <button type="button"
+                                                class="btn btn-primary showMore"
+                                                data-action="loadMore"
+                                                data-loadtype="news"
+                                                data-place="#newsTableManager">
+                                            Показать еще
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-primary showMore"
+                                                data-action="loadMore"
+                                                data-loadtype="news"
+                                                data-limit="30"
+                                                data-place="#newsTableManager">
                                             Показать еще 30
                                         </button>
                                     </td>
