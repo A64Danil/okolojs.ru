@@ -37,6 +37,7 @@ function coreFunction() {
         };
 
         recordsMainManager("trendsManager");
+        recordsMainManager("newsManager");
         recordsMainManager("rulesManager");
         recordsMainManager("faqManager");
         recordsMainManager("usflManager", "usfl_links");

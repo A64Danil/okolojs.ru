@@ -198,10 +198,10 @@
                     <div class="innerMenu">
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addNewModal">
-                            Add new
+                            Add news
                         </button>
                         <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addNewModal">
-                            Add new
+                            Add news
                         </button>
                     </div>
 
@@ -217,47 +217,14 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#newsSchema" aria-expanded="false" aria-controls="newsSchema">
-                                                Описание доступных полей
-                                            </button>
-                                        </div>
-
-                                        <div id="newsSchema" class="collapse">
-                                            <div class="card-body">
-                                                <ul class="schema">
-                                                    <li><b>Title*</b> - название новостьа (обяз. поле)</li>
-                                                    <li><b>titleOriginal</b> - название без перевода</li>
-                                                    <li><b>description</b> - краткое описание</li>
-                                                    <li><b>language</b> - язык новостьа</li>
-                                                    <li><b>difficulty</b> - сложость </li>
-                                                    <li><b>author</b> - автор новостьа</li>
-                                                    <li><b>url</b> - ссылка на новость</li>
-                                                    <li><b>published</b> - дата появления в сети</li>
-                                                    <li><b>started</b> - дата, когда новость стал актуален у нас</li>
-                                                    <li><b>status</b> - статус новостьа на текущий момент</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                     <form method="POST" action="https://okolojs.ru/core/core.php" class="addRecordForm">
                                         <input type="hidden" name="db" value="news">
                                         <div class="form-group">
-                                            <label for="">Введите Info в формате JSON: </label>
+                                            <label for="">Введите Текст Новости в формате JSON: </label>
                                             <textarea class="form-control" id="" cols=60 rows=12 name="info">
 {
-    "title": "Новый Новость",
-    "titleOriginal": "New New",
-    "description": "",
-    "language": "",
-    "difficulty": "",
-    "author": "",
-    "url": "",
-    "published": "",
-    "started": "",
-    "status": ""
+    "info": "Текст новости",
 }
                                             </textarea>
                                         </div>
