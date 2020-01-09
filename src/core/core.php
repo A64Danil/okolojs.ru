@@ -408,19 +408,6 @@ function showAsJson($result, $type)
     while ($row = $result -> fetch_assoc())
     {
         $teller++;
-//        $Id = '"id": '.$row[0].",\r\n";
-//        $Title = '"title": "'.iconv("windows-1251","utf-8", $row[1]).'"';
-//        count($row) == 2 ? $Title .= "\r\n" : $Title .= ",\r\n";
-//
-//
-//        print "{"."\r\n";
-//        print "$Id";
-//        print "$Title";
-//        // если в info что-то есть
-//        if (!empty($row[2])) {
-//            $Info = '"info": '.iconv("windows-1251","utf-8", $row[2])."\r\n";
-//            print "$Info";
-//        }
 
         print "{"."\r\n";
 
@@ -434,7 +421,13 @@ function showAsJson($result, $type)
                     $currentValue = $value;
                     break;
                 case 'info':
+
                     $currentValue = iconv("windows-1251","utf-8", $value);
+                    $currentValueObj = json_decode($currentValue);
+                    if( property_exists($currentValueObj, "text") ) {
+                        $currentValueObj->text = nl2br2($currentValueObj->text);
+                        $currentValue = json_encode($currentValueObj, JSON_UNESCAPED_UNICODE);
+                    }
                     break;
                 default:
                     $currentValue = '"'.iconv("windows-1251","utf-8", $value).'"';
@@ -478,6 +471,11 @@ function checkAndPushValidID($originArr) {
     }
 
     return $newChekedArr;
+}
+
+function nl2br2($string) {
+    $string = str_replace(array("\r\n", "\r", "\n"), "<br>", $string);
+    return $string;
 }
 
 function changeTagsInLinks($link) {

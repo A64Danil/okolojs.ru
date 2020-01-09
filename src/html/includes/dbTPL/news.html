@@ -1,0 +1,19 @@
+<div class="records" id="news" data-lastid="" data-loadtype="news" data-tags="" data-tplid="news-template">
+    <div class="output">
+        <div class="loader">
+            <div class="loaderText">Загружаем контент...</div>
+            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+        </div>
+    </div>
+</div>
+
+
+<script id="news-template" type="text/x-handlebars-template">
+    {{#each news}}
+    <div class="record">
+        <div class="record__title">{{title}}</div>
+        <div class="record__title">{{{info.text}}}</div>
+
+    </div>
+    {{/each}}
+</script>

@@ -42,7 +42,7 @@ author: "Danil X"
                     <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
                     <span class="logo__desc logo__desc--small logo__desc--subtitle">News</span>
                 </div>
-                <p>Здесь будут новости нашего сообщества</p>
+                <%= _.template(require('html-loader!./../includes/dbTPL/news.html'))(data) %>
             </div>
 
             <div class="col-12 col-md-6 col-xl-5">
