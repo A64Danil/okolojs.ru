@@ -404,34 +404,49 @@ function showAsJson($result, $type)
 
     print '{ "'.$type.'": ['."\r\n";
     $teller = 0;
-    while ($row = $result->fetch_array(MYSQLI_NUM))
-//    while ($row = $result -> fetch_assoc())
+//    while ($row = $result->fetch_array(MYSQLI_NUM))
+    while ($row = $result -> fetch_assoc())
     {
         $teller++;
-
-
-//        echo "===========";
-//        while ($rowKey = current($row)) {
-//            echo key($row).'<br />';
-//            echo $rowKey.'<br />';
-//            next($row);
+//        $Id = '"id": '.$row[0].",\r\n";
+//        $Title = '"title": "'.iconv("windows-1251","utf-8", $row[1]).'"';
+//        count($row) == 2 ? $Title .= "\r\n" : $Title .= ",\r\n";
+//
+//
+//        print "{"."\r\n";
+//        print "$Id";
+//        print "$Title";
+//        // если в info что-то есть
+//        if (!empty($row[2])) {
+//            $Info = '"info": '.iconv("windows-1251","utf-8", $row[2])."\r\n";
+//            print "$Info";
 //        }
-//        echo "===========";
-
-
-        $Id = '"id": '.$row[0].",\r\n";
-        $Title = '"title": "'.iconv("windows-1251","utf-8", $row[1]).'"';
-        count($row) == 2 ? $Title .= "\r\n" : $Title .= ",\r\n";
-
 
         print "{"."\r\n";
-        print "$Id";
-        print "$Title";
-        // если в info что-то есть
-        if (!empty($row[2])) {
-            $Info = '"info": '.iconv("windows-1251","utf-8", $row[2])."\r\n";
-            print "$Info";
+
+        $currentFiledIndex = 0;
+        foreach($row as $key => $value)
+        {
+            $currentFiledIndex++;
+
+            switch ($key ) {
+                case 'id':
+                    $currentValue = $value;
+                    break;
+                case 'info':
+                    $currentValue = iconv("windows-1251","utf-8", $value);
+                    break;
+                default:
+                    $currentValue = '"'.iconv("windows-1251","utf-8", $value).'"';
+                    break;
+            };
+
+
+            $fieldInRow = '"'.$key.'":'.$currentValue;
+            count($row) == $currentFiledIndex ? $fieldInRow.= "\r\n" : $fieldInRow.= ",\r\n";
+            print "$fieldInRow";
         }
+
         if($result->num_rows !== $teller) {
             print "},"."\r\n";
         } else {
