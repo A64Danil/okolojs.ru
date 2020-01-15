@@ -425,7 +425,7 @@ function showAsJson($result, $type)
                     $currentValue = iconv("windows-1251","utf-8", $value);
                     $currentValueObj = json_decode($currentValue);
                     if( property_exists($currentValueObj, "text") ) {
-                        $currentValueObj->text = nl2br2($currentValueObj->text);
+//                        $currentValueObj->text = nl2br2($currentValueObj->text);
                         $currentValue = json_encode($currentValueObj, JSON_UNESCAPED_UNICODE);
                     }
                     break;
