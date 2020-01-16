@@ -224,7 +224,8 @@
                                             <label for="">Введите Текст Новости в формате JSON: </label>
                                             <textarea class="form-control" id="" cols=60 rows=12 name="info">
 {
-    "info": "Текст новости",
+    "title": "Заголовок новости",
+    "text": "Текст новости"
 }
                                             </textarea>
                                         </div>

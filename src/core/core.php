@@ -334,7 +334,11 @@ if (count($_POST) != 0) {
                 exit();
             };
 
-            $codedTitle = iconv("utf-8", "windows-1251", $newRecordTitle); // смена кодировки
+
+            $codedTitle = json_encode($newRecordTitle, JSON_UNESCAPED_UNICODE);
+            $codedTitle = iconv("utf-8", "windows-1251", $codedTitle); // смена кодировки
+            $codedTitle = str_replace('"', '', $codedTitle);
+//            $codedTitle = substr($codedTitle , 1, -1);
 
             switch ($_POST['db']) {
                 case 'usfl_tags':
@@ -425,7 +429,6 @@ function showAsJson($result, $type)
                     $currentValue = iconv("windows-1251","utf-8", $value);
                     $currentValueObj = json_decode($currentValue);
                     if( property_exists($currentValueObj, "text") ) {
-//                        $currentValueObj->text = nl2br2($currentValueObj->text);
                         $currentValue = json_encode($currentValueObj, JSON_UNESCAPED_UNICODE);
                     }
                     break;
