@@ -1,4 +1,4 @@
-<div class="records" id="news" data-lastid="" data-loadtype="news" data-tags="" data-tplid="news-template">
+<div class="records newsList" id="news" data-lastid="" data-loadtype="news" data-tags="" data-tplid="news-template">
     <div class="output">
         <div class="loader">
             <div class="loaderText">Загружаем контент...</div>
@@ -10,10 +10,24 @@
 
 <script id="news-template" type="text/x-handlebars-template">
     {{#each news}}
-    <div class="record">
-        <div class="record__title">{{title}}</div>
-        <div class="record__description">{{{info.text}}}</div>
-        <div class="record__status">{{published}}</div>
+    <div class="record record--collapse" >
+
+            <div class="miniCollapseWrp">
+                <!--кнопка-->
+
+                <div class="collapse">
+                    <div class="record__status">{{formatedDate published}}</div>
+                    <div class="record__description">
+                        {{{nl2br info.text}}}
+                    </div>
+                    <!--<div class="record__status">{{published}}</div>-->
+                    <button class="miniCollapseControl">
+                        <span class="toShow">Показать полностю</span>
+                        <span class="toHide">Свернуть новость</span>
+                    </button>
+                </div>
+
+            </div>
 
     </div>
     {{/each}}

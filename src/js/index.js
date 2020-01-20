@@ -416,6 +416,7 @@ function coreFunction() {
     function mainEvents() {
         console.log("Вешает все обработчики");
         document.body.addEventListener('click', showMoreData);
+        document.body.addEventListener('click', miniCollapseManager);
 
         let usflLinks__categoryList = document.querySelector(".usflLinks__categoryList");
         if (usflLinks__categoryList !== null) {
@@ -791,6 +792,54 @@ function showMoreData(e) {
 }
 
 
+//
+function miniCollapseManager(e) {
+    const minElHeight = 250;
+    let target = e.target;
+    let collapseNode;
+    console.log("15-40 miniCollapseManager");
+
+    if (target.classList.contains("miniCollapseControl")) {
+        collapseNode = target.parentNode.parentNode;
+    } else if (target.parentNode.classList.contains("miniCollapseControl")) {
+        collapseNode = target.parentNode.parentNode.parentNode;
+    } else {
+        return false;
+    }
+
+    console.log(collapseNode);
+    let collapse = collapseNode.querySelector('.collapse');
+
+    let newComputedHeight = getComputedStyle(collapse).height; // Получаем его настоящий размер
+
+    // console.log("Parsed height: " + parseInt(newComputedHeight));
+    // console.log("Min el: " + minElHeight);
+    // console.log(parseInt(newComputedHeight ) > minElHeight);
+
+    if (parseInt(newComputedHeight) >= minElHeight) {
+
+        if (!collapse.classList.contains('active')) {
+            collapse.classList.add('active');
+            collapse.style.height = "auto"; // Делаем наш спойлер обычного размера
+            newComputedHeight = getComputedStyle(collapse).height;
+            console.log("(open)NEW height: " + newComputedHeight);
+            collapse.style.height = minElHeight + "px"; // Делаем спойлер снова маленьким (200рх)
+            setTimeout(function () {
+                collapse.style.height = newComputedHeight; // Отрисовываем до настоящего размера с неольшой задержкой
+            }, 100);
+        } else {
+            collapse.style.height = minElHeight + "px"; // Делаем спойлер снова маленьким (200рх)
+            setTimeout(function () {
+                collapse.classList.remove('active');
+            }, 300);
+        }
+
+    }
+
+
+
+}
+
 //  --==:: TPL ::==-
 function manageRecordsTPL(item, dbName) {
     let itemCategories = "";
@@ -830,3 +879,48 @@ function manageRecordsTPL(item, dbName) {
     return newItem;
 }
 
+//  --==:: HBS - HELPERS ::==-
+Handlebars.registerHelper('shortText', function(text) {
+    let newString = text.slice(0, 504);
+    if (text.length > 504) {
+        let lastWhitespace = newString.lastIndexOf(' ');
+        return newString.slice(0, lastWhitespace) + "... ";
+    } else {
+        return newString;
+    }
+});
+
+Handlebars.registerHelper('nl2br', nl2br);
+
+Handlebars.registerHelper('formatedDate', function(date) {
+    var date = new Date(date).toLocaleString('ru', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+    });
+    return date;
+});
+
+function nl2br (str) {
+    // http://kevin.vanzonneveld.net
+    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   improved by: Philip Peterson
+    // +   improved by: Onno Marsman
+    // +   improved by: Atli Þór
+    // +   bugfixed by: Onno Marsman
+    // +      input by: Brett Zamir (http://brett-zamir.me)
+    // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   improved by: Brett Zamir (http://brett-zamir.me)
+    // +   improved by: Maximusya
+    // *     example 1: nl2br('Kevin\nvan\nZonneveld');
+    // *     returns 1: 'Kevin<br />\nvan<br />\nZonneveld'
+    // *     example 2: nl2br("\nOne\nTwo\n\nThree\n", false);
+    // *     returns 2: '<br>\nOne<br>\nTwo<br>\n<br>\nThree<br>\n'
+    // *     example 3: nl2br("\nOne\nTwo\n\nThree\n", true);
+    // *     returns 3: '<br />\nOne<br />\nTwo<br />\n<br />\nThree<br />\n'
+    var breakTag = '<br>'; // Adjust comment to avoid issue on phpjs.org display
+    console.log()
+    return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+}
