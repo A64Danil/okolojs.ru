@@ -316,6 +316,10 @@ header {
 
       .collapse {
         position: relative;
+        .record__description {
+          margin-bottom: 20px;
+        }
+
         button {
           //content: "Показать полностью";
           display: block;
