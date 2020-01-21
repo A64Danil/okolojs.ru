@@ -784,8 +784,13 @@ function showMoreData(e) {
     }
 
     if(targetParent.classList.contains("controls") && target.dataset.action == "loadLikeControls") {
+        // добавить изменение mainNodeData.limit при наличии параметра data-limit
+        if (target.dataset.limit) {
+            targetParent.parentNode.dataset.limit = target.dataset.limit;
+        } else {
+            targetParent.parentNode.dataset.limit = 10;
+        }
         loadInfo(targetParent.parentNode);
-
     }
 
 
