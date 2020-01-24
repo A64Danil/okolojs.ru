@@ -38,11 +38,15 @@ author: "Danil X"
             </div>
 
             <div class="col-12 col-md-6 col-xl-7">
-                <div class="logo logo--subtitle">
-                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
-                    <span class="logo__desc logo__desc--small logo__desc--subtitle">News</span>
+                <div class="mainPage__newsList">
+                    <div class="logo logo--subtitle">
+                        <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                        <span class="logo__desc logo__desc--small logo__desc--subtitle">News</span>
+                    </div>
+                    <%= _.template(require('html-loader!./../includes/dbTPL/news.html'))(data) %>
+
+                    <a href="/news.html">Архив новостей...</a>
                 </div>
-                <%= _.template(require('html-loader!./../includes/dbTPL/news.html'))(data) %>
             </div>
 
             <div class="col-12 col-md-6 col-xl-5">
