@@ -3,10 +3,32 @@ import popper from 'popper.js';
 import bootstrap from 'bootstrap';
 import Handlebars from 'handlebars';
 
-
 document.addEventListener("DOMContentLoaded", coreFunction);
 
 const eventLoad = new Event("loaded");
+
+const scrollToHash = (function() {
+    let executed = false;
+    return function() {
+        if (!executed) {
+            executed = true;
+            const hash = window.location.hash;
+            if (hash !== '') {
+                const anchorId = hash.slice(1);
+                console.log(anchorId);
+                setTimeout(()=>{
+                    const anchorLink = document.getElementById(anchorId);
+                    const anchorParent = anchorLink.parentNode;
+                    if (anchorParent.classList.contains('card')) {
+                        const collapseCard = anchorParent.querySelector('.collapse');
+                        if (collapseCard) collapseCard.classList.add('show');
+                    }
+                    anchorLink.scrollIntoView();
+                }, 500);
+            }
+        }
+    };
+})();
 
 function coreFunction() {
 
@@ -454,27 +476,6 @@ function coreFunction() {
 }
 
 // LOAD INFO
-const scrollToHash = (function() {
-    let executed = false;
-    return function() {
-        if (!executed) {
-            executed = true;
-            console.warn('we want to scroll!');
-            const hash = window.location.hash;
-            console.log(hash);
-            if (hash !== '') {
-                const anchorId = hash.slice(1);
-                console.log(anchorId);
-                setTimeout(()=>{
-                    const anchorLink = document.getElementById(anchorId);
-                    console.log(anchorLink);
-                    anchorLink.scrollIntoView();
-                }, 500);
-            }
-        }
-    };
-})();
-
 function findAllRecordsLists() {
     document.querySelectorAll('.records').forEach( el => {
         if (el.getAttribute("id") !== "") {
@@ -529,9 +530,6 @@ function loadInfo(mainNode) {
             const resultHBS = template(response);
 
 
-            // TODO: почистить консоль логи
-            // console.log(db);
-            // console.log(response[db]);
             // Удалить кнопки, если response пустой
             if(response[db].length === 0) {
                 alert("Все записи уже загружены!");
@@ -541,7 +539,6 @@ function loadInfo(mainNode) {
                 mainNode.dataset.lastid = response[db][arrLength - 1].id;
                 lastID ? BLOCK.innerHTML += resultHBS : BLOCK.innerHTML = resultHBS;
             }
-
 
             document.body.dispatchEvent(eventLoad);
         }
@@ -832,15 +829,13 @@ function miniCollapseManager(e) {
 
     if (target.classList.contains("miniCollapseControl")) {
         collapseNode = target.parentNode.parentNode;
-        console.log(collapseNode);
     } else if (target.parentNode.classList.contains("miniCollapseControl")) {
         collapseNode = target.parentNode.parentNode.parentNode;
-        console.log(collapseNode);
     } else {
         return false;
     }
 
-    console.log(collapseNode);
+    // console.log(collapseNode);
     let collapse = collapseNode.querySelector('.collapse');
 
     let newComputedHeight = getComputedStyle(collapse).height; // Получаем его настоящий размер
