@@ -20,8 +20,11 @@
     {{#each usfl_links}}
     <div class="record">
 
-        <a href="{{info.url}}" target="_blank">
-            <div class="record__title">{{title}}</div>
+        <a class="usflLinkWRP" href="{{info.url}}" target="_blank">
+            <div class="record__title">
+                <span>{{title}}</span>
+                {{langSup info.language}}
+            </div>
             {{#if info.description}}<div class="record__description">{{info.description}}</div>{{/if}}
         </a>
         {{#if info.tags}}

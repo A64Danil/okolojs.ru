@@ -6,6 +6,7 @@ import Handlebars from 'handlebars';
 
 document.addEventListener("DOMContentLoaded", coreFunction);
 
+const eventLoad = new Event("loaded");
 
 function coreFunction() {
 
@@ -338,12 +339,12 @@ function coreFunction() {
             }
 
             function loadTags() {
-                sendRequest('/core/core.php?id=all&db=usfl_tags', function (response) {
+                sendRequest('/core/core.php?id=all&db=usfl_tags&limit=200', function (response) {
                     if (response) {
                         allUsflTags.arr = JSON.parse(response)["usfl_tags"];
                         console.log("Пришли все возможные теги");
                         addRecordForm_searchResult.innerHTML = "";
-                        nodeCreator(allUsflTags.arr, addRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
+                        nodeCreator(allUsflTags.arr.slice(0, 10), addRecordForm_searchResult, nodeCreator_divTPL, "resultItem tag");
                     } else {
                         alert("Что-то пошло не так: \r\n" + response);
                     }
@@ -417,6 +418,7 @@ function coreFunction() {
         console.log("Вешает все обработчики");
         document.body.addEventListener('click', showMoreData);
         document.body.addEventListener('click', miniCollapseManager);
+        document.body.addEventListener('loaded', scrollToHash);
 
         let usflLinks__categoryList = document.querySelector(".usflLinks__categoryList");
         if (usflLinks__categoryList !== null) {
@@ -452,6 +454,27 @@ function coreFunction() {
 }
 
 // LOAD INFO
+const scrollToHash = (function() {
+    let executed = false;
+    return function() {
+        if (!executed) {
+            executed = true;
+            console.warn('we want to scroll!');
+            const hash = window.location.hash;
+            console.log(hash);
+            if (hash !== '') {
+                const anchorId = hash.slice(1);
+                console.log(anchorId);
+                setTimeout(()=>{
+                    const anchorLink = document.getElementById(anchorId);
+                    console.log(anchorLink);
+                    anchorLink.scrollIntoView();
+                }, 500);
+            }
+        }
+    };
+})();
+
 function findAllRecordsLists() {
     document.querySelectorAll('.records').forEach( el => {
         if (el.getAttribute("id") !== "") {
@@ -502,11 +525,11 @@ function loadInfo(mainNode) {
     xhr.onreadystatechange = function() {
         if (this.readyState == 4) {
             // вывести результат
-            const response = JSON.parse(xhr.responseText)
+            const response = JSON.parse(xhr.responseText);
             const resultHBS = template(response);
 
+
             // TODO: почистить консоль логи
-            // console.log(response);
             // console.log(db);
             // console.log(response[db]);
             // Удалить кнопки, если response пустой
@@ -518,6 +541,9 @@ function loadInfo(mainNode) {
                 mainNode.dataset.lastid = response[db][arrLength - 1].id;
                 lastID ? BLOCK.innerHTML += resultHBS : BLOCK.innerHTML = resultHBS;
             }
+
+
+            document.body.dispatchEvent(eventLoad);
         }
     }
 
@@ -806,8 +832,10 @@ function miniCollapseManager(e) {
 
     if (target.classList.contains("miniCollapseControl")) {
         collapseNode = target.parentNode.parentNode;
+        console.log(collapseNode);
     } else if (target.parentNode.classList.contains("miniCollapseControl")) {
         collapseNode = target.parentNode.parentNode.parentNode;
+        console.log(collapseNode);
     } else {
         return false;
     }
@@ -896,6 +924,12 @@ Handlebars.registerHelper('shortText', function(text) {
 });
 
 Handlebars.registerHelper('nl2br', nl2br);
+
+Handlebars.registerHelper('langSup', function(lang) {
+    if (!lang) return
+    return new Handlebars.SafeString( '<sup' + (lang !== 'ru' ? ' class="colored"' : '') +'>'+ lang + '</sup>' );
+
+});
 
 Handlebars.registerHelper('formatedDate', function(date) {
     var date = new Date(date).toLocaleString('ru', {

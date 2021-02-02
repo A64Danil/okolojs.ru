@@ -651,6 +651,7 @@
                                             <div class="card-body">
                                                 <ul class="schema">
                                                     <li><b>Title*</b> - заголовок ссылки(обяз. поле)</li>
+                                                    <li><b>language</b> - язык страницы</li>
                                                     <li><b>description</b> - краткое описание</li>
                                                     <li><b>url</b> - ссылка на страницу</li>
                                                 </ul>
@@ -665,6 +666,7 @@
                                             <textarea class="form-control" id="" cols=60 rows=12 name="info">
 {
     "title": "Новая Ссылка",
+    "language": "ru",
     "description": "",
     "url": "https://"
 }
