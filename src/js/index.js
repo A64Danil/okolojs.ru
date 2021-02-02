@@ -849,7 +849,7 @@ function miniCollapseManager(e) {
     // console.log("Min el: " + minElHeight);
     // console.log(parseInt(newComputedHeight ) > minElHeight);
 
-    if (parseInt(newComputedHeight) >= minElHeight) {
+    if (parseInt(newComputedHeight) >= 200) {
 
         if (!collapse.classList.contains('active')) {
             collapse.classList.add('active');

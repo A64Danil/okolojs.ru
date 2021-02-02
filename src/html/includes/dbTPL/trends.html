@@ -11,10 +11,9 @@
 <script id="trends-template" type="text/x-handlebars-template">
     {{#each trends}}
     <div class="trend">
-        {{#if difficulty}} <div class="trend__difficulty" title="Требуемый уровень подготовки">{{difficulty}}</div>{{/if}}
+        {{#if info.difficulty}} <div class="trend__difficulty" title="Требуемый уровень подготовки">{{info.difficulty}}</div>{{/if}}
         <div class="trend__title">{{title}}</div>
-        <div class="trend__title">{{info.titleOriginal}}</div>
-        {{#if info.titleOriginal}} <div class="trend__titleOriginal">{{info.titleOriginal}}</div> {{/if}}
+        {{#if info.titleOriginal}} <div class="trend__titleOriginal">({{info.titleOriginal}})</div> {{/if}}
         {{#if info.description}}<div class="trend__description">{{info.description}}</div>{{/if}}
         <div class="trend__language">Язык: {{info.language}}</div>
         {{#if info.author}}<div class="trend__author">Автор: {{info.author}}</div>{{/if}}

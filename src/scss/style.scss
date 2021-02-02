@@ -147,7 +147,13 @@ header {
 }
 
 
-
+// mainPage__newsList
+.mainPage__newsList {
+  margin-bottom: 4rem;
+  @include respond-to('sm') {
+    margin-bottom: 0;
+  }
+}
 
 
 //RECORDS
@@ -341,10 +347,17 @@ header {
   .record {
 
     margin-bottom: 3rem;
+    &:last-child {
+      margin-bottom: 2rem;
+    }
     .miniCollapseWrp {
 
       .collapse {
         position: relative;
+        .record__description {
+          margin-bottom: 20px;
+        }
+
         button {
           //content: "Показать полностью";
           display: block;
@@ -405,7 +418,7 @@ header {
 }
 
 .trend {
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .trend__difficulty {
