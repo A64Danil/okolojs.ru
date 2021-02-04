@@ -1,0 +1,215 @@
+<% var data = {
+title: "Codewars",
+author: "Danil X"
+}; %>
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <%= _.template(require('html-loader!./../includes/head.html'))(data) %>
+</head>
+<body>
+
+
+<%= _.template(require('html-loader!./../includes/header.html'))(data) %>
+
+<section >
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> <%= data.title %> </span>
+                </div>
+
+                <p>Вся информация о Codewars в удобном виде находится здесь.</p>
+
+                <ul>
+                    Это меню поможет быстрее найти нужное.
+                    <li><a href="#aboutCodewarsTitle">Что такое  Codewars и как им пользоваться?</a></li>
+                    <li><a href="#forWhyTitle">Зачем это делать?</a></li>
+                    <li><a href="#howToSeeResultsTitle">Как смотреть результаты других игроков?</a></li>
+                    <li><a href="#howToAddToClanTitle">Как добавиться в клан?</a></li>
+                    <li><a href="#howToSeeAnswerTitle">Как посмотреть готовое решение задачи?</a></li>
+                    <li><a href="#whatIsChallengeTitle">Что такое "челлендж"?</a></li>
+                    <li><a href="#howToShareResW1Title">Как поделиться результатом решения задачи - Способ 1</a></li>
+                    <li><a href="#howToShareResW2Title">Как поделиться результатом решения задачи - Способ 2</a></li>
+                    <li><a href="#howToRegisterTitle">Как пройти регистрацию на сайте?</a></li>
+                    <li><a href="#fastStartTitle">Описание сайта или "Как начать что-то делать на сайте?"</a></li>
+                    <li><a href="#sandBoxDescrTitle">Описание интерфейса песочницы</a></li>
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="mainBlock infoPage">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <hr class="mainBlockHR">
+            </div>
+
+            <div class="col-12">
+                <a id="aboutCodewarsTitle"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Что такое Codewars и как им пользоваться?</span>
+                </div>
+                <p>Codewars - это сайт, на котором можно тренировать свои навыки в изучении JS. Сайт содержит в себе большое количество задач разного уровня сложности и различного типа.</p>
+                <p>Сложность задач начинается с 8kyu (самые простые) до 1kyu (требуют изрядных навыков для решения). Каждая задача имеет отдельную страницу на сайте и представляет собой sandbox (песочницу), в которой можно запускать JS-код.</p>
+                <p>После регистрации на сайте (она немного непростая и требует элементарных знаний программирования), вам будет предложено выбрать задачу. Кроме "задания" и места для ввода js-кода, так же имеется и набор тестов. После написания кода нужно нажать кнопку "Test". Сайт запустит тестирование вашего кода и покажет, правильно ли вы решили задачу.</p>
+                <p><a href="#howToRegisterTitle">Помощь в регистрации</a></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="forWhyTitle"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Зачем это делать?</span>
+                </div>
+                <p>Решение задач помагает практиковать навыки JS. Так же, наличие такой практики очень хорошо помогает в прохождении собеседований, на которых даются тестовые задачи, схожие с теми, что есть на Codewars.</p>
+                <p>Кроме того, после прохождения задачи, вам становятся доступны решения других игроков. Некотрые из них на столько необычны, что стоят того, чтобы их посмотреть! Просмотр альтернативных решений - отличный способ расширить свой кругозор и взять на вооружение новые, более эффективные инструменты, для написания вашего кода.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="howToSeeResultsTitle"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Как смотреть результаты других игроков?</span>
+                </div>
+                <p>На странице самой задачи есть вкладка <strong>"Solutions"</strong>, которая ведет на результаты других игроков.</p>
+                <p>Вы можете посмотреть результаты других участников чата, если <a href="#howToAddToClanTitle">вступите в клан</a>.</p>
+                <p>Фильтр Show Me: <strong>Solutions of Users I am Following</strong> покажет результаты тех участников, кто смог решить эту задачу.</p>
+                <p>Вдобавок, вы можете голосовать за решения других игроков:
+                    <ul>
+                        <li>Best Practices - решение, которое вам показалось самым лучшим из всех.</li>
+                        <li>Clever - решение, которе вам показалось очень необычным/забавным или интересным, однако вы бы не стали использовать его в production-коде.</li>
+                    </ul>
+                </p>
+
+                <img src="img/pages/codewars/solutionsFromKata.png" alt="" class="img-fluid">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="howToAddToClanTitle"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Как добавиться в клан?</span>
+                </div>
+                <p>Перейдите на страницу "профиль". В левом углу, рядом с аватаркой, будет графа "клан" (<strong>Clan</strong>). Впишите в неё <strong>okolojs</strong>. Всё! Поздравляю, Вы в клане! Для того чтобы убедиться в этом, вы можете перейти на вкладку <strong>"Social"</strong> - там должен появиться список соклановцев и их рейтинг Codewars.</p>
+                <img src="img/pages/codewars/profileClan.png" alt="" class="img-fluid">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="howToSeeAnswerTitle"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Как посмотреть готовое решение задачи?</span>
+                </div>
+                <p>Решение задачи можно посмотреть только если вы уже РЕШИЛИ задачу. Решение доступно после прохождения ВСЕХ тестов задачи. Другим способом на сайте получить решение задачи нельзя. Это сделано для того чтобы у вас не было соблазна посмотреть решение задачи и не думать своей головой. </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="whatIsChallengeTitle"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Что такое "челлендж"?</span>
+                </div>
+                <p>"Челлендж" (анлг. challenge - испытание) - это игра среди участников чата, которые сидят на Codewars. Подходит как для новичков, так и для опытных программистов!</p>
+                <p>Раз в неделю (обычно в понедельник или вторник), кто-нибудь из участников чата предлагает задачу простой сложности 8kyu. Суть игры состоит в том, чтобы быстрее остальных решить задачу. Победитель выбирает задачу на ступень сложнее - 7kyu. Начинается новый "раунд" и игроки снова пытаются решить задачу. Тот, кто сделает это первым - выбирает новую, более сложную.</p>
+                <p>Обычно легкие задачи решаются быстро, но начиная с 6kyu каждый раунд занимает 1-2 дня. Таким образом к концу недели мы доходим до ~3kyu и на следующей неделе челлендж запускается вновь (с 8kyu).</p>
+                <p>Челлендж призван объеденить участников чата и мотивировать на обсуждение результатов их кода.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="howToShareResW1Title"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Как поделиться результатом решения задачи - Способ 1</span>
+                </div>
+                <p>Способ 1 подходит для тех, кто прошел задачу только что. Для этого вы должны находиться на странице задачи.</p>
+                <p>Перейдите во вкладку <strong>"My Solutions"</strong>.</p>
+                <p>В появившемся списке найдите нужное вам решение. Под ним будет кнопка  <strong>"Link"</strong> - это и есть нужная вам ссылка! Она приведет вас на отдельную страницу с вашим решением. Это и есть то что вам нужно.</p>
+<!--                <img src="img/pages/codewars/solutionsFromKata.png" alt="" class="img-fluid">-->
+                <img src="img/pages/codewars/solutionsMySolutLink.png" alt="" class="img-fluid">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="howToShareResW2Title"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Как поделиться результатом решения задачи - Способ 2</span>
+                </div>
+                <p>Способ 2 подходит, если у вас нет под рукой ссылки на задачу. Для этого вам нужно перейти в профиль.</p>
+                <p>Найдите в профиле вкладку <strong>"Solutions"</strong>. Вы увидите список всех ваших задач. Под каждой задачей будет несколько кнопок, вам нужна <strong>"Discuss"</strong> - это и есть нужная вам ссылка! Она приведет вас на отдельную страницу с вашим решением. Это и есть то что вам нужно.</p>
+
+                <img src="img/pages/codewars/profileSolutions.png" alt="" class="img-fluid">
+                <img src="img/pages/codewars/profileDiscuss.png" alt="" class="img-fluid">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="howToRegisterTitle"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Как пройти регистрацию на сайте?</span>
+                </div>
+                <p>Для начала регистрации вы должны решить простую задачу.</p>
+                <p>Чтобы решить задачу, вам нужно понимать, что написано в этой статье: <a href="https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Statements/return">Справочник по JavaScript - Return</a></p>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="fastStartTitle"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Описание сайта или "Как начать что-то делать на сайте?"</span>
+                </div>
+                <p>Если вы всё еще не понимаете, как начать - не переживайте! Мы в картинках покажем вам, что нужно делать</p>
+                <p>Для того чтобы "начать" решать задачи на Codewars, нужно всего лишь три шага:</p>
+                <ol>
+                    <li>Перейти в раздел "задачи"</li>
+                    <li>Выбрать задачу из списка</li>
+                    <li>Прочесть описание и начать</li>
+                </ol>
+                <img src="img/pages/codewars/fastStart1.png" alt="" class="img-fluid">
+                <img src="img/pages/codewars/fastStart2.png" alt="" class="img-fluid">
+                <img src="img/pages/codewars/fastStart3.png" alt="" class="img-fluid">
+
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="sandBoxDescrTitle"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Описание интерфейса песочницы</span>
+                </div>
+                <img src="img/pages/codewars/fastStart4.png" alt="" class="img-fluid">
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<%= _.template(require('html-loader!./../includes/footer.html'))(data) %>
+
+</body>
+</html>
