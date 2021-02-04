@@ -450,13 +450,23 @@ header {
 
 
 // Rules
-
-
 .rulesList {}
 .rulesList li b {
   //font-weight: 500;
 }
-// Manag
+
+// CODEWARS PAGE
+.codewarsPage .row {
+  margin-bottom: 2.5rem;
+  .logo--title {
+    padding-bottom: 1.5rem;
+  }
+  img.codewarsManual {
+    margin-bottom: 1rem;
+  }
+}
+
+// MANAGER
 .mainManagerMenu {
   margin-bottom: 20px;
 }
