@@ -65,6 +65,8 @@ function coreFunction() {
         recordsMainManager("faqManager");
         recordsMainManager("usflManager", "usfl_links");
         recordsMainManager("usflManager", "usfl_tags");
+        recordsMainManager("tlgtagsManager");
+        recordsMainManager("katalistManager");
 
         function recordsMainManager(mainManagerId, managerType) {
             const manager = document.getElementById(mainManagerId);
@@ -775,7 +777,15 @@ function showMoreData(e) {
     const targetParent = target.parentNode;
 
     if(target.classList.contains("showMore") && target.dataset.action == "loadMore") {
-        const types = ["trends", "faq", "rules", "usfl_tags", "usfl_links"];
+        const types = [
+            "trends",
+            "faq",
+            "rules",
+            "usfl_tags",
+            "usfl_links",
+            "tlgtags",
+            "katalist"
+        ];
         if (types.indexOf(target.dataset.loadtype) === -1) {
             console.log("неизвестный тип " + target.dataset.loadtype);
             return false;

@@ -1,0 +1,52 @@
+<div class="records katalistList" id="katalist" data-lastid="" data-loadtype="katalist" data-tplid="katalist-template">
+    <div class="output">
+        <div class="loader">
+            <div class="loaderText">Загружаем контент...</div>
+            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button type="button" class="btn btn-primary showMore" data-action="loadLikeControls" >
+            Показать еще
+        </button>
+        <button type="button" class="btn btn-primary showMore" data-action="loadLikeControls" data-limit="30">
+            Показать еще 30
+        </button>
+    </div>
+</div>
+
+
+<script id="katalist-template" type="text/x-handlebars-template">
+    {{#each katalist}}
+    <div class="record record--collapse" >
+
+        <div class="record__status h5">
+            {{formatedDate published}}
+            {{#if info.title}}
+                <sub>
+                    ({{info.title}})
+                </sub>
+            {{/if}}
+        </div>
+        <div class="record__description">
+            {{#if info.list}}
+                {{#each info.list}}
+
+                    {{#if this}}
+                        <p class="h6">{{@key}}</p>
+                        <ul>
+                            {{#each this}}
+                                <li> <a  href="{{this}}" target="_blank"> {{this}} </a></li>
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+
+                {{/each}}
+            {{/if}}
+        </div>
+
+
+    </div>
+    {{/each}}
+</script>

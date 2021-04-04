@@ -29,6 +29,7 @@ author: "Danil X"
                 <ul>
                     <li><a href="#rulesTitle">Правила нашего чата</a></li>
                     <li><a href="#faqTitle">FAQ - список вопросов</a></li>
+                    <li><a href="#tlgtagsTitle">Список тегов в телеграме с описанием</a></li>
                     <li><a href="#helpTitle">Помощь проекту</a></li>
                     <li><a href="#contactsTitle">Контакты</a></li>
                     <li><a href="/codewars.html">Инструкция по Codewars</a></li>
@@ -65,6 +66,16 @@ author: "Danil X"
                     <span class="logo__desc logo__desc--small logo__desc--subtitle"> F.A.Q.</span>
                 </div>
                 <%= _.template(require('html-loader!./../includes/dbTPL/faq.html'))(data) %>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a id="tlgtagsTitle"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Список тегов в телеграме</span>
+                </div>
+                <%= _.template(require('html-loader!./../includes/dbTPL/tlgtags.html'))(data) %>
             </div>
         </div>
         <div class="row">

@@ -1,0 +1,52 @@
+<% var data = {
+title: "Лист каток Codewars",
+author: "Danil X"
+}; %>
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <%= _.template(require('html-loader!./../includes/head.html'))(data) %>
+</head>
+<body>
+
+
+<%= _.template(require('html-loader!./../includes/header.html'))(data) %>
+
+<section >
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> <%= data.title %> </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="mainBlock">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <hr class="mainBlockHR">
+            </div>
+
+            <div class="col-12">
+                <%= _.template(require('html-loader!./../includes/dbTPL/katalist.html'))(data) %>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<%= _.template(require('html-loader!./../includes/footer.html'))(data) %>
+
+</body>
+</html>

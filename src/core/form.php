@@ -27,6 +27,12 @@
                     <a class="nav-item nav-link" id="nav-usfl-tab" data-toggle="tab" href="#usflManager" role="tab" aria-controls="usflManager" aria-selected="false">
                         Usefull Links
                     </a>
+                    <a class="nav-item nav-link" id="nav-tlgtags-tab" data-toggle="tab" href="#tlgtagsManager" role="tab" aria-controls="tlgtagsManager" aria-selected="false">
+                        Telegram TAGS
+                    </a>
+                    <a class="nav-item nav-link" id="nav-katalist-tab" data-toggle="tab" href="#katalistManager" role="tab" aria-controls="katalistManager" aria-selected="false">
+                        Codewars Katas
+                    </a>
                 </div>
             </nav>
 
@@ -914,7 +920,312 @@
                         </table>
                     </div>
                 </div>
+                
+                <div class="tab-pane fade" id="tlgtagsManager" role="tabpanel" aria-labelledby="nav-tlgtags-tab">
+                    <div class="innerMenu">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addTlgtagsModal">
+                            Add tlgtags
+                        </button>
+                        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addTlgtagsModal">
+                            Add tlgtags
+                        </button>
+                    </div>
 
+                    <!-- Modal -->
+                    <div class="manageForm modal fade addRecordModal" id="addTlgtagsModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Добавить Тэг</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#tlgtagsSchema" aria-expanded="false" aria-controls="tlgtagsSchema">
+                                                Описание доступных полей
+                                            </button>
+                                        </div>
+
+                                        <div id="tlgtagsSchema" class="collapse">
+                                            <div class="card-body">
+                                                <ul class="schema">
+                                                    <li><b>Title*</b> - название тэга (обяз. поле)</li>
+                                                    <li><b>description</b> - описание тэга</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addRecordForm">
+                                        <input type="hidden" name="db" value="tlgtags">
+                                        <div class="form-group">
+                                            <label for="">Введите Info в формате JSON: </label>
+                                            <textarea class="form-control" id="" cols=60 rows=12 name="info">
+{
+    "title": "Новый тэг",
+    "description": "описание тэга"
+}
+                                            </textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Добавить" class="btn btn-success">
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="manageForm modal fade updateRecordModal" id="updateTlgtagsModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Редактировать тэг</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="updateRecordForm">
+                                        <input type="hidden" name="db" value="tlgtags">
+                                        <input type="hidden" name="method" value="UPDATE">
+
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2 col-form-label col-form-label-lg">ID </label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" name="id" value="" readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2 col-form-label col-form-label-lg">Title </label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" name="title" value="" disabled readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="">Введите Info в формате JSON: </label>
+                                            <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Сохранить" class="btn btn-success" >
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive" >
+                        <table id="tlgtagsTableManage" class="manageRecordsTable table table-striped table-hover" data-lastid="" data-loadtype="tlgtags">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>TITLE</th>
+                                <th>EDIT</th>
+                                <th>DELETE</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                    <button type="button"
+                                            class="btn btn-primary showMore"
+                                            data-action="loadMore"
+                                            data-loadtype="tlgtags"
+                                            data-place="#tlgtagsTableManage">
+                                        Показать еще
+                                    </button>
+                                    <button type="button"
+                                            class="btn btn-primary showMore"
+                                            data-action="loadMore"
+                                            data-loadtype="tlgtags"
+                                            data-limit="30"
+                                            data-place="#tlgtagsTableManage">
+                                        Показать еще 30
+                                    </button>
+                                </td>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="katalistManager" role="tabpanel" aria-labelledby="nav-katalist-tab">
+                    <div class="innerMenu">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addKatalistModal">
+                            Add katalist
+                        </button>
+                        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addKatalistModal">
+                            Add katalist
+                        </button>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="manageForm modal fade addRecordModal" id="addKatalistModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Добавить список каток</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#katalistSchema" aria-expanded="false" aria-controls="katalistSchema">
+                                                Описание доступных полей
+                                            </button>
+                                        </div>
+
+                                        <div id="katalistSchema" class="collapse">
+                                            <div class="card-body">
+                                                <ul class="schema">
+                                                    <li><b>Title*</b> - название списока каток (обяз. поле)</li>
+                                                    <li><b>list</b> - список каток в виде объекта, где:</li>
+                                                        <ul>
+                                                            <li>ключи объекта- это сложность (8kyu самый лёгкий)</li>
+                                                            <li>значение ключа - массив ссылок на упражнения (string)</li>
+                                                        </ul>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="addRecordForm">
+                                        <input type="hidden" name="db" value="katalist">
+                                        <div class="form-group">
+                                            <label for="">Введите Info в формате JSON: </label>
+                                            <textarea class="form-control" id="" cols=60 rows=12 name="info">
+{
+    "title": "Новый список каток",
+    "list": {
+        "8kyu": [],
+        "7kyu": [],
+        "6kyu": [],
+        "5kyu": [],
+        "4kyu": [],
+        "3kyu": [],
+        "2kyu": [],
+        "1kyu": []
+    }
+}
+                                            </textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Добавить" class="btn btn-success">
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="manageForm modal fade updateRecordModal" id="updateKatalistModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <p class="manageForm__title">Редактировать список каток</p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" action="https://okolojs.ru/core/core.php" class="updateRecordForm">
+                                        <input type="hidden" name="db" value="katalist">
+                                        <input type="hidden" name="method" value="UPDATE">
+
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2 col-form-label col-form-label-lg">ID </label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" name="id" value="" readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2 col-form-label col-form-label-lg">Title </label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" name="title" value="" disabled readonly />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="">Введите Info в формате JSON: </label>
+                                            <textarea class="form-control" id="" cols=60 rows=12 name="info"></textarea>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Сохранить" class="btn btn-success" >
+                                            <input type="reset" value="Отменить" class="btn btn-secondary">
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive" >
+                        <table id="katalistTableManage" class="manageRecordsTable table table-striped table-hover" data-lastid="" data-loadtype="katalist">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>TITLE</th>
+                                <th>EDIT</th>
+                                <th>DELETE</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                    <button type="button"
+                                            class="btn btn-primary showMore"
+                                            data-action="loadMore"
+                                            data-loadtype="katalist"
+                                            data-place="#katalistTableManage">
+                                        Показать еще
+                                    </button>
+                                    <button type="button"
+                                            class="btn btn-primary showMore"
+                                            data-action="loadMore"
+                                            data-loadtype="katalist"
+                                            data-limit="30"
+                                            data-place="#katalistTableManage">
+                                        Показать еще 30
+                                    </button>
+                                </td>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
             </div>
 

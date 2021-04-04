@@ -1,0 +1,22 @@
+<div class="records" id="tlgtags" data-lastid="" data-loadtype="tlgtags" data-tags="" data-tplid="tlgtags-template" data-sortdir="ASC">
+    <ul class="output">
+        <div class="loader ulLoader">
+            <div class="loaderText">Загружаем контент...</div>
+            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+        </div>
+    </ul>
+</div>
+
+
+<script id="tlgtags-template" type="text/x-handlebars-template">
+    {{#each tlgtags}}
+    <li class="record">
+        <a id="tlgAnchor{{id}}"></a>
+        <div class="record__title">
+            #{{title}} -
+            {{#if info.description}}<span class="record__description">{{info.description}}</span>{{/if}}
+
+            <a class="anchor" href="#tlgAnchor{{id}}">#</a></div>
+    </li>
+    {{/each}}
+</script>
