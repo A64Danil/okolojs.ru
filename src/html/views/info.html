@@ -29,6 +29,7 @@ author: "Danil X"
                 <ul>
                     <li><a href="#rulesTitle">Правила нашего чата</a></li>
                     <li><a href="#faqTitle">FAQ - список вопросов</a></li>
+                    <li><a href="#howToSearchTagsTitle">Как искать по тегам?</a></li>
                     <li><a href="#tlgtagsTitle">Список тегов в телеграме с описанием</a></li>
                     <li><a href="#helpTitle">Помощь проекту</a></li>
                     <li><a href="#contactsTitle">Контакты</a></li>
@@ -68,6 +69,27 @@ author: "Danil X"
                 <%= _.template(require('html-loader!./../includes/dbTPL/faq.html'))(data) %>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-12">
+                <a id="howToSearchTagsTitle"></a>
+                <div class="logo  logo--title">
+                    <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
+                    <span class="logo__desc logo__desc--small logo__desc--subtitle"> Как искать по тегам в телеграме?</span>
+                </div>
+                <p>Для поиска по тегам в телеграме нужно выполнить простое действие - искать так же, как обычным способом (через поиск),
+                    либо кликнуть на тег прямо в ленте сообщений (тег должен быть написать через #решетку, тогда он будет подсвечиваться как ссылка).</p>
+                <p>Пошагово:
+                    <ol>
+                        <li>Нажать "поиск" рядом с название канала</li>
+                        <li>В строке поиска ввести название тега (с решеткой)</li>
+                        <li>В результатах поискать искать нужное сообщение</li>
+                    </ol>
+                </p>
+
+                <img src="img/tags/tagSearch.png" alt="" class="img-fluid">
+            </div>
+        </div>
         <div class="row">
             <div class="col-12">
                 <a id="tlgtagsTitle"></a>
@@ -95,8 +117,9 @@ author: "Danil X"
                     <img src="img/logoBW.svg" class="img-fluid logo__img logo__img--subtitle">
                     <span class="logo__desc logo__desc--small logo__desc--subtitle"> Контакты</span>
                 </div>
-                <p>Пишите к нам в телеграмм канал!</p>
-                <p><strong>t.me/okolojs</strong></p>
+                <p>Пишите к нам в телеграмм канал - <strong>t.me/okolojs</strong>!</p>
+
+                <p>Почта для связи с нами - info@okolojs.ru</p>
             </div>
         </div>
     </div>
